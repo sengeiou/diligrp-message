@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.diligrp.message.mapper.TriggersMapper">
+    <resultMap id="BaseResultMap" type="com.diligrp.message.domain.Triggers">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="trigger_code" jdbcType="VARCHAR" property="triggerCode"/>
+        <result column="market_code" jdbcType="VARCHAR" property="marketCode"/>
+        <result column="system_code" jdbcType="VARCHAR" property="systemCode"/>
+        <result column="scene_code" jdbcType="VARCHAR" property="sceneCode"/>
+        <result column="whitelist" jdbcType="TINYINT" property="whitelist"/>
+        <result column="enabled" jdbcType="TINYINT" property="enabled"/>
+        <result column="created" jdbcType="TIMESTAMP" property="created"/>
+        <result column="modified" jdbcType="TIMESTAMP" property="modified"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, trigger_code, market_code, system_code, scene_code, whitelist, enabled, created, 
+    modified
+  </sql>
+
+    <select id="selectForPage" parameterType="com.diligrp.message.domain.Triggers"
+            resultType="com.diligrp.message.domain.vo.TriggersVo">
+        SELECT
+            mt.*,
+            CASE
+                WHEN group_concat( mtt.channel ) IS NOT NULL THEN
+                group_concat( mtt.channel ) ELSE '--'
+            END AS group_channel,
+            CASE
+                WHEN group_concat( mtt.template_code ) IS NOT NULL THEN
+                group_concat( mtt.template_code ) ELSE '--'
+            END AS group_template_code
+            FROM
+                message_triggers mt
+            LEFT JOIN message_triggers_template mtt ON mt.trigger_code = mtt.trigger_code
+            <include refid="QUERY_WHERE_CLAUSE"/>
+            GROUP BY mt.trigger_code
+            order by ${sort} ${order}
+    </select>
+
+    <!-- 全部条件(更多功能可以通过queryData扩展实现)  -->
+    <sql id="QUERY_WHERE_CLAUSE">
+        <where>
+            <if test="marketCode != null and marketCode !=''">
+                and mt.market_code = #{marketCode}
+            </if>
+            <if test="systemCode != null and systemCode != ''">
+                and mt.system_code = #{systemCode}
+            </if>
+            <if test="sceneCode != null and systemCode != ''">
+                and mt.scene_code = #{sceneCode}
+            </if>
+            <if test="enabled != null">
+                and mt.enabled = #{enabled}
+            </if>
+        </where>
+    </sql>
+
+
+</mapper>

@@ -1,0 +1,73 @@
+server:
+  port: 80
+  servlet:
+    context-path: /
+  tomcat:
+    uri-encoding: UTF-8
+
+jasypt:
+  encryptor:
+    password: security
+
+# 日志
+logging:
+  file: classpath:conf/logback-springboot.xml
+  pattern:
+    file: '%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n'
+
+spring:
+  profiles:
+    active: @build.profile.id@
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: @spring.datasource.url@
+    username: @spring.datasource.username@
+    password: @spring.datasource.password@
+    druid:
+      max-active: 20
+      initial-size: 10
+      min-idle: 10
+      max-wait: 60000
+      time-between-eviction-runs-millis: 60000
+      filters: stat,wall,slf4j
+      max-open-prepared-statements: 20
+      connect-properties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+
+## mybatis 相关配置
+mybatis:
+  mapper-locations: classpath*:mapper/*.xml
+  type-aliases-package: com.diligrp.message.domain
+  config-location: classpath:conf/mybatis-config.xml
+
+## mybatis mapper
+mapper:
+  mappers[0]: com.dili.ss.base.MyMapper
+  not-empty: false
+  identity: MYSQL
+  enable-method-annotation: true
+
+##mybatis pagehelper
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql
+
+---
+#开发环境配置
+spring:
+  # 数据源
+  profiles: dev
+
+---
+#测试环境配置
+spring:
+  # 数据源
+  profiles: test
+
+---
+#生产环境配置
+spring:
+  # 数据源
+  profiles: prod
