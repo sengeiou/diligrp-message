@@ -24,12 +24,12 @@
                     <div class="search-item">
                         <input name="sceneCode" id="sceneCode" style="width:100%" labelAlign="right" editable="false"
                                labelAlign="right" panelWidth="auto" panelHeight="auto" label="应用场景:" />
-                        <#comboProvider _id="sceneCode" _provider='firmProvider' _queryParams='{emptyText:"-- 全部 --"}'/>
+                        <#comboProvider _id="sceneCode" _provider='dataDictionaryValueProvider' _queryParams='{dd_code:"message_scene",emptyText:"-- 全部 --"}'/>
                     </div>
                     <div class="search-item">
                         <input name="enabled" id="enabled" style="width:100%" labelAlign="right" editable="false"
                                labelAlign="right" panelWidth="auto" panelHeight="auto" label="状态:" />
-                        <#comboProvider _id="enabled" _provider='firmProvider' _queryParams='{emptyText:"-- 全部 --"}'/>
+                        <#comboProvider _id="enabled" _provider='triggersStateProvider' _queryParams='{emptyText:"-- 全部 --"}'/>
                     </div>
                     <div class="search-wrap-btn">
                         <a href="#" class="easyui-linkbutton" iconCls="icon-search" id="queryBtn" onclick="queryTriggerGrid()">查询</a>
@@ -46,34 +46,34 @@
     <div region="center" style="width:100%;" height="auto">
         <!-- =========================================================表格========================================================= -->
         <table class="easyui-datagrid" title="场景/模板列表" id="triggerGrid" fitColumns="true" noheader="true"
-               pagination="true" pageSize="30" pageNumber="1" pagePosition="top" rownumbers="false" remoteSort="false"
-               loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="false" sortName="triggerCode"
+               pagination="true" pageSize="30" pageNumber="1" pagePosition="top" rownumbers="false" remoteSort="true" sortName="id" sortOrder="desc"
+               loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="false"
                align="center" fit="true" striped="true" idField="id" data-options="onDblClickRow:openUpdate, onHeaderContextMenu:headerContextMenu">
             <thead>
             <tr>
-                <th data-options="field:'triggerCode',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
-                    触发点编码
+                <th width="8%" data-options="field:'marketCode', _provider:'firmProvider', sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                    所属市场
                 </th>
-                <th data-options="field:'marketCode',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
-                    市场编码
-                </th>
-                <th data-options="field:'systemCode',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                <th width="8%" data-options="field:'systemCode',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                     所属系统
                 </th>
-                <th data-options="field:'sceneCode',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                <th width="8%" data-options="field:'sceneCode', _provider:'dataDictionaryValueProvider',_queryParams:{'dd_code':'message_scene'},   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                     应用场景
                 </th>
-                <th data-options="field:'whitelist',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
-                    是否启用白名单
+                <th width="8%" data-options="field:'sceneCode',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                    场景编码
                 </th>
                 <th data-options="field:'enabled',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
-                    是否启用
+                    状态
+                </th>
+                <th data-options="field:'enabled',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                    模板来源
+                </th>
+                <th data-options="field:'enabled',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                    模板编码
                 </th>
                 <th data-options="field:'created',  _provider:'datetimeProvider', sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                     创建时间
-                </th>
-                <th data-options="field:'modified',  _provider:'datetimeProvider', sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
-                    修改时间
                 </th>
             </tr>
             </thead>
