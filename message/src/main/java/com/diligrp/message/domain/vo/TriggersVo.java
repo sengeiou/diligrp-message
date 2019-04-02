@@ -1,8 +1,10 @@
 package com.diligrp.message.domain.vo;
 
+import com.dili.ss.domain.annotation.Operator;
 import com.diligrp.message.domain.Triggers;
 
 import javax.persistence.Column;
+import java.util.List;
 
 /**
  * <B>Description</B>
@@ -26,19 +28,29 @@ public class TriggersVo extends Triggers {
     @Column(name = "`group_template_code`")
     private String groupTemplateCode;
 
+    /**
+     * 市场编码
+     */
+    @Column(name = "`market_code`")
+    private List<String> marketCodeList;
+
     public String getGroupChannel() {
         return groupChannel;
     }
-
     public void setGroupChannel(String groupChannel) {
         this.groupChannel = groupChannel;
     }
-
     public String getGroupTemplateCode() {
         return groupTemplateCode;
     }
-
     public void setGroupTemplateCode(String groupTemplateCode) {
         this.groupTemplateCode = groupTemplateCode;
+    }
+    @Operator(Operator.IN)
+    public List<String> getMarketCodeList() {
+        return marketCodeList;
+    }
+    public void setMarketCodeList(List<String> marketCodeList) {
+        this.marketCodeList = marketCodeList;
     }
 }
