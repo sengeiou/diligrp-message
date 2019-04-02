@@ -9,10 +9,11 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
  * 由MyBatis Generator工具自动生成
+ * @author yuehongbo
  */
 @SpringBootApplication
 @EnableTransactionManagement
-@ComponentScan(basePackages={"com.dili.ss","com.diligrp.message"})
+@ComponentScan(basePackages={"com.dili.ss","com.diligrp.message","com.dili.uap.sdk"})
 @RestfulScan({"com.diligrp.message.rpc", "com.dili.uap.sdk.rpc"})
 /**
  * 除了内嵌容器的部署模式，Spring Boot也支持将应用部署至已有的Tomcat容器, 或JBoss, WebLogic等传统Java EE应用服务器。
