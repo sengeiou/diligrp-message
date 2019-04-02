@@ -71,11 +71,11 @@
             <property name="suppressDate" value="false"/>
         </commentGenerator>
 
-<!--        <jdbcConnection driverClass="${jdbc.driverClass}"-->
-<!--                        connectionURL="${jdbc.url}"-->
-<!--                        userId="${jdbc.user}"-->
-<!--                        password="${jdbc.password}">-->
-<!--        </jdbcConnection>-->
+        <jdbcConnection driverClass="${jdbc.driverClass}"
+                        connectionURL="${jdbc.url}"
+                        userId="${jdbc.user}"
+                        password="${jdbc.password}">
+        </jdbcConnection>
 
         <javaModelGenerator targetPackage="${targetModelPackage}" targetProject="${targetJavaProject}"/>
 

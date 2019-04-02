@@ -10,7 +10,7 @@ import javax.persistence.*;
 /**
  * 由MyBatis Generator工具自动生成
  * 
- * This file was generated on 2019-03-31 10:54:30.
+ * This file was generated on 2019-04-02 10:14:09.
  */
 @Table(name = "`message_whitelist`")
 public class Whitelist extends BaseDomain {

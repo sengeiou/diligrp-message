@@ -10,7 +10,7 @@ import javax.persistence.*;
 /**
  * 由MyBatis Generator工具自动生成
  * 
- * This file was generated on 2019-03-31 10:53:25.
+ * This file was generated on 2019-04-02 10:22:23.
  */
 @Table(name = "`message_triggers_template`")
 public class TriggersTemplate extends BaseDomain {

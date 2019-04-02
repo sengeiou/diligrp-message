@@ -10,7 +10,7 @@ import javax.persistence.*;
 /**
  * 由MyBatis Generator工具自动生成
  * 
- * This file was generated on 2019-03-31 10:36:28.
+ * This file was generated on 2019-04-02 10:19:22.
  */
 @Table(name = "`message_market_channel`")
 public class MarketChannel extends BaseDomain {

@@ -10,7 +10,7 @@ import javax.persistence.*;
 /**
  * 由MyBatis Generator工具自动生成
  * 
- * This file was generated on 2019-03-31 10:52:30.
+ * This file was generated on 2019-04-02 10:16:25.
  */
 @Table(name = "`message_triggers`")
 public class Triggers extends BaseDomain {
@@ -50,7 +50,7 @@ public class Triggers extends BaseDomain {
      * 是否启用白名单
      */
     @Column(name = "`whitelist`")
-    private Boolean whitelist;
+    private Byte whitelist;
 
     /**
      * 是否启用
@@ -77,7 +77,6 @@ public class Triggers extends BaseDomain {
      */
     @FieldDef(label="ID")
     @EditMode(editor = FieldEditor.Number, required = true)
-    @Override
     public Long getId() {
         return id;
     }
@@ -87,7 +86,6 @@ public class Triggers extends BaseDomain {
      *
      * @param id ID
      */
-    @Override
     public void setId(Long id) {
         this.id = id;
     }
@@ -179,7 +177,7 @@ public class Triggers extends BaseDomain {
      */
     @FieldDef(label="是否启用白名单")
     @EditMode(editor = FieldEditor.Text, required = false)
-    public Boolean getWhitelist() {
+    public Byte getWhitelist() {
         return whitelist;
     }
 
@@ -188,7 +186,7 @@ public class Triggers extends BaseDomain {
      *
      * @param whitelist 是否启用白名单
      */
-    public void setWhitelist(Boolean whitelist) {
+    public void setWhitelist(Byte whitelist) {
         this.whitelist = whitelist;
     }
 
