@@ -59,4 +59,17 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <select id="listAll" parameterType="com.diligrp.message.domain.MarketChannel" resultType="com.diligrp.message.domain.vo.MarketChannelVo">
+    select
+    mc.*, group_concat( mc.channel ) as group_channel, group_concat( mc.signature ) as group_signature
+    from message_market_channel mc
+    where 1=1
+    <if test="metadata.authMarkets != null and metadata.authMarkets !=''">
+      and mc.market_code in (${metadata.authMarkets})
+    </if>
+    group by mc.market_code
+    order by ${sort} ${order}
+  </select>
+
 </mapper>

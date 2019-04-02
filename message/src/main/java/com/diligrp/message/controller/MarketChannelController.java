@@ -2,6 +2,7 @@ package com.diligrp.message.controller;
 
 import com.dili.ss.domain.BaseOutput;
 import com.diligrp.message.domain.MarketChannel;
+import com.diligrp.message.domain.vo.MarketChannelVo;
 import com.diligrp.message.service.MarketChannelService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -38,8 +39,8 @@ public class MarketChannelController {
 		@ApiImplicitParam(name="MarketChannel", paramType="form", value = "MarketChannel的form信息", required = false, dataType = "string")
 	})
     @RequestMapping(value="/list.action", method = {RequestMethod.GET, RequestMethod.POST})
-    public @ResponseBody List<MarketChannel> list(@ModelAttribute MarketChannel marketChannel) {
-        return marketChannelService.list(marketChannel);
+    public @ResponseBody List<MarketChannelVo> list(@ModelAttribute MarketChannel marketChannel) {
+        return marketChannelService.listAll(marketChannel);
     }
 
     @ApiOperation(value="分页查询MarketChannel", notes = "分页查询MarketChannel，返回easyui分页信息")

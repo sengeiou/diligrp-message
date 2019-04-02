@@ -65,13 +65,13 @@
             <thead>
             <tr>
                 <th data-options="field:'marketCode',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
-                    市场编码
+                    所属市场
                 </th>
                 <th data-options="field:'channel',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
-                    通道编码
+                    消息通道
                 </th>
                 <th data-options="field:'signature',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
-                    通道签名
+                    签名
                 </th>
                 <th data-options="field:'accountNo',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                     通道账号
@@ -263,7 +263,7 @@
     function queryGrid() {
         var opts = $("#grid").datagrid("options");
         if (null == opts.url || "" == opts.url) {
-            opts.url = "${contextPath}/marketChannel/listPage.action";
+            opts.url = "${contextPath}/marketChannel/list.action";
         }
         if(!$('#form').form("validate")){
             return;
