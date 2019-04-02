@@ -55,6 +55,12 @@
             <if test="enabled != null">
                 and mt.enabled = #{enabled}
             </if>
+            <if test="marketCodeList != null and marketCodeList.size()>0">
+                AND mt.market_code IN
+                <foreach collection="marketCodeList" item="item" open="(" close=")" separator="," >
+                    #{item}
+                </foreach>
+            </if>
         </where>
     </sql>
 

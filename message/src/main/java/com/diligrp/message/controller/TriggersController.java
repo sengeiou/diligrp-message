@@ -2,6 +2,7 @@ package com.diligrp.message.controller;
 
 import com.dili.ss.domain.BaseOutput;
 import com.diligrp.message.domain.Triggers;
+import com.diligrp.message.domain.vo.TriggersVo;
 import com.diligrp.message.service.TriggersService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -25,8 +26,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping("/triggers")
 public class TriggersController {
+
     @Autowired
-    TriggersService triggersService;
+    private TriggersService triggersService;
 
     @ApiOperation("跳转到Triggers页面")
     @RequestMapping(value="/index.html", method = RequestMethod.GET)
@@ -49,7 +51,7 @@ public class TriggersController {
 	})
     @RequestMapping(value="/listPage.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody String listPage(@ModelAttribute Triggers triggers) throws Exception {
-        return triggersService.listEasyuiPageByExample(triggers, true).toString();
+        return triggersService.listPageForEasyui(triggers, true).toString();
     }
 
     @ApiOperation("新增Triggers")
