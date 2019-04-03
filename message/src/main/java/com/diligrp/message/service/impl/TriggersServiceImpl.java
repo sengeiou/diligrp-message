@@ -30,7 +30,7 @@ import java.util.List;
 @Service
 public class TriggersServiceImpl extends BaseServiceImpl<Triggers, Long> implements TriggersService {
 
-    private TriggersMapper getActualDao() {
+    private TriggersMapper getActualMapper() {
         return (TriggersMapper)getDao();
     }
 
@@ -61,9 +61,20 @@ public class TriggersServiceImpl extends BaseServiceImpl<Triggers, Long> impleme
             }
             query.setMarketCodeList(currentUserFirms);
         }
-        List<TriggersVo> triggerList = getActualDao().selectForPage(query);
+        List<TriggersVo> triggerList = getActualMapper().selectForPage(query);
         long total = triggerList instanceof Page ? ((Page) triggerList).getTotal() : (long) triggerList.size();
         List results = useProvider ? ValueProviderUtils.buildDataByProvider(triggers, triggerList) : triggerList;
         return new EasyuiPageOutput((int) total, results);
+    }
+
+    /**
+     * 根据条件聚合查询触发点及模板信息
+     *
+     * @param triggers
+     * @return
+     */
+    @Override
+    public List<TriggersVo> selectForUnionTemplate(Triggers triggers) {
+        return getActualMapper().selectForUnionTemplate(triggers);
     }
 }

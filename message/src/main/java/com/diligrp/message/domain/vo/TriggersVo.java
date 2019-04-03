@@ -2,6 +2,7 @@ package com.diligrp.message.domain.vo;
 
 import com.dili.ss.domain.annotation.Operator;
 import com.diligrp.message.domain.Triggers;
+import com.diligrp.message.domain.TriggersTemplate;
 
 import javax.persistence.Column;
 import java.util.List;
@@ -34,6 +35,11 @@ public class TriggersVo extends Triggers {
     @Column(name = "`market_code`")
     private List<String> marketCodeList;
 
+    /**
+     * 触发点对应的模板信息
+     */
+    private List<TriggersTemplate> templateList;
+
     public String getGroupChannel() {
         return groupChannel;
     }
@@ -52,5 +58,11 @@ public class TriggersVo extends Triggers {
     }
     public void setMarketCodeList(List<String> marketCodeList) {
         this.marketCodeList = marketCodeList;
+    }
+    public List<TriggersTemplate> getTemplateList() {
+        return templateList;
+    }
+    public void setTemplateList(List<TriggersTemplate> templateList) {
+        this.templateList = templateList;
     }
 }
