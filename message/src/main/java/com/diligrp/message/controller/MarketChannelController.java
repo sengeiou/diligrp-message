@@ -43,6 +43,11 @@ public class MarketChannelController {
         return marketChannelService.listAll(marketChannel).toString();
     }
 
+    @RequestMapping(value="/listDetail.action", method = {RequestMethod.GET, RequestMethod.POST})
+    public @ResponseBody List<MarketChannel> listDetail(@ModelAttribute MarketChannelVo marketChannel) {
+        return marketChannelService.list(marketChannel);
+    }
+
     @ApiOperation(value="分页查询MarketChannel", notes = "分页查询MarketChannel，返回easyui分页信息")
     @ApiImplicitParams({
 		@ApiImplicitParam(name="MarketChannel", paramType="form", value = "MarketChannel的form信息", required = false, dataType = "string")
