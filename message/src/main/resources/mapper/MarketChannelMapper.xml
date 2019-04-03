@@ -65,8 +65,12 @@
     mc.*, group_concat( mc.channel ) as group_channel, group_concat( mc.signature ) as group_signature
     from message_market_channel mc
     where 1=1
-    <if test="metadata.authMarkets != null and metadata.authMarkets !=''">
-      and mc.market_code in (${metadata.authMarkets})
+
+    <if test="metadata.authMarkets != null and metadata.authMarkets.size()>0">
+      and mc.market_code in
+      <foreach collection="metadata.authMarkets" item="item" open="(" close=")" separator="," >
+        #{item}
+      </foreach>
     </if>
     group by mc.market_code
     order by ${sort} ${order}

@@ -1,6 +1,8 @@
 package com.diligrp.message.service.impl;
 
 import com.dili.ss.base.BaseServiceImpl;
+import com.dili.ss.domain.EasyuiPageOutput;
+import com.dili.ss.metadata.ValueProviderUtils;
 import com.diligrp.message.domain.vo.MarketChannelVo;
 import com.diligrp.message.mapper.MarketChannelMapper;
 import com.diligrp.message.domain.MarketChannel;
@@ -29,20 +31,12 @@ public class MarketChannelServiceImpl extends BaseServiceImpl<MarketChannel, Lon
     }
 
     @Override
-    public List<MarketChannelVo> listAll(MarketChannel marketChannel) {
+    public EasyuiPageOutput listAll(MarketChannel marketChannel) throws Exception {
         marketChannel.setSort("id");
         marketChannel.setOrder("desc");
-
-        List<String> marketlist = firmService.getCurrentUserFirmCodes();
-        StringBuffer markets = new StringBuffer();
-        if(!CollectionUtils.isEmpty(marketlist)){
-
-            for(int i=0;i<marketlist.size();i++){
-                markets.append("'" + marketlist.get(i)+ "',");
-            }
-        }
-        marketChannel.setMetadata("authMarkets", markets.substring(0, markets.length()-1));
+        marketChannel.setMetadata("authMarkets", firmService.getCurrentUserFirmCodes());
         List<MarketChannelVo> list = this.getActualDao().listAll(marketChannel);
-        return list;
+        return new EasyuiPageOutput(Integer.parseInt(String.valueOf(list.size())), ValueProviderUtils.buildDataByProvider(marketChannel, list));
     }
+
 }

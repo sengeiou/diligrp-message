@@ -1,6 +1,7 @@
 package com.diligrp.message.service;
 
 import com.dili.ss.base.BaseService;
+import com.dili.ss.domain.EasyuiPageOutput;
 import com.diligrp.message.domain.MarketChannel;
 import com.diligrp.message.domain.vo.MarketChannelVo;
 
@@ -16,5 +17,5 @@ public interface MarketChannelService extends BaseService<MarketChannel, Long> {
      * @param marketChannel 查询用于 拥有权限 的市场的通道信息
      * @return
      */
-    public List<MarketChannelVo> listAll(MarketChannel marketChannel);
+    EasyuiPageOutput listAll(MarketChannel marketChannel) throws Exception;
 }
