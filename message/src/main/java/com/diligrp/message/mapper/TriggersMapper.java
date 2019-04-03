@@ -6,6 +6,9 @@ import com.diligrp.message.domain.vo.TriggersVo;
 
 import java.util.List;
 
+/**
+ * @author yuehongbo
+ */
 public interface TriggersMapper extends MyMapper<Triggers> {
 
     /**
@@ -14,4 +17,11 @@ public interface TriggersMapper extends MyMapper<Triggers> {
      * @return
      */
     List<TriggersVo> selectForPage(Triggers triggers);
+
+    /**
+     * 根据条件聚合查询触发点及模板信息
+     * @param triggers
+     * @return
+     */
+    List<TriggersVo> selectForUnionTemplate(Triggers triggers);
 }

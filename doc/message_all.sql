@@ -90,7 +90,7 @@ create table message_triggers
    trigger_code         varchar(50) not null comment '触发点编码',
    market_code          varchar(20) not null comment '市场编码',
    system_code          varchar(20) comment '所属系统',
-   scene_code           varchar(20) comment '应用场景',
+   scene_code           varchar(50) comment '应用场景',
    whitelist            tinyint comment '是否启用白名单',
    enabled              tinyint comment '是否启用',
    created              datetime default current_timestamp comment '创建时间',
@@ -175,6 +175,51 @@ alter table message_whitelist comment '白名单信息管理';
 /* Index: idx_whitelist_cellphone                               */
 /*==============================================================*/
 create index idx_whitelist_cellphone on message_whitelist
+(
+   cellphone
+);
+
+
+/*==============================================================*/
+/* Table: message_send_log                                      */
+/*==============================================================*/
+drop table if exists message_send_log;
+create table message_send_log
+(
+   id                   bigint not null auto_increment comment 'ID',
+   request_code         varchar(50) comment '此次消息请求码',
+   market_code          varchar(20) comment '来源市场',
+   system_code          varchar(20) comment '来源系统',
+   scene_code           varchar(50) comment '应用场景',
+   cellphone            varchar(20) comment '电话号码',
+   receipt_time         datetime comment '接收时间',
+   content              varchar(255) comment '消息内容',
+   send_state           tinyint comment '发送状态',
+   send_time            datetime comment '发送时间',
+   send_channel         varchar(20) comment '发送通道',
+   remarks              varchar(255) comment '备注',
+   primary key (id)
+);
+alter table message_send_log comment '消息发送日志';
+
+/*==============================================================*/
+/* Index: idx_send_log_send_time                                */
+/*==============================================================*/
+create index idx_send_log_send_time on message_send_log
+(
+   send_time
+);
+/*==============================================================*/
+/* Index: idx_send_log_scene_code                               */
+/*==============================================================*/
+create index idx_send_log_scene_code on message_send_log
+(
+   scene_code
+);
+/*==============================================================*/
+/* Index: idx_send_log_cellphone                                */
+/*==============================================================*/
+create index idx_send_log_cellphone on message_send_log
 (
    cellphone
 );

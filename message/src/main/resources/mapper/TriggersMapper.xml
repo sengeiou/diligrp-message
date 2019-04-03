@@ -15,9 +15,14 @@
         <result column="created" jdbcType="TIMESTAMP" property="created"/>
         <result column="modified" jdbcType="TIMESTAMP" property="modified"/>
     </resultMap>
+
+    <resultMap id="unionTemplateMap" type="com.diligrp.message.domain.vo.TriggersVo" extends="BaseResultMap">
+         <collection property="templateList" column="trigger_code" select="com.diligrp.message.mapper.TriggersTemplateMapper.selectByTriggerCode" />
+    </resultMap>
+
     <sql id="Base_Column_List">
-    id, trigger_code, market_code, system_code, scene_code, whitelist, enabled, created, 
-    modified
+        id, trigger_code, market_code, system_code, scene_code, whitelist, enabled, created,
+        modified
   </sql>
 
     <select id="selectForPage" parameterType="com.diligrp.message.domain.Triggers"
@@ -64,5 +69,12 @@
         </where>
     </sql>
 
+    <!-- 根据条件聚合查询触发点及模板信息 -->
+    <select id="selectForUnionTemplate" resultMap="unionTemplateMap" parameterType="com.diligrp.message.domain.Triggers">
+        select
+        <include refid="Base_Column_List"/>
+        from message_triggers_template
+        <include refid="QUERY_WHERE_CLAUSE" />
+    </select>
 
 </mapper>
