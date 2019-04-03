@@ -163,6 +163,13 @@
                     del();
                 }
             },
+            {
+                iconCls:'icon-ok',
+                text:'保存',
+                handler:function(){
+                    $("#marketChannelDetailGrid").dataGridEditor().save();
+                }
+            }
         ]
     });
         //表格仅显示下边框
