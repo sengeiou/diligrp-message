@@ -17,5 +17,5 @@ public interface MarketChannelService extends BaseService<MarketChannel, Long> {
      * @param marketChannel 查询用于 拥有权限 的市场的通道信息
      * @return
      */
-    EasyuiPageOutput listAll(MarketChannel marketChannel) throws Exception;
+    EasyuiPageOutput listAll(MarketChannelVo marketChannel) throws Exception;
 }

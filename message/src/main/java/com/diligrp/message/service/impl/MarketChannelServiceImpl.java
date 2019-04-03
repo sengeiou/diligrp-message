@@ -31,10 +31,10 @@ public class MarketChannelServiceImpl extends BaseServiceImpl<MarketChannel, Lon
     }
 
     @Override
-    public EasyuiPageOutput listAll(MarketChannel marketChannel) throws Exception {
+    public EasyuiPageOutput listAll(MarketChannelVo marketChannel) throws Exception {
         marketChannel.setSort("id");
         marketChannel.setOrder("desc");
-        marketChannel.setMetadata("authMarkets", firmService.getCurrentUserFirmCodes());
+        marketChannel.setAuthMarkets(firmService.getCurrentUserFirmCodes());
         List<MarketChannelVo> list = this.getActualDao().listAll(marketChannel);
         return new EasyuiPageOutput(Integer.parseInt(String.valueOf(list.size())), ValueProviderUtils.buildDataByProvider(marketChannel, list));
     }

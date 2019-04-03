@@ -66,9 +66,9 @@
     from message_market_channel mc
     where 1=1
 
-    <if test="metadata.authMarkets != null and metadata.authMarkets.size()>0">
+    <if test="authMarkets != null and authMarkets.size()>0">
       and mc.market_code in
-      <foreach collection="metadata.authMarkets" item="item" open="(" close=")" separator="," >
+      <foreach collection="authMarkets" item="item" open="(" close=")" separator="," >
         #{item}
       </foreach>
     </if>

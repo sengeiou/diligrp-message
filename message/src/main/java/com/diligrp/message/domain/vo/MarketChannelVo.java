@@ -3,6 +3,7 @@ package com.diligrp.message.domain.vo;
 import com.diligrp.message.domain.MarketChannel;
 
 import javax.persistence.Column;
+import java.util.List;
 
 public class MarketChannelVo extends MarketChannel {
     /**
@@ -16,6 +17,11 @@ public class MarketChannelVo extends MarketChannel {
      */
     @Column(name = "`group_signature`")
     private String group_signature;
+
+    /**
+     * 用户有权限的市场列表
+     */
+    private List<String> authMarkets;
 
     public String getGroupChannel() {
         return groupChannel;
@@ -31,5 +37,13 @@ public class MarketChannelVo extends MarketChannel {
 
     public void setGroup_signature(String group_signature) {
         this.group_signature = group_signature;
+    }
+
+    public List<String> getAuthMarkets() {
+        return authMarkets;
+    }
+
+    public void setAuthMarkets(List<String> authMarkets) {
+        this.authMarkets = authMarkets;
     }
 }
