@@ -1,5 +1,7 @@
 <#body>
+<style>
 
+</style>
 <div class="easyui-layout" fit="true">
     <!-- ====================================================================================================================== -->
     <!-- 上方布局 -->
@@ -67,7 +69,7 @@
                 </td>
             </tr>
             <tbody class="channel-wrap-tmpl" hidden>
-                <tr>
+                <tr class="flag-edit-btn">
                     <td style="padding:5px;">
                         <input class="easyui-textbox" name="_channel" id="_channel" style="width:100%" data-options="label:'通道编码:', validType:'length[0,20]'" />
                         <a href="javascript:;" class="l-btn l-btn-small l-btn-plain btn-add-channel" style="position: absolute;right: 40px;margin-top: -26px"><span class="l-btn-left l-btn-icon-left" ><span class="l-btn-text"></span><span class="l-btn-icon icon-add">&nbsp;</span></span></a>
@@ -91,24 +93,24 @@
                 </tr>
             </tbody>
         <tbody class="channel-wrap">
-            <tr>
+            <tr class="flag-edit-btn" flag-count="0">
                 <td style="padding:5px;">
                     <input class="easyui-textbox" name="_channel" id="_channel" style="width:100%" data-options="label:'通道编码:', validType:'length[0,20]'" />
                     <a href="javascript:;" class="l-btn l-btn-small l-btn-plain btn-add-channel" style="position: absolute;right: 40px;margin-top: -26px"><span class="l-btn-left l-btn-icon-left" ><span class="l-btn-text"></span><span class="l-btn-icon icon-add">&nbsp;</span></span></a>
-                    <a href="javascript:;" class="l-btn l-btn-small l-btn-plain btn-delete-channel" style="position: absolute;right: 10px;margin-top: -26px"><span class="l-btn-left l-btn-icon-left" ><span class="l-btn-text"></span><span class="l-btn-icon icon-remove">&nbsp;</span></span></a>
+                    <!--<a href="javascript:;" class="l-btn l-btn-small l-btn-plain btn-delete-channel" style="position: absolute;right: 10px;margin-top: -26px"><span class="l-btn-left l-btn-icon-left" ><span class="l-btn-text"></span><span class="l-btn-icon icon-remove">&nbsp;</span></span></a>-->
                 </td>
             </tr>
-            <tr>
+            <tr flag-count="0">
                 <td style="padding:5px;">
                     <input class="easyui-textbox" name="_signature" id="_signature" style="width:100%" data-options="label:'通道签名:', validType:'length[0,50]'" />
                 </td>
             </tr>
-            <tr>
+            <tr flag-count="0">
                 <td style="padding:5px;">
                     <input class="easyui-textbox" name="_accountNo" id="_accountNo" style="width:100%" data-options="label:'通道账号:', validType:'length[0,50]'" />
                 </td>
             </tr>
-            <tr>
+            <tr flag-count="0">
                 <td style="padding:5px;">
                     <input class="easyui-textbox" name="_password" id="_password" style="width:100%" data-options="label:'通道密码:', validType:'length[0,255]'" />
                 </td>
@@ -309,20 +311,18 @@
         queryGrid();
     })
 
+    let flagChannelCount = 0;
     $('.channel-table').on('click', '.btn-add-channel', function(){
-        $('.channel-wrap').append($('.channel-wrap-tmpl').clone().find('tr').attr('flag-count', (new Date()).getTime()).end().html()).show();
+        flagChannelCount ++;
+        $('.channel-wrap').append($('.channel-wrap-tmpl').clone().find('tr').attr('flag-count', flagChannelCount).end().html()).show();
         $(this).hide();
-        $('.channel-wrap').find('.btn-add-channel:last-of-type').show();
-        $('.channel-wrap').find('.btn-delete-channel').show();
-        $('.channel-wrap').find('.btn-delete-channel:first-of-type').hide();
+        console.log($('.channel-wrap').find('.btn-add-channel:last-of-type').length)
     })
     $('.channel-table').on('click', '.btn-delete-channel', function(){
         let flagCount = $(this).closest('tr').attr('flag-count');
-        console.log(flagCount)
-        $('.channel-table').find("[flag-count=" + flagCount + "]").remove();
-        if ($('.channel-wrap').find('.btn-add-channel').length < 2) {
-            $('.channel-wrap').find('.btn-add-channel:first-of-type').show();
-        }
+        $('.channel-wrap').find("[flag-count=" + flagCount + "]").remove();
+        let flagCountLast = $('.channel-table .channel-wrap tr:last-child').attr('flag-count');
+        $('.channel-table .channel-wrap tr[flag-count="'+ flagCountLast +'"]').find('.btn-add-channel').show();
 
     })
 
