@@ -1,29 +1,5 @@
 <script type="text/javascript">
 
-
-    //打开新增窗口
-    function openInsert(){
-        $('#dlg').dialog('open');
-        $('#dlg').dialog('center');
-        $('#_form').form('clear');
-        formFocus("_form", "_marketCode");
-    }
-
-    //打开修改窗口
-    function openUpdate(){
-        var selected = $("#marketChannelGrid").datagrid("getSelected");
-        if (null == selected) {
-            swal('警告','请选中一条数据', 'warning');
-            return;
-        }
-        $('#dlg').dialog('open');
-        $('#dlg').dialog('center');
-        formFocus("_form", "_marketCode");
-        var formData = $.extend({},selected);
-        formData = addKeyStartWith(getOriginalData(formData),"_");
-        $('#_form').form('load', formData);
-    }
-
     function saveOrUpdate(){
         if(!$('#_form').form("validate")){
             return;
@@ -170,16 +146,13 @@
                 iconCls:'icon-add',
                 text:'新增',
                 handler:function(){
-                    alert(11)
                     $("#marketChannelDetailGrid").dataGridEditor().insert();
-                    // openInsert();
                 }
             },
             {
                 iconCls:'icon-edit',
                 text:'修改',
                 handler:function(){
-                    // openUpdate();
                     $("#marketChannelDetailGrid").dataGridEditor().update();
                 }
             },
@@ -215,30 +188,30 @@
 
     function initMarketChannelDetailGrid() {
         //设置grid的可编辑信息
-        $("#roleGrid").dataGridEditor({
+        $("#marketChannelDetailGrid").dataGridEditor({
             insertUrl: "${contextPath!}/marketChannel/insert.action",
             updateUrl: "${contextPath!}/marketChannel/update.action",
             deleteUrl: '${contextPath!}/marketChannel/delete.action',
-            onBeginEdit: function (index,row) {
-                var editors = $("#marketChannelDetailGrid").datagrid('getEditors', index);
-                editors[0].target.trigger('focus');
-                //获取市场字段的编辑框
-                var ed = $("#marketChannelDetailGrid").datagrid('getEditor', {index:index,field:'firmCode'});
-                //存在ID，数据编辑情况下,市场信息不可更改
-                if (row.id != 'temp'){
-                    var obj = {};
-                    obj.code = row.$_firmCode;
-                    obj.name = row.firmCode;
-                    var datas = [];
-                    datas.push(obj);
-                    $(ed.target).combobox('loadData', datas);
-                }else{
-                    //新增数据时，加载市场信息
-                    $(ed.target).combobox("loadData", firms);
-                }
-                // firmLoadSuccess(index);
-                // setOptBtnDisplay(true);
-            },
+            // onBeginEdit: function (index,row) {
+            //     var editors = $("#marketChannelDetailGrid").datagrid('getEditors', index);
+            //     editors[0].target.trigger('focus');
+            //     //获取市场字段的编辑框
+            //     var ed = $("#marketChannelDetailGrid").datagrid('getEditor', {index:index,field:'marketCode'});
+            //     //存在ID，数据编辑情况下,市场信息不可更改
+            //     if (row.id != 'temp'){
+            //         var obj = {};
+            //         obj.code = row.$_firmCode;
+            //         obj.name = row.firmCode;
+            //         var datas = [];
+            //         datas.push(obj);
+            //         $(ed.target).combobox('loadData', datas);
+            //     }else{
+            //         //新增数据时，加载市场信息
+            //         $(ed.target).combobox("loadData", firms);
+            //     }
+            //     // firmLoadSuccess(index);
+            //     // setOptBtnDisplay(true);
+            // },
             onEndEdit: function () {
                 // setOptBtnDisplay(false);
             },
