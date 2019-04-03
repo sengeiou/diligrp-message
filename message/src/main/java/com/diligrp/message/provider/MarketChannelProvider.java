@@ -25,11 +25,30 @@ public class MarketChannelProvider implements ValueProvider {
 
     @Override
     public List<ValuePair<?>> getLookupList(Object o, Map map, FieldMeta fieldMeta) {
-        return null;
+        return BUFFER;
     }
 
     @Override
     public String getDisplayText(Object o, Map map, FieldMeta fieldMeta) {
+        if (null == o) {
+            return null;
+        }
+        if (o.toString().contains(",")){
+            String[] channellist = o.toString().split(",");
+            String buf = "";
+            for (String str : channellist){
+                ValuePair<?> valuePair = BUFFER.stream().filter(val -> str.equals(val.getValue())).findFirst().orElseGet(null);
+                if (null != valuePair && !buf.contains(valuePair.getText())) {
+                    buf += valuePair.getText()+ ",";
+                }
+            }
+            return buf.substring(0, buf.length()-1);
+        }else {
+            ValuePair<?> valuePair = BUFFER.stream().filter(val -> o.equals(val.getValue())).findFirst().orElseGet(null);
+            if (null != valuePair) {
+               return valuePair.getText();
+            }
+        }
         return null;
     }
 }

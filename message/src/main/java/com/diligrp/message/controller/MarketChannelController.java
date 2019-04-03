@@ -39,7 +39,7 @@ public class MarketChannelController {
 		@ApiImplicitParam(name="MarketChannel", paramType="form", value = "MarketChannel的form信息", required = false, dataType = "string")
 	})
     @RequestMapping(value="/list.action", method = {RequestMethod.GET, RequestMethod.POST})
-    public @ResponseBody String list(@ModelAttribute MarketChannel marketChannel) throws Exception {
+    public @ResponseBody String list(@ModelAttribute MarketChannelVo marketChannel) throws Exception {
         return marketChannelService.listAll(marketChannel).toString();
     }
 
