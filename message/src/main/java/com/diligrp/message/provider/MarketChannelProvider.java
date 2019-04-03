@@ -33,9 +33,21 @@ public class MarketChannelProvider implements ValueProvider {
         if (null == o) {
             return null;
         }
-        ValuePair<?> valuePair = BUFFER.stream().filter(val -> o.toString().equals(val.getValue())).findFirst().orElseGet(null);
-        if (null != valuePair) {
-            return valuePair.getText();
+        if (o.toString().contains(",")){
+            String[] channellist = o.toString().split(",");
+            String buf = "";
+            for (String str : channellist){
+                ValuePair<?> valuePair = BUFFER.stream().filter(val -> str.equals(val.getValue())).findFirst().orElseGet(null);
+                if (null != valuePair && !buf.contains(valuePair.getText())) {
+                    buf += valuePair.getText()+ ",";
+                }
+            }
+            return buf.substring(0, buf.length()-1);
+        }else {
+            ValuePair<?> valuePair = BUFFER.stream().filter(val -> o.equals(val.getValue())).findFirst().orElseGet(null);
+            if (null != valuePair) {
+               return valuePair.getText();
+            }
         }
         return null;
     }

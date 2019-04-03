@@ -16,7 +16,7 @@ public class MarketChannelVo extends MarketChannel {
      * 联合分组后的，通道签名，默认以,隔开
      */
     @Column(name = "`group_signature`")
-    private String group_signature;
+    private String groupSignature;
 
     /**
      * 用户有权限的市场列表
@@ -31,12 +31,12 @@ public class MarketChannelVo extends MarketChannel {
         this.groupChannel = groupChannel;
     }
 
-    public String getGroup_signature() {
-        return group_signature;
+    public String getGroupSignature() {
+        return groupSignature;
     }
 
-    public void setGroup_signature(String group_signature) {
-        this.group_signature = group_signature;
+    public void setGroupSignature(String groupSignature) {
+        this.groupSignature = groupSignature;
     }
 
     public List<String> getAuthMarkets() {
