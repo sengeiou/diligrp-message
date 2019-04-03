@@ -25,11 +25,18 @@ public class MarketChannelProvider implements ValueProvider {
 
     @Override
     public List<ValuePair<?>> getLookupList(Object o, Map map, FieldMeta fieldMeta) {
-        return null;
+        return BUFFER;
     }
 
     @Override
     public String getDisplayText(Object o, Map map, FieldMeta fieldMeta) {
+        if (null == o) {
+            return null;
+        }
+        ValuePair<?> valuePair = BUFFER.stream().filter(val -> o.toString().equals(val.getValue())).findFirst().orElseGet(null);
+        if (null != valuePair) {
+            return valuePair.getText();
+        }
         return null;
     }
 }
