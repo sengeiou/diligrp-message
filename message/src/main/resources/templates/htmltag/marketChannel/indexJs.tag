@@ -114,7 +114,7 @@
      *          表单提交需执行的任务
      */
     $(function () {
-        bindFormEvent("form", "marketCode", queryGrid);
+        bindFormEvent("_form", "_marketCode", queryGrid);
         bindFormEvent("_form", "_marketCode", saveOrUpdate, function (){$('#dlg').dialog('close');});
         if (document.addEventListener) {
             document.addEventListener("keyup",getKey,false);
@@ -163,6 +163,13 @@
                     del();
                 }
             },
+            {
+                iconCls:'icon-ok',
+                text:'保存',
+                handler:function(){
+                    $("#marketChannelDetailGrid").dataGridEditor().save();
+                }
+            }
         ]
     });
         //表格仅显示下边框
@@ -170,20 +177,7 @@
         queryGrid();
     })
 
-    let flagChannelCount = 0;
-    $('.channel-table').on('click', '.btn-add-channel', function(){
-        flagChannelCount ++;
-        $('.channel-wrap').append($('.channel-wrap-tmpl').clone().find('tr').attr('flag-count', flagChannelCount).end().html()).show();
-        $(this).hide();
-        console.log($('.channel-wrap').find('.btn-add-channel:last-of-type').length)
-    })
-    $('.channel-table').on('click', '.btn-delete-channel', function(){
-        let flagCount = $(this).closest('tr').attr('flag-count');
-        $('.channel-wrap').find("[flag-count=" + flagCount + "]").remove();
-        let flagCountLast = $('.channel-table .channel-wrap tr:last-child').attr('flag-count');
-        $('.channel-table .channel-wrap tr[flag-count="'+ flagCountLast +'"]').find('.btn-add-channel').show();
 
-    })
 
 
     function initMarketChannelDetailGrid() {
