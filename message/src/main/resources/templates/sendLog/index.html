@@ -40,12 +40,6 @@
                                 - <input class="easyui-datetimebox" editable="false" name="endSendTime" id="endSendTime"
                                          labelAlign="right" style="width: 150px;"/>
                             </td>
-
-                            <!--<td style="padding:5px;">-->
-                                <!--<input class="easyui-datetimebox" name="sendTime" id="sendTime" style="width:100%" data-options="label:'发送时间:'" />-->
-
-                            <!--</td>-->
-
                             <td style="padding:5px;">
                                 <input class="easyui-textbox" name="cellphone" id="cellphone" style="width:100%" data-options="label:'电话号码:', validType:'length[0,20]'" />
 
@@ -67,7 +61,7 @@
         <!-- 表格 -->
         <div region="center" style="width:100%;" height="auto">
             <!-- =========================================================表格========================================================= -->
-            <table class="easyui-datagrid" title="SendLog列表" id="grid" fitColumns="true"
+            <table class="easyui-datagrid" title="发送记录列表" id="grid" fitColumns="true"
                    pagination="true" pageSize="30" pageNumber="1" pagePosition="top" rownumbers="true" remoteSort="false"
                    loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="false" sortName="requestCode"
                    align="center" fit="true" striped="true" toolbar="#toolbar" idField="id">
