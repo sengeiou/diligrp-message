@@ -12,20 +12,25 @@ public class SendLogVo extends SendLog {
      *
      * 权限市场
      * */
+    @Operator(Operator.IN)
     @Column(name = "`market_code`")
     private List<String> authMarkets;
 
     /**
      * 发送时间  -- 开始
      */
+    @Column(name = "`send_time`")
+    @Operator(Operator.GREAT_EQUAL_THAN)
     private Date startSendTime;
 
     /**
      * 发送时间 -- 结束
      */
+
+    @Column(name = "`send_time`")
+    @Operator(Operator.LITTLE_EQUAL_THAN)
     private Date endSendTime;
 
-    @Operator(Operator.IN)
 
     public List<String> getAuthMarkets() {
         return authMarkets;
@@ -35,8 +40,6 @@ public class SendLogVo extends SendLog {
         this.authMarkets = authMarkets;
     }
 
-    @Column(name = "`send_time`")
-    @Operator(Operator.GREAT_EQUAL_THAN)
     public Date getStartSendTime() {
         return startSendTime;
     }
@@ -45,8 +48,6 @@ public class SendLogVo extends SendLog {
         this.startSendTime = startSendTime;
     }
 
-    @Column(name = "`send_time`")
-    @Operator(Operator.LITTLE_EQUAL_THAN)
     public Date getEndSendTime() {
         return endSendTime;
     }
