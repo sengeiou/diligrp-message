@@ -34,5 +34,37 @@ public class MarketChannelEnum {
         }
     }
 
+    public enum SendStateEnum {
+
+        FAILURE(-1, "失败"),
+        SUCCESS(1, "成功"),
+        ;
+
+        private String name;
+        private Integer code;
+
+        SendStateEnum(Integer code, String name){
+            this.code = code;
+            this.name = name;
+        }
+
+        public static SendStateEnum getSendStateEnum(Integer code) {
+            for (MarketChannelEnum.SendStateEnum mce : MarketChannelEnum.SendStateEnum.values()) {
+                if (mce.getCode().equals(code)) {
+                    return mce;
+                }
+            }
+            return null;
+        }
+
+        public Integer getCode() {
+            return code;
+        }
+
+        public String getName() {
+            return name;
+        }
+    }
+
 
 }

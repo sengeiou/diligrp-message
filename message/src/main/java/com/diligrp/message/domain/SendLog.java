@@ -68,7 +68,7 @@ public class SendLog extends BaseDomain {
      * 发送状态
      */
     @Column(name = "`send_state`")
-    private Byte sendState;
+    private Integer sendState;
 
     /**
      * 发送时间
@@ -255,7 +255,7 @@ public class SendLog extends BaseDomain {
      */
     @FieldDef(label="发送状态")
     @EditMode(editor = FieldEditor.Text, required = false)
-    public Byte getSendState() {
+    public Integer getSendState() {
         return sendState;
     }
 
@@ -264,7 +264,7 @@ public class SendLog extends BaseDomain {
      *
      * @param sendState 发送状态
      */
-    public void setSendState(Byte sendState) {
+    public void setSendState(Integer sendState) {
         this.sendState = sendState;
     }
 
