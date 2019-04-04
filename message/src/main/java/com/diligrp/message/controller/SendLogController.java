@@ -2,6 +2,7 @@ package com.diligrp.message.controller;
 
 import com.dili.ss.domain.BaseOutput;
 import com.diligrp.message.domain.SendLog;
+import com.diligrp.message.domain.vo.SendLogVo;
 import com.diligrp.message.service.SendLogService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -47,8 +48,8 @@ public class SendLogController {
 		@ApiImplicitParam(name="SendLog", paramType="form", value = "SendLog的form信息", required = false, dataType = "string")
 	})
     @RequestMapping(value="/listPage.action", method = {RequestMethod.GET, RequestMethod.POST})
-    public @ResponseBody String listPage(@ModelAttribute SendLog sendLog) throws Exception {
-        return sendLogService.listEasyuiPageByExample(sendLog, true).toString();
+    public @ResponseBody String listPage(@ModelAttribute SendLogVo sendLog) throws Exception {
+        return sendLogService.findBySendLogVo(sendLog, true).toString();
     }
 
     @ApiOperation("新增SendLog")

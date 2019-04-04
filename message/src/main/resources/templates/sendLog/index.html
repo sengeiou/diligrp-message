@@ -10,58 +10,50 @@
                     <table style="padding:10px;">
                         <tr>
                             <td style="padding:5px;">
-                                <input class="easyui-textbox" name="requestCode" id="requestCode" style="width:100%" data-options="label:'此次消息请求码:', validType:'length[0,50]'" />
+                                <input class="easyui-textbox" name="marketCode" id="marketCode" style="width:100%" data-options="label:'市场:', validType:'length[0,20]'" />
+                                <#comboProvider _id="marketCode" _provider='firmProvider' _queryParams='{emptyText:"-- 全部 --"}'/>
 
                             </td>
                             <td style="padding:5px;">
-                                <input class="easyui-textbox" name="marketCode" id="marketCode" style="width:100%" data-options="label:'来源市场:', validType:'length[0,20]'" />
+                                <input class="easyui-textbox" name="systemCode" id="systemCode" style="width:100%" data-options="label:'所属系统:', validType:'length[0,20]'" />
+                                <#comboProvider _id="systemCode" _provider='firmProvider' _queryParams='{emptyText:"-- 全部 --"}'/>
 
                             </td>
                             <td style="padding:5px;">
-                                <input class="easyui-textbox" name="systemCode" id="systemCode" style="width:100%" data-options="label:'来源系统:', validType:'length[0,20]'" />
+                                <input class="easyui-textbox" name="sceneCode" id="sceneCode" style="width:100%" data-options="label:'业务场景:', validType:'length[0,50]'" />
+                                <#comboProvider _id="sceneCode" _provider='dataDictionaryValueProvider' _queryParams='{dd_code:"message_scene",emptyText:"-- 全部 --"}'/>
 
                             </td>
                             <td style="padding:5px;">
-                                <input class="easyui-textbox" name="sceneCode" id="sceneCode" style="width:100%" data-options="label:'应用场景:', validType:'length[0,50]'" />
-
-                            </td>
-                            <td style="padding:5px;">
-                                <input class="easyui-textbox" name="cellphone" id="cellphone" style="width:100%" data-options="label:'电话号码:', validType:'length[0,20]'" />
-
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="padding:5px;">
-                                <input class="easyui-datetimebox" name="receiptTime" id="receiptTime" style="width:100%" data-options="label:'接收时间:'" />
-
-                            </td>
-                            <td style="padding:5px;">
-                                <input class="easyui-textbox" name="content" id="content" style="width:100%" data-options="label:'消息内容:', validType:'length[0,255]'" />
+                                <input class="easyui-textbox" name="sendChannel" id="sendChannel" style="width:100%" data-options="label:'通道:', validType:'length[0,20]'" />
+                                <#comboProvider _id="sendChannel" _provider='marketChannelProvider' _queryParams='{emptyText:"-- 全部 --"}'/>
 
                             </td>
                             <td style="padding:5px;">
                                 <input class="easyui-textbox" name="sendState" id="sendState" style="width:100%" data-options="label:'发送状态:', validType:'length[0,3]'" />
 
                             </td>
-                            <td style="padding:5px;">
-                                <input class="easyui-datetimebox" name="sendTime" id="sendTime" style="width:100%" data-options="label:'发送时间:'" />
 
-                            </td>
                             <td style="padding:5px;">
-                                <input class="easyui-textbox" name="sendChannel" id="sendChannel" style="width:100%" data-options="label:'发送通道:', validType:'length[0,20]'" />
+                                <input class="easyui-datetimebox" name="startSendTime" editable="false" id="startSendTime"
+                                       labelAlign="right" data-options="label:' 发送时间:'" style="width: 250px;"/>
+                                - <input class="easyui-datetimebox" editable="false" name="endSendTime" id="endSendTime"
+                                         labelAlign="right" style="width: 150px;"/>
+                            </td>
 
-                            </td>
-                        </tr>
-                        <tr>
+                            <!--<td style="padding:5px;">-->
+                                <!--<input class="easyui-datetimebox" name="sendTime" id="sendTime" style="width:100%" data-options="label:'发送时间:'" />-->
+
+                            <!--</td>-->
+
                             <td style="padding:5px;">
-                                <input class="easyui-textbox" name="remarks" id="remarks" style="width:100%" data-options="label:'备注:', validType:'length[0,255]'" />
+                                <input class="easyui-textbox" name="cellphone" id="cellphone" style="width:100%" data-options="label:'电话号码:', validType:'length[0,20]'" />
 
                             </td>
                         </tr>
                         <tr>
                             <td>
-                                <a href="#" class="easyui-linkbutton" iconCls="icon-search" id="queryBtn"
-                                   onclick="queryGrid()">查询</a>
+                                <a href="#" class="easyui-linkbutton" iconCls="icon-search" id="queryBtn" onclick="queryGrid()">查询</a>
                                 <a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()">清除</a>
                             </td>
                         </tr>
@@ -78,234 +70,44 @@
             <table class="easyui-datagrid" title="SendLog列表" id="grid" fitColumns="true"
                    pagination="true" pageSize="30" pageNumber="1" pagePosition="top" rownumbers="true" remoteSort="false"
                    loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="false" sortName="requestCode"
-                   align="center" fit="true" striped="true" toolbar="#toolbar" idField="id" data-options="onDblClickRow:openUpdate, onHeaderContextMenu:headerContextMenu">
+                   align="center" fit="true" striped="true" toolbar="#toolbar" idField="id">
                 <thead>
                     <tr>
-                        <th data-options="field:'requestCode',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
-                            此次消息请求码
+                        <th width="5%" data-options="field:'marketCode', _provider:'firmProvider',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                            市场
                         </th>
-                        <th data-options="field:'marketCode',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
-                            来源市场
+                        <th width="10%" data-options="field:'systemCode', _provider:'firmProvider',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                            所属系统
                         </th>
-                        <th data-options="field:'systemCode',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
-                            来源系统
+                        <th width="10%" data-options="field:'sceneCode', _provider:'dataDictionaryValueProvider', _queryParams:{'dd_code':'message_scene'},   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                            业务场景
                         </th>
-                        <th data-options="field:'sceneCode',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
-                            应用场景
-                        </th>
-                        <th data-options="field:'cellphone',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        <th width="10%" data-options="field:'cellphone',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                             电话号码
                         </th>
-                        <th data-options="field:'receiptTime',  _provider:'datetimeProvider', sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
-                            接收时间
+                        <th width="5%" data-options="field:'sendChannel', _provider:'marketChannelProvider',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                            通道
                         </th>
-                        <th data-options="field:'content',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        <th width="40%" data-options="field:'content',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                             消息内容
                         </th>
-                        <th data-options="field:'sendState',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        <th width="10%" data-options="field:'sendState',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                             发送状态
                         </th>
-                        <th data-options="field:'sendTime',  _provider:'datetimeProvider', sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        <th width="10%" data-options="field:'sendTime',  _provider:'datetimeProvider', sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                             发送时间
-                        </th>
-                        <th data-options="field:'sendChannel',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
-                            发送通道
-                        </th>
-                        <th data-options="field:'remarks',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
-                            备注
                         </th>
                     </tr>
                 </thead>
             </table>
             <!-- datagrid工具栏 -->
-            <div id="toolbar" style="padding:2px 5px;">
-                <a href="#" class="easyui-linkbutton" iconCls="icon-add" onclick="openInsert()" plain="true"></a>
-                <a href="#" class="easyui-linkbutton" iconCls="icon-edit" onclick="openUpdate()" plain="true"></a>
-                <a href="#" class="easyui-linkbutton" iconCls="icon-remove" onclick="del()" plain="true"></a>
-                <a href="#" class="easyui-linkbutton" iconCls="icon-export" onclick="doExport('grid')" plain="true"></a>
-                <div style="float:right">
-                边框显示:<select onchange="changeBorder('grid',this.value)">
-                    <option value="lines-both">全边框</option>
-                    <option value="lines-no">无边框</option>
-                    <option value="lines-right">右边框</option>
-                    <option value="lines-bottom">下边框</option>
-                </select>
-                行条纹:<input type="checkbox" checked="checked" onclick="$('#grid').datagrid({striped:$(this).is(':checked')})">
-                </div>
-            </div>
         </div>
     </div>
-    <!-- 隐藏编辑框 -->
-    <div id="dlg" class="easyui-dialog" resizable="false" constrain="true" shadow="true" draggable="false" title="SendLog信息" style="padding:20px" modal="true" border="thin" closed="true"
-         data-options="
-				iconCls: 'icon-save',
-				height: 480,
-				buttons: [{
-					text:'确认',
-					iconCls:'icon-ok',
-					handler:saveOrUpdate
-				},{
-					text:'取消',
-                    iconCls:'icon-cancel',
-					handler:function(){
-						$('#dlg').dialog('close');
-					}
-				}]
-			">
-    <form id="_form" class="easyui-form" method="post" fit="true">
-        <input name="_id" id="_id" type="hidden">
-        <table width="360px">
-            <tr>
-                <td style="padding:5px;">
-                    <input class="easyui-textbox" name="_requestCode" id="_requestCode" style="width:100%" data-options="label:'此次消息请求码:', validType:'length[0,50]'" />
-                </td>
-            </tr>
-            <tr>
-                <td style="padding:5px;">
-                    <input class="easyui-textbox" name="_marketCode" id="_marketCode" style="width:100%" data-options="label:'来源市场:', validType:'length[0,20]'" />
-                </td>
-            </tr>
-            <tr>
-                <td style="padding:5px;">
-                    <input class="easyui-textbox" name="_systemCode" id="_systemCode" style="width:100%" data-options="label:'来源系统:', validType:'length[0,20]'" />
-                </td>
-            </tr>
-            <tr>
-                <td style="padding:5px;">
-                    <input class="easyui-textbox" name="_sceneCode" id="_sceneCode" style="width:100%" data-options="label:'应用场景:', validType:'length[0,50]'" />
-                </td>
-            </tr>
-            <tr>
-                <td style="padding:5px;">
-                    <input class="easyui-textbox" name="_cellphone" id="_cellphone" style="width:100%" data-options="label:'电话号码:', validType:'length[0,20]'" />
-                </td>
-            </tr>
-            <tr>
-                <td style="padding:5px;">
-                    <input class="easyui-datetimebox" name="_receiptTime" id="_receiptTime" style="width:100%" data-options="label:'接收时间:'" />
-                </td>
-            </tr>
-            <tr>
-                <td style="padding:5px;">
-                    <input class="easyui-textbox" name="_content" id="_content" style="width:100%" data-options="label:'消息内容:', validType:'length[0,255]'" />
-                </td>
-            </tr>
-            <tr>
-                <td style="padding:5px;">
-                    <input class="easyui-textbox" name="_sendState" id="_sendState" style="width:100%" data-options="label:'发送状态:', validType:'length[0,3]'" />
-                </td>
-            </tr>
-            <tr>
-                <td style="padding:5px;">
-                    <input class="easyui-datetimebox" name="_sendTime" id="_sendTime" style="width:100%" data-options="label:'发送时间:'" />
-                </td>
-            </tr>
-            <tr>
-                <td style="padding:5px;">
-                    <input class="easyui-textbox" name="_sendChannel" id="_sendChannel" style="width:100%" data-options="label:'发送通道:', validType:'length[0,20]'" />
-                </td>
-            </tr>
-            <tr>
-                <td style="padding:5px;">
-                    <input class="easyui-textbox" name="_remarks" id="_remarks" style="width:100%" data-options="label:'备注:', validType:'length[0,255]'" />
-                </td>
-            </tr>
-        </table>
-    </form>
 
-    </div>
     <!-- ====================================================================================================================== -->
     <!-- style & script 分隔线 -->
     <!-- ====================================================================================================================== -->
     <script type="text/javascript">
-        //打开新增窗口
-        function openInsert(){
-            $('#dlg').dialog('open');
-            $('#dlg').dialog('center');
-            $('#_form').form('clear');
-            formFocus("_form", "_requestCode");
-        }
-
-        //打开修改窗口
-        function openUpdate(){
-            var selected = $("#grid").datagrid("getSelected");
-            if (null == selected) {
-                $.messager.alert('警告','请选中一条数据');
-                return;
-            }
-            $('#dlg').dialog('open');
-            $('#dlg').dialog('center');
-            formFocus("_form", "_requestCode");
-            var formData = $.extend({},selected);
-            formData = addKeyStartWith(getOriginalData(formData),"_");
-            $('#_form').form('load', formData);
-        }
-
-        function saveOrUpdate(){
-            if(!$('#_form').form("validate")){
-                return;
-            }
-            var _formData = removeKeyStartWith($("#_form").serializeObject(),"_");
-            var _url = null;
-            //没有id就新增
-            if(_formData.id == null || _formData.id==""){
-                _url = "${contextPath}/sendLog/insert.action";
-            }else{//有id就修改
-                _url = "${contextPath}/sendLog/update.action";
-            }
-            $.ajax({
-                type: "POST",
-                url: _url,
-                data: _formData,
-                processData:true,
-                dataType: "json",
-                async : true,
-                success: function (data) {
-                    if(data.code=="200"){
-                        $("#grid").datagrid("reload");
-                        $('#dlg').dialog('close');
-                    }else{
-                        $.messager.alert('错误',data.result);
-                    }
-                },
-                error: function(){
-                    $.messager.alert('错误','远程访问失败');
-                }
-            });
-        }
-
-        //根据主键删除
-        function del() {
-            var selected = $("#grid").datagrid("getSelected");
-            if (null == selected) {
-                $.messager.alert('警告','请选中一条数据');
-                return;
-            }
-            $.messager.confirm('确认','您确认想要删除记录吗？',function(r){
-                if (r){
-                    $.ajax({
-                        type: "POST",
-                        url: "${contextPath}/sendLog/delete.action",
-                        data: {id:selected.id},
-                        processData:true,
-                        dataType: "json",
-                        async : true,
-                        success: function (data) {
-                            if(data.code=="200"){
-                                $("#grid").datagrid("reload");
-                                $('#dlg').dialog('close');
-                            }else{
-                                $.messager.alert('错误',data.result);
-                            }
-                        },
-                        error: function(){
-                            $.messager.alert('错误','远程访问失败');
-                        }
-                    });
-                }
-            });
-
-        }
         //表格查询
         function queryGrid() {
             var opts = $("#grid").datagrid("options");
@@ -318,55 +120,9 @@
             $("#grid").datagrid("load", bindGridMeta2Form("grid", "form"));
         }
 
-
         //清空表单
         function clearForm() {
             $('#form').form('clear');
         }
-
-        //表格表头右键菜单
-        function headerContextMenu(e, field){
-            e.preventDefault();
-            if (!cmenu){
-                createColumnMenu("grid");
-            }
-            cmenu.menu('show', {
-                left:e.pageX,
-                top:e.pageY
-            });
-        }
-
-        //全局按键事件
-        function getKey(e){
-            e = e || window.event;
-            var keycode = e.which ? e.which : e.keyCode;
-            if(keycode == 46){ //如果按下删除键
-                var selected = $("#grid").datagrid("getSelected");
-                if(selected && selected!= null){
-                    del();
-                }
-            }
-        }
-
-        /**
-         * 绑定页面回车事件，以及初始化页面时的光标定位
-         * @formId
-         *          表单ID
-         * @elementName
-         *          光标定位在指点表单元素的name属性的值
-         * @submitFun
-         *          表单提交需执行的任务
-         */
-        $(function () {
-            bindFormEvent("form", "requestCode", queryGrid);
-            bindFormEvent("_form", "_requestCode", saveOrUpdate, function (){$('#dlg').dialog('close');});
-            if (document.addEventListener) {
-                document.addEventListener("keyup",getKey,false);
-            } else if (document.attachEvent) {
-                document.attachEvent("onkeyup",getKey);
-            } else {
-                document.onkeyup = getKey;
-            }
-        })
     </script>
 </#body>

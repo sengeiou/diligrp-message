@@ -73,7 +73,13 @@
       </foreach>
     </if>
     group by mc.market_code
-    order by ${sort} ${order}
+
+    <if test="sort !=null">
+      order by ${sort}
+      <if test="order !=null">
+        ${order}
+      </if>
+    </if>
   </select>
 
 </mapper>

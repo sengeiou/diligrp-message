@@ -76,4 +76,55 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+
+  <!--根据用户输入查询所有登录日志 -->
+  <select id="findBySendLogVo" parameterType="com.diligrp.message.domain.vo.SendLogVo" resultMap="BaseResultMap">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    select
+    <include refid="Base_Column_List" />
+    from message_send_log
+    WHERE 1=1
+    <if test="systemCode !=null and systemCode !=''">
+      AND system_code =#{systemCode}
+    </if>
+    <if test="marketCode !=null and marketCode !=''">
+      AND market_code =#{marketCode}
+    </if>
+    <if test="sceneCode !=null and sceneCode !=''">
+      AND scene_code =#{sceneCode}
+    </if>
+    <if test="sendChannel !=null and sendChannel !=''">
+      AND send_channel =#{sendChannel}
+    </if>
+    <if test="sendState !=null">
+      AND send_state =#{sendState}
+    </if>
+    <if test="startSendTime !=null">
+      AND send_time >=#{startSendTime}
+    </if>
+    <if test="endSendTime !=null">
+      AND #{endSendTime}>=send_time
+    </if>
+    <if test="cellphone !=null and cellphone !=''">
+      AND `cellphone`=#{cellphone}
+    </if>
+    <if test="authMarkets != null and authMarkets.size()>0">
+      and market_code in
+      <foreach collection="authMarkets" item="item" open="(" close=")" separator="," >
+        #{item}
+      </foreach>
+    </if>
+
+    <if test="sort !=null">
+      ORDER BY `${sort}`
+      <if test="order !=null">
+        ${order}
+      </if>
+    </if>
+
+  </select>
+
 </mapper>
