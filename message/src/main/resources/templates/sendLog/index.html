@@ -10,27 +10,27 @@
                     <table style="padding:10px;">
                         <tr>
                             <td style="padding:5px;">
-                                <input class="easyui-textbox" name="marketCode" id="marketCode" style="width:100%" data-options="label:'市场:', validType:'length[0,20]'" />
+                                <input name="marketCode" id="marketCode" style="width:100%" data-options="label:'市场:', validType:'length[0,20]'" />
                                 <#comboProvider _id="marketCode" _provider='firmProvider' _queryParams='{emptyText:"-- 全部 --"}'/>
 
                             </td>
                             <td style="padding:5px;">
-                                <input class="easyui-textbox" name="systemCode" id="systemCode" style="width:100%" data-options="label:'所属系统:', validType:'length[0,20]'" />
+                                <input name="systemCode" id="systemCode" style="width:100%" data-options="label:'所属系统:', validType:'length[0,20]'" />
                                 <#comboProvider _id="systemCode" _provider='firmProvider' _queryParams='{emptyText:"-- 全部 --"}'/>
 
                             </td>
                             <td style="padding:5px;">
-                                <input class="easyui-textbox" name="sceneCode" id="sceneCode" style="width:100%" data-options="label:'业务场景:', validType:'length[0,50]'" />
+                                <input name="sceneCode" id="sceneCode" style="width:100%" data-options="label:'业务场景:', validType:'length[0,50]'" />
                                 <#comboProvider _id="sceneCode" _provider='dataDictionaryValueProvider' _queryParams='{dd_code:"message_scene",emptyText:"-- 全部 --"}'/>
 
                             </td>
                             <td style="padding:5px;">
-                                <input class="easyui-textbox" name="sendChannel" id="sendChannel" style="width:100%" data-options="label:'通道:', validType:'length[0,20]'" />
+                                <input name="sendChannel" id="sendChannel" style="width:100%" data-options="label:'通道:', validType:'length[0,20]'" />
                                 <#comboProvider _id="sendChannel" _provider='marketChannelProvider' _queryParams='{emptyText:"-- 全部 --"}'/>
 
                             </td>
                             <td style="padding:5px;">
-                                <input class="easyui-textbox" name="sendState" id="sendState" style="width:100%" data-options="label:'发送状态:', validType:'length[0,20]'" />
+                                <input name="sendState" id="sendState" style="width:100%" data-options="label:'发送状态:', validType:'length[0,20]'" />
                                 <#comboProvider _id="sendState" _provider='sendStateProvider' _queryParams='{emptyText:"-- 全部 --"}'/>
 
                             </td>

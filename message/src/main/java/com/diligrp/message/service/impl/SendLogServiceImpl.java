@@ -30,15 +30,14 @@ public class SendLogServiceImpl extends BaseServiceImpl<SendLog, Long> implement
 
     @Override
     public EasyuiPageOutput findBySendLogVo(SendLogVo sendLogVo, boolean useProvider) throws Exception{
-        if (sendLogVo.getRows() != null && sendLogVo.getRows().intValue() >= 1) {
-            PageHelper.startPage(sendLogVo.getPage().intValue(), sendLogVo.getRows().intValue());
-        }
+//        if (sendLogVo.getRows() != null && sendLogVo.getRows().intValue() >= 1) {
+//            PageHelper.startPage(sendLogVo.getPage().intValue(), sendLogVo.getRows().intValue());
+//        }
         sendLogVo.setAuthMarkets(firmService.getCurrentUserFirmCodes());
-        sendLogVo.setOrder("desc");
-        sendLogVo.setSort("id");
-        List list = this.getActualDao().findBySendLogVo(sendLogVo);
-        long total = list instanceof Page ? ((Page) list).getTotal() : (long) list.size();
-        List results = useProvider ? ValueProviderUtils.buildDataByProvider(sendLogVo, list) : list;
-        return new EasyuiPageOutput(Integer.valueOf(Integer.parseInt(String.valueOf(total))), results);
+//        List list = this.getActualDao().findBySendLogVo(sendLogVo);
+//        long total = list instanceof Page ? ((Page) list).getTotal() : (long) list.size();
+//        List results = useProvider ? ValueProviderUtils.buildDataByProvider(sendLogVo, list) : list;
+//        return new EasyuiPageOutput(Integer.valueOf(Integer.parseInt(String.valueOf(total))), results);
+        return listEasyuiPageByExample(sendLogVo, true);
     }
 }
