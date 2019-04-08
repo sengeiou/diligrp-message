@@ -26,6 +26,6 @@ public class SendLogServiceImpl extends BaseServiceImpl<SendLog, Long> implement
     @Override
     public EasyuiPageOutput findBySendLogVo(SendLogVo sendLogVo, boolean useProvider) throws Exception{
         sendLogVo.setAuthMarkets(firmService.getCurrentUserFirmCodes());
-        return listEasyuiPageByExample(sendLogVo, true);
+        return listEasyuiPageByExample(sendLogVo, useProvider);
     }
 }

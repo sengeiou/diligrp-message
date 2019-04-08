@@ -2,6 +2,7 @@ package com.diligrp.message.controller;
 
 import com.dili.ss.domain.BaseOutput;
 import com.diligrp.message.domain.Whitelist;
+import com.diligrp.message.domain.vo.WhitelistVo;
 import com.diligrp.message.service.WhitelistService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -47,8 +48,8 @@ public class WhitelistController {
 		@ApiImplicitParam(name="Whitelist", paramType="form", value = "Whitelist的form信息", required = false, dataType = "string")
 	})
     @RequestMapping(value="/listPage.action", method = {RequestMethod.GET, RequestMethod.POST})
-    public @ResponseBody String listPage(@ModelAttribute Whitelist whitelist) throws Exception {
-        return whitelistService.listEasyuiPageByExample(whitelist, true).toString();
+    public @ResponseBody String listPage(@ModelAttribute WhitelistVo whitelist) throws Exception {
+        return whitelistService.findByWhitelistVo(whitelist, true).toString();
     }
 
     @ApiOperation("新增Whitelist")

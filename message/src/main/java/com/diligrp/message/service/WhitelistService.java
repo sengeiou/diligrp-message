@@ -1,11 +1,20 @@
 package com.diligrp.message.service;
 
 import com.dili.ss.base.BaseService;
+import com.dili.ss.domain.EasyuiPageOutput;
 import com.diligrp.message.domain.Whitelist;
+import com.diligrp.message.domain.vo.WhitelistVo;
 
 /**
  * 由MyBatis Generator工具自动生成
  * This file was generated on 2019-03-31 10:54:30.
  */
 public interface WhitelistService extends BaseService<Whitelist, Long> {
+
+    /**
+     * 查询短信发送记录
+     * @param whitelistVo 查询vo
+     * @param useProvider 是否使用provider解析
+     * */
+    EasyuiPageOutput findByWhitelistVo(WhitelistVo whitelistVo, boolean useProvider) throws Exception;
 }
