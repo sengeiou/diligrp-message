@@ -1,6 +1,6 @@
 package com.diligrp.message.common.enums;
 
-public class MarketChannelEnum {
+public class MessageEnum {
 
     public enum ChannelEnum {
 
@@ -17,7 +17,7 @@ public class MarketChannelEnum {
         }
 
         public static ChannelEnum getChannelEnum(String code) {
-            for (MarketChannelEnum.ChannelEnum mc : MarketChannelEnum.ChannelEnum.values()) {
+            for (MessageEnum.ChannelEnum mc : MessageEnum.ChannelEnum.values()) {
                 if (mc.getCode().equals(code)) {
                     return mc;
                 }
@@ -49,7 +49,39 @@ public class MarketChannelEnum {
         }
 
         public static SendStateEnum getSendStateEnum(Integer code) {
-            for (MarketChannelEnum.SendStateEnum mce : MarketChannelEnum.SendStateEnum.values()) {
+            for (MessageEnum.SendStateEnum mce : MessageEnum.SendStateEnum.values()) {
+                if (mce.getCode().equals(code)) {
+                    return mce;
+                }
+            }
+            return null;
+        }
+
+        public Integer getCode() {
+            return code;
+        }
+
+        public String getName() {
+            return name;
+        }
+    }
+
+    public enum MessageSourceEnum {
+
+        SYSTEM(10, "系统加入"),
+        MANUAL(20, "手动添加"),
+        ;
+
+        private String name;
+        private Integer code;
+
+        MessageSourceEnum(Integer code, String name){
+            this.code = code;
+            this.name = name;
+        }
+
+        public static MessageSourceEnum getMessageSourceEnum(Integer code) {
+            for (MessageEnum.MessageSourceEnum mce : MessageEnum.MessageSourceEnum.values()) {
                 if (mce.getCode().equals(code)) {
                     return mce;
                 }

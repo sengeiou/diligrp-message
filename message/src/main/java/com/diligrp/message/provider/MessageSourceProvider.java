@@ -14,11 +14,11 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Component
-public class SendStateProvider implements ValueProvider {
+public class MessageSourceProvider implements ValueProvider {
     private static final List<ValuePair<?>> BUFFER = new ArrayList<>();
 
     static {
-        BUFFER.addAll(Stream.of(MessageEnum.SendStateEnum.values())
+        BUFFER.addAll(Stream.of(MessageEnum.MessageSourceEnum.values())
                 .map(e -> new ValuePairImpl<>(e.getName(), e.getCode()))
                 .collect(Collectors.toList()));
     }

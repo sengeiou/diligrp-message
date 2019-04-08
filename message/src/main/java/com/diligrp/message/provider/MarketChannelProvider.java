@@ -4,7 +4,7 @@ import com.dili.ss.metadata.FieldMeta;
 import com.dili.ss.metadata.ValuePair;
 import com.dili.ss.metadata.ValuePairImpl;
 import com.dili.ss.metadata.ValueProvider;
-import com.diligrp.message.common.enums.MarketChannelEnum;
+import com.diligrp.message.common.enums.MessageEnum;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -18,7 +18,7 @@ public class MarketChannelProvider implements ValueProvider {
     private static final List<ValuePair<?>> BUFFER = new ArrayList<>();
 
     static {
-        BUFFER.addAll(Stream.of(MarketChannelEnum.ChannelEnum.values())
+        BUFFER.addAll(Stream.of(MessageEnum.ChannelEnum.values())
                 .map(e -> new ValuePairImpl<>(e.getName(), e.getCode()))
                 .collect(Collectors.toList()));
     }
