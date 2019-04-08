@@ -1,17 +1,14 @@
 package com.diligrp.message.domain.vo;
 
 import com.dili.ss.domain.annotation.Operator;
-import com.dili.ss.dto.IMybatisForceParams;
 import com.diligrp.message.domain.Whitelist;
 
 import javax.persistence.Column;
 import javax.persistence.Transient;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
-public class WhitelistVo extends Whitelist implements IMybatisForceParams {
+public class WhitelistVo extends Whitelist {
     /**
      *
      * 权限市场
@@ -41,27 +38,6 @@ public class WhitelistVo extends Whitelist implements IMybatisForceParams {
      */
     @Transient
     private String keywords;
-
-
-    /**
-     *
-     * 以下字段时实现接口方法
-     * */
-    @Transient
-    private String whereSuffixSql;
-
-    @Transient
-    private Map<String, Object> setForceParams;
-
-    @Transient
-    private Map<String, Object> insertForceParams;
-
-    @Transient
-    private Set<String> selectColumns;
-
-    @Transient
-    private Boolean checkInjection;
-
 
     public String getKeywords() {
         return keywords;
@@ -95,54 +71,4 @@ public class WhitelistVo extends Whitelist implements IMybatisForceParams {
         this.endTime = endTime;
     }
 
-
-    @Override
-    public Map<String, Object> getSetForceParams() {
-        return setForceParams;
-    }
-
-    @Override
-    public void setSetForceParams(Map<String, Object> setForceParams) {
-        this.setForceParams = setForceParams;
-    }
-
-    @Override
-    public Map<String, Object> getInsertForceParams() {
-        return insertForceParams;
-    }
-
-    @Override
-    public void setInsertForceParams(Map<String, Object> insertForceParams) {
-        this.insertForceParams = insertForceParams;
-    }
-
-    @Override
-    public Set<String> getSelectColumns() {
-        return selectColumns;
-    }
-
-    @Override
-    public void setSelectColumns(Set<String> selectColumns) {
-        this.selectColumns = selectColumns;
-    }
-
-    @Override
-    public Boolean getCheckInjection() {
-        return checkInjection;
-    }
-
-    @Override
-    public void setCheckInjection(Boolean checkInjection) {
-        this.checkInjection = checkInjection;
-    }
-
-    @Override
-    public String getWhereSuffixSql() {
-        return whereSuffixSql;
-    }
-
-    @Override
-    public void setWhereSuffixSql(String whereSuffixSql) {
-        this.whereSuffixSql = whereSuffixSql;
-    }
 }
