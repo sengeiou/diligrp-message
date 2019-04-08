@@ -3,15 +3,18 @@ package com.diligrp.message.service.impl;
 import com.dili.ss.base.BaseServiceImpl;
 import com.dili.ss.domain.EasyuiPageOutput;
 import com.dili.ss.dto.IDTO;
+import com.dili.ss.util.BeanConver;
+import com.diligrp.message.common.enums.MessageEnum;
 import com.diligrp.message.domain.Whitelist;
 import com.diligrp.message.domain.vo.WhitelistVo;
 import com.diligrp.message.mapper.WhitelistMapper;
 import com.diligrp.message.service.WhitelistService;
 import com.diligrp.message.service.remote.FirmService;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Calendar;
+import java.util.*;
 
 /**
  * 由MyBatis Generator工具自动生成
@@ -28,6 +31,7 @@ public class WhitelistServiceImpl extends BaseServiceImpl<Whitelist, Long> imple
 
     @Override
     public EasyuiPageOutput findByWhitelistVo(WhitelistVo whitelistVo, boolean useProvider) throws Exception{
+        whitelistVo.setDeleted(MessageEnum.DeletedEnum.NO.getCode());
         if (whitelistVo.getKeywords() != null){
             whitelistVo.setMetadata(IDTO.AND_CONDITION_EXPR, "(customer_name="+whitelistVo.getKeywords()+" or cellphone ="+whitelistVo.getKeywords()+")");
         }
@@ -40,4 +44,25 @@ public class WhitelistServiceImpl extends BaseServiceImpl<Whitelist, Long> imple
         whitelistVo.setAuthMarkets(firmService.getCurrentUserFirmCodes());
         return listEasyuiPageByExample(whitelistVo, useProvider);
     }
+
+
+    public boolean checkDate(Whitelist whitelist) {
+        WhitelistVo vo = new WhitelistVo();
+        vo.setDeleted(MessageEnum.DeletedEnum.NO.getCode());
+        vo.setAuthMarkets(firmService.getCurrentUserFirmCodes());
+        vo.setCellphone(whitelist.getCellphone());
+        vo.setMarketCode(whitelist.getMarketCode());
+        List<Whitelist> list = this.listByExample(vo);
+        if (CollectionUtils.isEmpty(list)){
+            return false;
+        }
+        for (int i = 0; i < list.size(); i++){
+            if (whitelist.getStartDate().before(list.get(i).getStartDate()) || whitelist.getEndDate().after(list.get(i).getEndDate())){
+                return false;
+            }
+        }
+
+        return true;
+    }
+
 }

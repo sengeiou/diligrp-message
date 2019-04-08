@@ -62,7 +62,7 @@ public class Whitelist extends BaseDomain {
      * 是否删除(1-是;0-否)
      */
     @Column(name = "`deleted`")
-    private Byte deleted;
+    private Integer deleted;
 
     /**
      * 创建时间
@@ -222,8 +222,8 @@ public class Whitelist extends BaseDomain {
      * @return deleted - 是否删除(1-是;0-否)
      */
     @FieldDef(label="是否删除(1-是;0-否)")
-    @EditMode(editor = FieldEditor.Text, required = false)
-    public Byte getDeleted() {
+    @EditMode(editor = FieldEditor.Number, required = false)
+    public Integer getDeleted() {
         return deleted;
     }
 
@@ -232,7 +232,7 @@ public class Whitelist extends BaseDomain {
      *
      * @param deleted 是否删除(1-是;0-否)
      */
-    public void setDeleted(Byte deleted) {
+    public void setDeleted(Integer deleted) {
         this.deleted = deleted;
     }
 

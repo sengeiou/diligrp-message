@@ -17,4 +17,10 @@ public interface WhitelistService extends BaseService<Whitelist, Long> {
      * @param useProvider 是否使用provider解析
      * */
     EasyuiPageOutput findByWhitelistVo(WhitelistVo whitelistVo, boolean useProvider) throws Exception;
+    /**
+     * 验证白名单用户时间是否包含在已有时间区间
+     * @param whitelist 新增对象
+     * @return false -- 未包含在已有时间区间； true --- 包含在已有时间区间内
+     * */
+    boolean checkDate(Whitelist whitelist);
 }

@@ -98,5 +98,37 @@ public class MessageEnum {
         }
     }
 
+    public enum DeletedEnum {
+
+        NO(0, "否"),
+        YES(1, "是"),
+        ;
+
+        private String name;
+        private Integer code;
+
+        DeletedEnum(Integer code, String name){
+            this.code = code;
+            this.name = name;
+        }
+
+        public static DeletedEnum getDeletedEnum(Integer code) {
+            for (MessageEnum.DeletedEnum mce : MessageEnum.DeletedEnum.values()) {
+                if (mce.getCode().equals(code)) {
+                    return mce;
+                }
+            }
+            return null;
+        }
+
+        public Integer getCode() {
+            return code;
+        }
+
+        public String getName() {
+            return name;
+        }
+    }
+
 
 }
