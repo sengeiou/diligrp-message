@@ -3,7 +3,6 @@ package com.diligrp.message.service.impl;
 import com.dili.ss.base.BaseServiceImpl;
 import com.dili.ss.domain.EasyuiPageOutput;
 import com.dili.ss.dto.IDTO;
-import com.dili.ss.util.BeanConver;
 import com.diligrp.message.common.enums.MessageEnum;
 import com.diligrp.message.domain.Whitelist;
 import com.diligrp.message.domain.vo.WhitelistVo;
@@ -14,7 +13,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.List;
 
 /**
  * 由MyBatis Generator工具自动生成
