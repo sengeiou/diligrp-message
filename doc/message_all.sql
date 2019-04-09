@@ -65,8 +65,8 @@ create table message_market_channel
    market_code          varchar(20) not null comment '市场编码',
    channel              varchar(20) comment '通道编码',
    signature            varchar(50) comment '通道签名',
-   account_no           varchar(50) comment '通道账号',
-   password             varchar(255) comment '通道密码',
+   access_key           varchar(50) comment '通道账号',
+   secret               varchar(255) comment '通道密码',
    created              datetime not null default current_timestamp comment '创建时间',
    modified             datetime not null default current_timestamp on update current_timestamp comment '修改时间',
    primary key (id)
@@ -135,6 +135,7 @@ create table message_triggers_template
 (
    id                   bigint not null auto_increment comment 'ID',
    trigger_code         varchar(50) not null comment '消息触发点',
+   market_chanel_ids    varchar(255) comment '市场通道ID(如果多个，用#号隔开)',
    channel              varchar(20) comment '模板通道',
    template_name        varchar(50) comment '模板名称',
    template_code        varchar(20) comment '模板编码',
@@ -193,10 +194,13 @@ create table message_send_log
    scene_code           varchar(50) comment '应用场景',
    cellphone            varchar(20) comment '电话号码',
    receipt_time         datetime comment '接收时间',
+   parameters           json comment '请求参数',
    content              varchar(255) comment '消息内容',
    send_state           tinyint comment '发送状态',
    send_time            datetime comment '发送时间',
    send_channel         varchar(20) comment '发送通道',
+   request_id           varchar(50) comment '请求ID',
+   biz_id               varchar(50) comment '发送回执ID',
    remarks              varchar(255) comment '备注',
    primary key (id)
 );

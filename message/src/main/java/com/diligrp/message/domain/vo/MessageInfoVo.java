@@ -1,5 +1,8 @@
 package com.diligrp.message.domain.vo;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -36,6 +39,11 @@ public class MessageInfoVo {
      */
     private String cellphone;
 
+    /**
+     * json格式的参数
+     */
+    private JSONObject parameters;
+
     public String getMarketCode() {
         return marketCode;
     }
@@ -59,5 +67,11 @@ public class MessageInfoVo {
     }
     public void setCellphone(String cellphone) {
         this.cellphone = cellphone;
+    }
+    public JSONObject getParameters() {
+        return parameters;
+    }
+    public void setParameters(JSONObject parameters) {
+        this.parameters = parameters;
     }
 }

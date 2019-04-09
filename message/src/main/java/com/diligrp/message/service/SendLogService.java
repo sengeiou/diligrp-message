@@ -8,8 +8,15 @@ import com.diligrp.message.domain.vo.SendLogVo;
 /**
  * 由MyBatis Generator工具自动生成
  * This file was generated on 2019-04-03 15:57:14.
+ * @author yuehongbo
  */
 public interface SendLogService extends BaseService<SendLog, Long> {
+
+    /**
+     * 保存发送信息
+     * @param sendLog
+     */
+    void save(SendLog sendLog);
 
     /**
      * 查询短信发送记录

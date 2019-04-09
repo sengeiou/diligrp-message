@@ -59,6 +59,12 @@ public class SendLog extends BaseDomain {
     private Date receiptTime;
 
     /**
+     * 请求参数
+     */
+    @Column(name = "`parameters`")
+    private String parameters;
+
+    /**
      * 消息内容
      */
     @Column(name = "`content`")
@@ -83,6 +89,18 @@ public class SendLog extends BaseDomain {
     private String sendChannel;
 
     /**
+     * 请求ID
+     */
+    @Column(name = "`request_id`")
+    private String requestId;
+
+    /**
+     * 回执ID
+     */
+    @Column(name = "`biz_Id`")
+    private String bizId;
+
+    /**
      * 备注
      */
     @Column(name = "`remarks`")
@@ -95,6 +113,7 @@ public class SendLog extends BaseDomain {
      */
     @FieldDef(label="ID")
     @EditMode(editor = FieldEditor.Number, required = true)
+    @Override
     public Long getId() {
         return id;
     }
@@ -104,6 +123,7 @@ public class SendLog extends BaseDomain {
      *
      * @param id ID
      */
+    @Override
     public void setId(Long id) {
         this.id = id;
     }
@@ -228,6 +248,14 @@ public class SendLog extends BaseDomain {
         this.receiptTime = receiptTime;
     }
 
+    public String getParameters() {
+        return parameters;
+    }
+
+    public void setParameters(String parameters) {
+        this.parameters = parameters;
+    }
+
     /**
      * 获取消息内容
      *
@@ -306,6 +334,19 @@ public class SendLog extends BaseDomain {
      */
     public void setSendChannel(String sendChannel) {
         this.sendChannel = sendChannel;
+    }
+
+    public String getRequestId() {
+        return requestId;
+    }
+    public void setRequestId(String requestId) {
+        this.requestId = requestId;
+    }
+    public String getBizId() {
+        return bizId;
+    }
+    public void setBizId(String bizId) {
+        this.bizId = bizId;
     }
 
     /**

@@ -7,6 +7,7 @@
         -->
         <id column="id" jdbcType="BIGINT" property="id"/>
         <result column="trigger_code" jdbcType="VARCHAR" property="triggerCode"/>
+        <result column="market_chanel_id" property="marketChanelId" />
         <result column="channel" jdbcType="VARCHAR" property="channel"/>
         <result column="template_name" jdbcType="VARCHAR" property="templateName"/>
         <result column="template_code" jdbcType="VARCHAR" property="templateCode"/>
@@ -18,7 +19,7 @@
         <!--
           WARNING - @mbg.generated
         -->
-        id, trigger_code, channel, template_name, template_code, template_content, created,
+        id, trigger_code, market_chanel_id ,channel, template_name, template_code, template_content, created,
         modified
     </sql>
     <select id="selectByTriggerCode" parameterType="java.lang.String" resultMap="BaseResultMap">

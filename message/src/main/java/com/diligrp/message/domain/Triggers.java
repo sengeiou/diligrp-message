@@ -50,13 +50,13 @@ public class Triggers extends BaseDomain {
      * 是否启用白名单
      */
     @Column(name = "`whitelist`")
-    private Byte whitelist;
+    private Boolean whitelist;
 
     /**
      * 是否启用
      */
     @Column(name = "`enabled`")
-    private Byte enabled;
+    private Integer enabled;
 
     /**
      * 创建时间
@@ -177,7 +177,7 @@ public class Triggers extends BaseDomain {
      */
     @FieldDef(label="是否启用白名单")
     @EditMode(editor = FieldEditor.Text, required = false)
-    public Byte getWhitelist() {
+    public Boolean getWhitelist() {
         return whitelist;
     }
 
@@ -186,7 +186,7 @@ public class Triggers extends BaseDomain {
      *
      * @param whitelist 是否启用白名单
      */
-    public void setWhitelist(Byte whitelist) {
+    public void setWhitelist(Boolean whitelist) {
         this.whitelist = whitelist;
     }
 
@@ -197,7 +197,7 @@ public class Triggers extends BaseDomain {
      */
     @FieldDef(label="是否启用")
     @EditMode(editor = FieldEditor.Text, required = false)
-    public Byte getEnabled() {
+    public Integer getEnabled() {
         return enabled;
     }
 
@@ -206,7 +206,7 @@ public class Triggers extends BaseDomain {
      *
      * @param enabled 是否启用
      */
-    public void setEnabled(Byte enabled) {
+    public void setEnabled(Integer enabled) {
         this.enabled = enabled;
     }
 

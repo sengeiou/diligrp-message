@@ -4,13 +4,15 @@ import com.dili.ss.domain.BaseDomain;
 import com.dili.ss.metadata.FieldEditor;
 import com.dili.ss.metadata.annotation.EditMode;
 import com.dili.ss.metadata.annotation.FieldDef;
-import java.util.Date;
+
 import javax.persistence.*;
+import java.util.Date;
 
 /**
  * 由MyBatis Generator工具自动生成
  * 
  * This file was generated on 2019-04-02 10:22:23.
+ * @author yuehongbo
  */
 @Table(name = "`message_triggers_template`")
 public class TriggersTemplate extends BaseDomain {
@@ -27,6 +29,12 @@ public class TriggersTemplate extends BaseDomain {
      */
     @Column(name = "`trigger_code`")
     private String triggerCode;
+
+    /**
+     * 市场通道ID(如果有多个，用#号隔开)
+     */
+    @Column(name = "`market_chanel_ids`")
+    private String marketChanelIds;
 
     /**
      * 模板通道
@@ -71,6 +79,7 @@ public class TriggersTemplate extends BaseDomain {
      */
     @FieldDef(label="ID")
     @EditMode(editor = FieldEditor.Number, required = true)
+    @Override
     public Long getId() {
         return id;
     }
@@ -80,6 +89,7 @@ public class TriggersTemplate extends BaseDomain {
      *
      * @param id ID
      */
+    @Override
     public void setId(Long id) {
         this.id = id;
     }
@@ -102,6 +112,15 @@ public class TriggersTemplate extends BaseDomain {
      */
     public void setTriggerCode(String triggerCode) {
         this.triggerCode = triggerCode;
+    }
+
+
+    public String getMarketChanelIds() {
+        return marketChanelIds;
+    }
+
+    public void setMarketChanelId(String marketChanelIds) {
+        this.marketChanelIds = marketChanelIds;
     }
 
     /**
