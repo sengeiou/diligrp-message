@@ -10,7 +10,7 @@ import javax.persistence.*;
 /**
  * 由MyBatis Generator工具自动生成
  * 
- * This file was generated on 2019-04-02 10:19:22.
+ * This file was generated on 2019-04-09 15:57:04.
  */
 @Table(name = "`message_market_channel`")
 public class MarketChannel extends BaseDomain {
@@ -43,14 +43,14 @@ public class MarketChannel extends BaseDomain {
     /**
      * 通道账号
      */
-    @Column(name = "`account_no`")
-    private String accountNo;
+    @Column(name = "`access_key`")
+    private String accessKey;
 
     /**
      * 通道密码
      */
-    @Column(name = "`password`")
-    private String password;
+    @Column(name = "`secret`")
+    private String secret;
 
     /**
      * 创建时间
@@ -147,41 +147,41 @@ public class MarketChannel extends BaseDomain {
     /**
      * 获取通道账号
      *
-     * @return account_no - 通道账号
+     * @return access_key - 通道账号
      */
     @FieldDef(label="通道账号", maxLength = 50)
     @EditMode(editor = FieldEditor.Text, required = false)
-    public String getAccountNo() {
-        return accountNo;
+    public String getAccessKey() {
+        return accessKey;
     }
 
     /**
      * 设置通道账号
      *
-     * @param accountNo 通道账号
+     * @param accessKey 通道账号
      */
-    public void setAccountNo(String accountNo) {
-        this.accountNo = accountNo;
+    public void setAccessKey(String accessKey) {
+        this.accessKey = accessKey;
     }
 
     /**
      * 获取通道密码
      *
-     * @return password - 通道密码
+     * @return secret - 通道密码
      */
     @FieldDef(label="通道密码", maxLength = 255)
     @EditMode(editor = FieldEditor.Text, required = false)
-    public String getPassword() {
-        return password;
+    public String getSecret() {
+        return secret;
     }
 
     /**
      * 设置通道密码
      *
-     * @param password 通道密码
+     * @param secret 通道密码
      */
-    public void setPassword(String password) {
-        this.password = password;
+    public void setSecret(String secret) {
+        this.secret = secret;
     }
 
     /**

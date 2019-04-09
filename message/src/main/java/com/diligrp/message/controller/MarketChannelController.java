@@ -2,7 +2,6 @@ package com.diligrp.message.controller;
 
 import com.dili.ss.domain.BaseOutput;
 import com.diligrp.message.domain.MarketChannel;
-import com.diligrp.message.domain.vo.MarketChannelVo;
 import com.diligrp.message.service.MarketChannelService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -19,7 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * 由MyBatis Generator工具自动生成
- * This file was generated on 2019-03-31 10:36:28.
+ * This file was generated on 2019-04-09 15:57:04.
  */
 @Api("/marketChannel")
 @Controller
@@ -39,12 +38,7 @@ public class MarketChannelController {
 		@ApiImplicitParam(name="MarketChannel", paramType="form", value = "MarketChannel的form信息", required = false, dataType = "string")
 	})
     @RequestMapping(value="/list.action", method = {RequestMethod.GET, RequestMethod.POST})
-    public @ResponseBody String list(@ModelAttribute MarketChannelVo marketChannel) throws Exception {
-        return marketChannelService.listAll(marketChannel).toString();
-    }
-
-    @RequestMapping(value="/listDetail.action", method = {RequestMethod.GET, RequestMethod.POST})
-    public @ResponseBody List<MarketChannel> listDetail(@ModelAttribute MarketChannelVo marketChannel) {
+    public @ResponseBody List<MarketChannel> list(@ModelAttribute MarketChannel marketChannel) {
         return marketChannelService.list(marketChannel);
     }
 
