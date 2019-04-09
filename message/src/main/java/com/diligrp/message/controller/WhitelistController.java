@@ -72,7 +72,7 @@ public class WhitelistController {
         }
 
         if (whitelistService.checkDate(whitelist) ){
-            return BaseOutput.failure("新增失败！该时间段已存在，不能重复添加");
+            return BaseOutput.failure("新增失败！该时间段与已有时间段存在重复。");
         }
         whitelistService.insertSelective(whitelist);
         return BaseOutput.success("新增成功");

@@ -13,6 +13,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -55,13 +56,16 @@ public class WhitelistServiceImpl extends BaseServiceImpl<Whitelist, Long> imple
         if (CollectionUtils.isEmpty(list)){
             return false;
         }
+
         for (int i = 0; i < list.size(); i++){
-            if (whitelist.getStartDate().before(list.get(i).getStartDate()) || whitelist.getEndDate().after(list.get(i).getEndDate())){
-                return false;
+            if (whitelist.getEndDate().before(list.get(i).getStartDate()) || whitelist.getStartDate().after(list.get(i).getEndDate())){
+                continue;
+            }else {
+                return true;
             }
         }
 
-        return true;
+        return false;
     }
 
 }
