@@ -122,5 +122,56 @@
         function clearForm() {
             $('#form').form('clear');
         }
+
+
+        //全局按键事件
+        function getKey(e){
+            e = e || window.event;
+            var keycode = e.which ? e.which : e.keyCode;
+            if(keycode == 46){ //如果按下删除键
+                var selected = $("#grid").datagrid("getSelected");
+                if(selected && selected!= null){
+                    del();
+                }
+            }
+        }
+
+        function initialStartTime(){
+            var now = new Date()
+            now.setHours(0)
+            now.setMinutes(0)
+            now.setSeconds(0)
+            $('#startSendTime').datetimebox('setValue', convertTime(now));
+        }
+
+        function convertTime(dateTime) {
+            let date = dateTime.toLocaleDateString()
+            let time = dateTime.toTimeString().slice(0,8);
+            return date + ' ' + time ;
+        }
+
+        /**
+         * 绑定页面回车事件，以及初始化页面时的光标定位
+         * @formId
+         *          表单ID
+         * @elementName
+         *          光标定位在指点表单元素的name属性的值
+         * @submitFun
+         *          表单提交需执行的任务
+         */
+        $(function () {
+            bindFormEvent("form", "marketCode", queryGrid);
+            if (document.addEventListener) {
+                document.addEventListener("keyup",getKey,false);
+            } else if (document.attachEvent) {
+                document.attachEvent("onkeyup",getKey);
+            } else {
+                document.onkeyup = getKey;
+            }
+            //表格仅显示下边框
+            $('#grid').datagrid('getPanel').removeClass('lines-both lines-no lines-right lines-bottom').addClass("lines-bottom");
+            initialStartTime();
+            queryGrid();
+        })
     </script>
 </#body>
