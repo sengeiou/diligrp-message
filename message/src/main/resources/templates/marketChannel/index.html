@@ -52,7 +52,7 @@
                         <th width="20%" data-options="field:'signature',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                             签名
                         </th>
-                        <th data-options="field:'password', _provider:'passwordProvider', hidden:true"></th>
+                        <th data-options="field:'secret', _provider:'passwordProvider', hidden:true"></th>
                         <th width="20%" data-options="field:'accessKey',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                             AccessKey
                         </th>
@@ -139,7 +139,9 @@
             $('#dlg').dialog('center');
             formFocus("_form", "_marketCode");
             var formData = $.extend({},selected);
+            var secret = formData.secret;
             formData = addKeyStartWith(getOriginalData(formData),"_");
+            formData["_secret"] = secret;
             $('#_form').form('load', formData);
         }
 
