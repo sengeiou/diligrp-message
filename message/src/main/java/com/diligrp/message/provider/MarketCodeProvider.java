@@ -6,7 +6,6 @@ import com.dili.ss.metadata.ValuePairImpl;
 import com.dili.ss.metadata.ValueProvider;
 import com.diligrp.message.common.enums.MessageEnum;
 import com.diligrp.message.domain.MarketChannel;
-import com.diligrp.message.utils.Base64Util;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -16,7 +15,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Component
-public class PasswordProvider implements ValueProvider {
+public class MarketCodeProvider implements ValueProvider {
 
 
     @Override
@@ -26,15 +25,7 @@ public class PasswordProvider implements ValueProvider {
 
     @Override
     public String getDisplayText(Object o, Map map, FieldMeta fieldMeta){
-        Map marketChannel = (Map)map.get(ValueProvider.ROW_DATA_KEY);
-        if(marketChannel.get("secret") == null){
-            return null;
-        }
-        try {
-            return Base64Util.getDecoderString(marketChannel.get("secret").toString());
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
+        MarketChannel marketChannel = (MarketChannel)map.get(ValueProvider.ROW_DATA_KEY);
+        return marketChannel.getMarketCode();
     }
 }
