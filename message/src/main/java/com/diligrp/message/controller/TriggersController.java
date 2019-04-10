@@ -1,6 +1,8 @@
 package com.diligrp.message.controller;
 
 import com.dili.ss.domain.BaseOutput;
+import com.dili.uap.sdk.domain.UserTicket;
+import com.dili.uap.sdk.session.SessionContext;
 import com.diligrp.message.domain.Triggers;
 import com.diligrp.message.domain.vo.TriggersVo;
 import com.diligrp.message.service.TriggersService;
@@ -12,10 +14,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 由MyBatis Generator工具自动生成
@@ -82,5 +81,15 @@ public class TriggersController {
     public @ResponseBody BaseOutput delete(Long id) {
         triggersService.delete(id);
         return BaseOutput.success("删除成功");
+    }
+
+    @ApiOperation("跳转到Customer新增页面")
+    @RequestMapping(value="/add.html", method = {RequestMethod.GET, RequestMethod.POST})
+    public String add(ModelMap modelMap, @RequestParam(name="id", required = false) Long id) throws Exception {
+        UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
+        if (userTicket == null) {
+            throw new RuntimeException("未登录");
+        }
+        return "triggers/edit";
     }
 }

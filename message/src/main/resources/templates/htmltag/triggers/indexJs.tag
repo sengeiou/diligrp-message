@@ -1,10 +1,7 @@
 <script type="text/javascript">
     //打开新增窗口
     function openInsert(){
-        $('#dlg').dialog('open');
-        $('#dlg').dialog('center');
-        $('#_form').form('clear');
-        formFocus("_form", "_triggerCode");
+        window.location.href="${contextPath}/triggers/add.html";
     }
 
     //打开修改窗口
