@@ -61,26 +61,4 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
 
-  <select id="listAll" parameterType="com.diligrp.message.domain.MarketChannel" resultType="com.diligrp.message.domain.vo.MarketChannelVo">
-    select
-    mc.*, group_concat( mc.channel ) as group_channel, group_concat( mc.signature ) as group_signature
-    from message_market_channel mc
-    where 1=1
-
-    <if test="authMarkets != null and authMarkets.size()&gt;0">
-      and mc.market_code in
-      <foreach close=")" collection="authMarkets" item="item" open="(" separator=",">
-        #{item}
-      </foreach>
-    </if>
-    group by mc.market_code
-
-    <if test="sort !=null">
-      order by ${sort}
-      <if test="order !=null">
-        ${order}
-      </if>
-    </if>
-  </select>
-
 </mapper>
