@@ -33,8 +33,8 @@ public class TriggersTemplate extends BaseDomain {
     /**
      * 市场通道ID(如果有多个，用#号隔开)
      */
-    @Column(name = "`market_chanel_ids`")
-    private String marketChanelIds;
+    @Column(name = "`market_channel_ids`")
+    private String marketChannelIds;
 
     /**
      * 模板通道
@@ -115,12 +115,12 @@ public class TriggersTemplate extends BaseDomain {
     }
 
 
-    public String getMarketChanelIds() {
-        return marketChanelIds;
+    public String getMarketChannelIds() {
+        return marketChannelIds;
     }
 
-    public void setMarketChanelId(String marketChanelIds) {
-        this.marketChanelIds = marketChanelIds;
+    public void setMarketChannelIds(String marketChannelIds) {
+        this.marketChannelIds = marketChannelIds;
     }
 
     /**

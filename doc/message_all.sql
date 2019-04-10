@@ -135,7 +135,7 @@ create table message_triggers_template
 (
    id                   bigint not null auto_increment comment 'ID',
    trigger_code         varchar(50) not null comment '消息触发点',
-   market_chanel_ids    varchar(255) comment '市场通道ID(如果多个，用#号隔开)',
+   market_channel_ids    varchar(255) comment '市场通道ID(如果多个，用#号隔开)',
    channel              varchar(20) comment '模板通道',
    template_name        varchar(50) comment '模板名称',
    template_code        varchar(20) comment '模板编码',
