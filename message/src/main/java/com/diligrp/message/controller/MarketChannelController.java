@@ -3,10 +3,13 @@ package com.diligrp.message.controller;
 import com.dili.ss.domain.BaseOutput;
 import com.diligrp.message.domain.MarketChannel;
 import com.diligrp.message.service.MarketChannelService;
+import com.diligrp.message.utils.Base64Util;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+
+import java.util.Base64;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -56,7 +59,8 @@ public class MarketChannelController {
 		@ApiImplicitParam(name="MarketChannel", paramType="form", value = "MarketChannel的form信息", required = true, dataType = "string")
 	})
     @RequestMapping(value="/insert.action", method = {RequestMethod.GET, RequestMethod.POST})
-    public @ResponseBody BaseOutput insert(@ModelAttribute MarketChannel marketChannel) {
+    public @ResponseBody BaseOutput insert(@ModelAttribute MarketChannel marketChannel) throws Exception{
+        marketChannel.setSecret(Base64Util.getEncoderString(marketChannel.getSecret()));
         marketChannelService.insertSelective(marketChannel);
         return BaseOutput.success("新增成功");
     }
@@ -66,7 +70,8 @@ public class MarketChannelController {
 		@ApiImplicitParam(name="MarketChannel", paramType="form", value = "MarketChannel的form信息", required = true, dataType = "string")
 	})
     @RequestMapping(value="/update.action", method = {RequestMethod.GET, RequestMethod.POST})
-    public @ResponseBody BaseOutput update(@ModelAttribute MarketChannel marketChannel) {
+    public @ResponseBody BaseOutput update(@ModelAttribute MarketChannel marketChannel) throws Exception{
+        marketChannel.setSecret(Base64Util.getEncoderString(marketChannel.getSecret()));
         marketChannelService.updateSelective(marketChannel);
         return BaseOutput.success("修改成功");
     }

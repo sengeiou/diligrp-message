@@ -5,7 +5,8 @@ public class MessageEnum {
     public enum ChannelEnum {
 
         ALIDAYU("alidayu", "阿里大于"),
-        MOBILE("mobile", "移动"),
+        CHINA_MOBILE("china_mobile", "中国移动云MAS"),
+        WEBCHINESE_SMS("webchinese_sms", "网建短信通"),
         ;
 
         private String name;

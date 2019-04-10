@@ -5,6 +5,8 @@ import com.dili.ss.metadata.ValuePair;
 import com.dili.ss.metadata.ValuePairImpl;
 import com.dili.ss.metadata.ValueProvider;
 import com.diligrp.message.common.enums.MessageEnum;
+import com.diligrp.message.domain.MarketChannel;
+import com.diligrp.message.utils.Base64Util;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -29,25 +31,22 @@ public class MarketChannelProvider implements ValueProvider {
     }
 
     @Override
-    public String getDisplayText(Object o, Map map, FieldMeta fieldMeta) {
+    public String getDisplayText(Object o, Map map, FieldMeta fieldMeta){
         if (null == o) {
             return null;
         }
-        if (o.toString().contains(",")){
-            String[] channellist = o.toString().split(",");
-            String buf = "";
-            for (String str : channellist){
-                ValuePair<?> valuePair = BUFFER.stream().filter(val -> str.equals(val.getValue())).findFirst().orElseGet(null);
-                if (null != valuePair && !buf.contains(valuePair.getText())) {
-                    buf += valuePair.getText()+ ",";
-                }
-            }
-            return buf.substring(0, buf.length()-1);
-        }else {
-            ValuePair<?> valuePair = BUFFER.stream().filter(val -> o.equals(val.getValue())).findFirst().orElseGet(null);
-            if (null != valuePair) {
-               return valuePair.getText();
-            }
+
+        MarketChannel marketChannel = (MarketChannel)map.get(ValueProvider.ROW_DATA_KEY);
+        try {
+            marketChannel.setSecret(Base64Util.getDecoderString(marketChannel.getSecret()));
+//            map.put(ValueProvider.ROW_DATA_KEY, marketChannel);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        ValuePair<?> valuePair = BUFFER.stream().filter(val -> o.equals(val.getValue())).findFirst().orElseGet(null);
+        if (null != valuePair) {
+            return valuePair.getText();
         }
         return null;
     }

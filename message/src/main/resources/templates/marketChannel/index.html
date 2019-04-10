@@ -10,41 +10,21 @@
                     <table style="padding:10px;">
                         <tr>
                             <td style="padding:5px;">
-                                <input class="easyui-textbox" name="marketCode" id="marketCode" style="width:100%" data-options="label:'市场编码:', validType:'length[0,20]'" />
+                                <input name="marketCode" id="marketCode" style="width:100%" labelAlign="right" data-options="label:'市场:', validType:'length[0,20]'" />
+                                <#comboProvider _id="marketCode" _provider='firmProvider' _queryParams='{emptyText:"-- 全部 --"}'/>
 
                             </td>
                             <td style="padding:5px;">
-                                <input class="easyui-textbox" name="channel" id="channel" style="width:100%" data-options="label:'通道编码:', validType:'length[0,20]'" />
-
-                            </td>
-                            <td style="padding:5px;">
-                                <input class="easyui-textbox" name="signature" id="signature" style="width:100%" data-options="label:'通道签名:', validType:'length[0,50]'" />
-
-                            </td>
-                            <td style="padding:5px;">
-                                <input class="easyui-textbox" name="accessKey" id="accessKey" style="width:100%" data-options="label:'通道账号:', validType:'length[0,50]'" />
-
-                            </td>
-                            <td style="padding:5px;">
-                                <input class="easyui-textbox" name="secret" id="secret" style="width:100%" data-options="label:'通道密码:', validType:'length[0,255]'" />
+                                    <input name="channel" id="channel" style="width:100%" labelAlign="right" data-options="label:'消息通道:', validType:'length[0,20]'" />
+                                <#comboProvider _id="channel" _provider='marketChannelProvider' _queryParams='{emptyText:"-- 全部 --"}'/>
 
                             </td>
                         </tr>
                         <tr>
-                            <td style="padding:5px;">
-                                <input class="easyui-datetimebox" name="created" id="created" style="width:100%" data-options="label:'创建时间:'" />
-
-                            </td>
-                            <td style="padding:5px;">
-                                <input class="easyui-datetimebox" name="modified" id="modified" style="width:100%" data-options="label:'修改时间:'" />
-
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
+                            <td style="padding-left:28px;padding-top: 10px; padding-bottom: 10px;">
                                 <a href="#" class="easyui-linkbutton" iconCls="icon-search" id="queryBtn"
-                                   onclick="queryGrid()">查询</a>
-                                <a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()">清除</a>
+                                   onclick="queryGrid()">查询</a>&nbsp;&nbsp;
+                                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-clear" onclick="clearForm()">清除</a>
                             </td>
                         </tr>
                     </table>
@@ -57,56 +37,34 @@
         <!-- 表格 -->
         <div region="center" style="width:100%;" height="auto">
             <!-- =========================================================表格========================================================= -->
-            <table class="easyui-datagrid" title="MarketChannel列表" id="grid" fitColumns="true"
-                   pagination="true" pageSize="30" pageNumber="1" pagePosition="top" rownumbers="true" remoteSort="false"
+            <table class="easyui-datagrid" title="市场/通道列表" id="grid" fitColumns="true" noheader="true"
+                   pagination="true" pageSize="30" pageNumber="1" pagePosition="top" rownumbers="false" remoteSort="false"
                    loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="false" sortName="marketCode"
-                   align="center" fit="true" striped="true" toolbar="#toolbar" idField="id" data-options="onDblClickRow:openUpdate, onHeaderContextMenu:headerContextMenu">
+                   align="center" fit="true" striped="true" idField="id" data-options="onDblClickRow:openUpdate, onHeaderContextMenu:headerContextMenu">
                 <thead>
                     <tr>
-                        <th data-options="field:'marketCode',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
-                            市场编码
+                        <th width="20%" data-options="field:'marketCode', _provider:'firmProvider',  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                            所属市场
                         </th>
-                        <th data-options="field:'channel',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
-                            通道编码
+                        <th width="20%" data-options="field:'channel', _provider:'marketChannelProvider',  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                            消息通道
                         </th>
-                        <th data-options="field:'signature',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
-                            通道签名
+                        <th width="20%" data-options="field:'signature',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                            签名
                         </th>
-                        <th data-options="field:'accessKey',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
-                            通道账号
+                        <th width="20%" data-options="field:'accessKey',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                            AccessKey
                         </th>
-                        <th data-options="field:'secret',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
-                            通道密码
-                        </th>
-                        <th data-options="field:'created',  _provider:'datetimeProvider', sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        <th width="20%" data-options="field:'created',  _provider:'datetimeProvider', sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                             创建时间
-                        </th>
-                        <th data-options="field:'modified',  _provider:'datetimeProvider', sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
-                            修改时间
                         </th>
                     </tr>
                 </thead>
             </table>
-            <!-- datagrid工具栏 -->
-            <div id="toolbar" style="padding:2px 5px;">
-                <a href="#" class="easyui-linkbutton" iconCls="icon-add" onclick="openInsert()" plain="true"></a>
-                <a href="#" class="easyui-linkbutton" iconCls="icon-edit" onclick="openUpdate()" plain="true"></a>
-                <a href="#" class="easyui-linkbutton" iconCls="icon-remove" onclick="del()" plain="true"></a>
-                <a href="#" class="easyui-linkbutton" iconCls="icon-export" onclick="doExport('grid')" plain="true"></a>
-                <div style="float:right">
-                边框显示:<select onchange="changeBorder('grid',this.value)">
-                    <option value="lines-both">全边框</option>
-                    <option value="lines-no">无边框</option>
-                    <option value="lines-right">右边框</option>
-                    <option value="lines-bottom">下边框</option>
-                </select>
-                行条纹:<input type="checkbox" checked="checked" onclick="$('#grid').datagrid({striped:$(this).is(':checked')})">
-                </div>
-            </div>
         </div>
     </div>
     <!-- 隐藏编辑框 -->
-    <div id="dlg" class="easyui-dialog" resizable="false" constrain="true" shadow="true" draggable="false" title="MarketChannel信息" style="padding:20px" modal="true" border="thin" closed="true"
+    <div id="dlg" class="easyui-dialog" resizable="false" constrain="true" shadow="true" draggable="false" title="市场/通道信息" style="padding:20px" modal="true" border="thin" closed="true"
          data-options="
 				iconCls: 'icon-save',
 				height: 480,
@@ -116,7 +74,7 @@
 					handler:saveOrUpdate
 				},{
 					text:'取消',
-                    iconCls:'icon-cancel',
+					iconCls:'icon-cancel',
 					handler:function(){
 						$('#dlg').dialog('close');
 					}
@@ -127,40 +85,30 @@
         <table width="360px">
             <tr>
                 <td style="padding:5px;">
-                    <input class="easyui-textbox" name="_marketCode" id="_marketCode" style="width:100%" data-options="label:'市场编码:', validType:'length[0,20]'" 
+                    <input name="_marketCode" id="_marketCode" style="width:100%" data-options="label:'市场:', validType:'length[0,20]'"
                         required="true" />
+                    <#comboProvider _id="_marketCode" _provider='firmProvider' _queryParams='{emptyText:"-- 全部 --"}'/>
                 </td>
             </tr>
             <tr>
                 <td style="padding:5px;">
-                    <input class="easyui-textbox" name="_channel" id="_channel" style="width:100%" data-options="label:'通道编码:', validType:'length[0,20]'" />
+                    <input name="_channel" id="_channel" style="width:100%" data-options="label:'通道:', validType:'length[0,20]'"  required="true"/>
+                    <#comboProvider _id="_channel" _provider='marketChannelProvider' _queryParams='{emptyText:"-- 全部 --"}'/>
                 </td>
             </tr>
             <tr>
                 <td style="padding:5px;">
-                    <input class="easyui-textbox" name="_signature" id="_signature" style="width:100%" data-options="label:'通道签名:', validType:'length[0,50]'" />
+                    <input class="easyui-textbox" name="_signature" id="_signature" style="width:100%" data-options="label:'签名:', validType:'length[0,50]'" required="true"/>
                 </td>
             </tr>
             <tr>
                 <td style="padding:5px;">
-                    <input class="easyui-textbox" name="_accessKey" id="_accessKey" style="width:100%" data-options="label:'通道账号:', validType:'length[0,50]'" />
+                    <input class="easyui-textbox" name="_accessKey" id="_accessKey" style="width:100%" data-options="label:'AccessKey:', validType:'length[0,50]'" required="true"/>
                 </td>
             </tr>
             <tr>
                 <td style="padding:5px;">
-                    <input class="easyui-textbox" name="_secret" id="_secret" style="width:100%" data-options="label:'通道密码:', validType:'length[0,255]'" />
-                </td>
-            </tr>
-            <tr>
-                <td style="padding:5px;">
-                    <input class="easyui-datetimebox" name="_created" id="_created" style="width:100%" data-options="label:'创建时间:'" 
-                        required="true" />
-                </td>
-            </tr>
-            <tr>
-                <td style="padding:5px;">
-                    <input class="easyui-datetimebox" name="_modified" id="_modified" style="width:100%" data-options="label:'修改时间:'" 
-                        required="true" />
+                    <input class="easyui-passwordbox" name="_secret" id="_secret" style="width:100%" data-options="label:'Secret:', validType:'length[0,255]'" required="true"/>
                 </td>
             </tr>
         </table>
@@ -183,7 +131,7 @@
         function openUpdate(){
             var selected = $("#grid").datagrid("getSelected");
             if (null == selected) {
-                $.messager.alert('警告','请选中一条数据');
+                swal('警告','请选中一条数据', 'warning');
                 return;
             }
             $('#dlg').dialog('open');
@@ -218,11 +166,11 @@
                         $("#grid").datagrid("reload");
                         $('#dlg').dialog('close');
                     }else{
-                        $.messager.alert('错误',data.result);
+                        swal('错误',data.result, 'error');
                     }
                 },
                 error: function(){
-                    $.messager.alert('错误','远程访问失败');
+                    swal('错误', '远程访问失败', 'error');
                 }
             });
         }
@@ -231,11 +179,10 @@
         function del() {
             var selected = $("#grid").datagrid("getSelected");
             if (null == selected) {
-                $.messager.alert('警告','请选中一条数据');
+                swal('警告','请选中一条数据', 'warning');
                 return;
             }
-            $.messager.confirm('确认','您确认想要删除记录吗？',function(r){
-                if (r){
+            <#swalConfirm swalTitle="您确认想要删除记录吗？">
                     $.ajax({
                         type: "POST",
                         url: "${contextPath}/marketChannel/delete.action",
@@ -248,16 +195,14 @@
                                 $("#grid").datagrid("reload");
                                 $('#dlg').dialog('close');
                             }else{
-                                $.messager.alert('错误',data.result);
+                                swal('错误',data.result, 'error');
                             }
                         },
                         error: function(){
-                            $.messager.alert('错误','远程访问失败');
+                            swal('错误', '远程访问失败', 'error');
                         }
                     });
-                }
-            });
-
+            </#swalConfirm>
         }
         //表格查询
         function queryGrid() {
@@ -320,6 +265,36 @@
             } else {
                 document.onkeyup = getKey;
             }
+            var pager = $('#grid').datagrid('getPager');    // get the pager of treegrid
+                pager.pagination({
+                    <#controls_paginationOpts/>,
+                    buttons:[
+                    {
+                        iconCls:'icon-add',
+                        text:'新增',
+                        handler:function(){
+                            openInsert();
+                        }
+                    },
+                    {
+                        iconCls:'icon-edit',
+                        text:'修改',
+                        handler:function(){
+                            openUpdate();
+                        }
+                    },
+                    {
+                        iconCls:'icon-remove',
+                        text:'删除',
+                        handler:function(){
+                            del();
+                        }
+                    }
+                ]
+            });
+            //表格仅显示下边框
+            $('#grid').datagrid('getPanel').removeClass('lines-both lines-no lines-right lines-bottom').addClass("lines-bottom");
+            queryGrid();
         })
     </script>
 </#body>
