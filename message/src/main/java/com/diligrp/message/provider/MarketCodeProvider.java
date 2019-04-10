@@ -25,7 +25,10 @@ public class MarketCodeProvider implements ValueProvider {
 
     @Override
     public String getDisplayText(Object o, Map map, FieldMeta fieldMeta){
-        MarketChannel marketChannel = (MarketChannel)map.get(ValueProvider.ROW_DATA_KEY);
-        return marketChannel.getMarketCode();
+        Map marketChannel = (Map)map.get(ValueProvider.ROW_DATA_KEY);
+        if (marketChannel.get("marketCode") == null){
+            return null;
+        }
+        return marketChannel.get("marketCode").toString();
     }
 }
