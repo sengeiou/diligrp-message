@@ -16,29 +16,22 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Component
-public class MarketChannelProvider implements ValueProvider {
-    private static final List<ValuePair<?>> BUFFER = new ArrayList<>();
+public class PasswordProvider implements ValueProvider {
 
-    static {
-        BUFFER.addAll(Stream.of(MessageEnum.ChannelEnum.values())
-                .map(e -> new ValuePairImpl<>(e.getName(), e.getCode()))
-                .collect(Collectors.toList()));
-    }
 
     @Override
     public List<ValuePair<?>> getLookupList(Object o, Map map, FieldMeta fieldMeta) {
-        return BUFFER;
+        return null;
     }
 
     @Override
     public String getDisplayText(Object o, Map map, FieldMeta fieldMeta){
-        if (null == o) {
+        MarketChannel marketChannel = (MarketChannel)map.get(ValueProvider.ROW_DATA_KEY);
+        try {
+            return Base64Util.getDecoderString(marketChannel.getSecret());
+        } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
-        ValuePair<?> valuePair = BUFFER.stream().filter(val -> o.equals(val.getValue())).findFirst().orElseGet(null);
-        if (null != valuePair) {
-            return valuePair.getText();
-        }
-        return null;
     }
 }
