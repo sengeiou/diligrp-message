@@ -7,17 +7,8 @@ import cn.hutool.extra.template.TemplateConfig;
 import cn.hutool.extra.template.TemplateEngine;
 import cn.hutool.extra.template.TemplateUtil;
 import com.alibaba.fastjson.JSONObject;
-import com.aliyuncs.CommonRequest;
-import com.aliyuncs.CommonResponse;
-import com.aliyuncs.DefaultAcsClient;
-import com.aliyuncs.IAcsClient;
-import com.aliyuncs.exceptions.ClientException;
-import com.aliyuncs.exceptions.ServerException;
-import com.aliyuncs.http.MethodType;
-import com.aliyuncs.profile.DefaultProfile;
 import com.dili.ss.domain.BaseOutput;
 import com.diligrp.message.common.enums.MessageEnum;
-import com.diligrp.message.common.enums.MessageSendEnum;
 import com.diligrp.message.domain.MarketChannel;
 import com.diligrp.message.domain.SendLog;
 import com.diligrp.message.domain.TriggersTemplate;
@@ -65,7 +56,7 @@ public class SmsServiceImpl implements SmsService {
         SendLog sendLog = sendLogService.get(sendLogId);
         Map<Long, MarketChannel> marketChannelMap = marketChannelService.queryByMarket(sendLog.getMarketCode());
         if (CollectionUtil.isEmpty(marketChannelMap)) {
-            sendLog.setSendState(MessageSendEnum.SendState.FAILURE.getCode());
+            sendLog.setSendState(MessageEnum.SendStateEnum.FAILURE.getCode());
             sendLog.setRemarks("市场通道未配置");
             sendLogService.update(sendLog);
             return;
@@ -95,13 +86,13 @@ public class SmsServiceImpl implements SmsService {
                         sendLog.setContent(produceContent(t.getTemplateContent(), JSONObject.parseObject(sendLog.getParameters())));
                         if (output.isSuccess()) {
                             sendLog.setBizId(output.getResult());
-                            sendLog.setSendState(MessageSendEnum.SendState.SUCCEED.getCode());
+                            sendLog.setSendState(MessageEnum.SendStateEnum.SUCCEED.getCode());
                             flag = true;
                             break;
                         } else {
                             SendLog log = new SendLog();
                             BeanUtil.copyProperties(sendLog, log);
-                            log.setSendState(MessageSendEnum.SendState.FAILURE.getCode());
+                            log.setSendState(MessageEnum.SendStateEnum.FAILURE.getCode());
                             log.setRemarks(output.getResult());
                             log.setId(null);
                             sendLogs.add(log);

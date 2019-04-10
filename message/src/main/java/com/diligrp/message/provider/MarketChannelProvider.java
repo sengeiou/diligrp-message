@@ -5,8 +5,6 @@ import com.dili.ss.metadata.ValuePair;
 import com.dili.ss.metadata.ValuePairImpl;
 import com.dili.ss.metadata.ValueProvider;
 import com.diligrp.message.common.enums.MessageEnum;
-import com.diligrp.message.domain.MarketChannel;
-import com.diligrp.message.utils.Base64Util;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;

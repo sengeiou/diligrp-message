@@ -3,7 +3,7 @@ package com.diligrp.message.component;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import com.dili.ss.domain.BaseOutput;
-import com.diligrp.message.common.enums.MessageSendEnum;
+import com.diligrp.message.common.enums.MessageEnum;
 import com.diligrp.message.domain.SendLog;
 import com.diligrp.message.domain.Triggers;
 import com.diligrp.message.domain.vo.MessageInfoVo;
@@ -60,12 +60,12 @@ public class MessageInfoHandler {
         sendLog.setRemarks(msg.toString());
         sendLog.setParameters(info.getParameters().toJSONString());
         if (StrUtil.isNotBlank(msg)){
-            sendLog.setSendState(MessageSendEnum.SendState.FAILURE.getCode());
+            sendLog.setSendState(MessageEnum.SendStateEnum.FAILURE.getCode());
             sendLogService.save(sendLog);
             return BaseOutput.failure().setResult(msg.toString());
 
         }else{
-            sendLog.setSendState(MessageSendEnum.SendState.WAITING.getCode());
+            sendLog.setSendState(MessageEnum.SendStateEnum.WAITING.getCode());
             sendLogService.save(sendLog);
             //目前只有短信，则直接注册到短信任务中
             messageSendTask.registerSMS(sendLog.getId(),new Date(),triggersVo.getTemplateList());

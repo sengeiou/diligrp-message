@@ -2,7 +2,9 @@ package com.diligrp.message.controller;
 
 import com.dili.ss.domain.BaseOutput;
 import com.diligrp.message.domain.MarketChannel;
+import com.diligrp.message.domain.TriggersTemplate;
 import com.diligrp.message.service.MarketChannelService;
+import com.diligrp.message.service.TriggersTemplateService;
 import com.diligrp.message.utils.Base64Util;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -11,6 +13,8 @@ import io.swagger.annotations.ApiOperation;
 
 import java.util.Base64;
 import java.util.List;
+
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -29,6 +33,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class MarketChannelController {
     @Autowired
     MarketChannelService marketChannelService;
+    @Autowired
+    TriggersTemplateService triggersTemplateService;
 
     @ApiOperation("跳转到MarketChannel页面")
     @RequestMapping(value="/index.html", method = RequestMethod.GET)
@@ -82,6 +88,13 @@ public class MarketChannelController {
 	})
     @RequestMapping(value="/delete.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody BaseOutput delete(Long id) {
+        if (id == null){
+            return BaseOutput.success("删除失败！参数ID为空");
+        }
+        List<TriggersTemplate> list = triggersTemplateService.listByMarketChannelId(String.valueOf(id));
+        if (CollectionUtils.isNotEmpty(list)){
+            return BaseOutput.success("删除失败！该通道下还存在消息模板，不能删除！");
+        }
         marketChannelService.delete(id);
         return BaseOutput.success("删除成功");
     }

@@ -36,11 +36,10 @@ public class MessageEnum {
     }
 
     public enum SendStateEnum {
-
-        FAILURE(-1, "失败"),
-        SUCCESS(1, "成功"),
+        WAITING(0,"等待中"),
+        SUCCEED(1, "成功"),
+        FAILURE(2, "失败"),
         ;
-
         private String name;
         private Integer code;
 
