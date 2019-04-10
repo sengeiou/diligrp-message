@@ -1,4 +1,18 @@
  <#body>
+ <script type="text/javascript">
+     //通道选中事件
+     function channelSelectFun(newValue, oldValue) {
+         if (newValue == 'china_mobile') {
+             $('#_companyName').textbox('textbox').validatebox('options').required = true;
+             $('#tr_companyName').show();
+             $('#tr_view_companyName').show();
+         }else {
+             $('#_companyName').textbox('textbox').validatebox('options').required = false;
+             $('#tr_companyName').hide();
+             $('#tr_view_companyName').hide();
+         }
+     }
+     </script>
     <div class="easyui-layout" fit="true">
         <!-- ====================================================================================================================== -->
         <!-- 上方布局 -->
@@ -87,15 +101,20 @@
         <table width="360px">
             <tr>
                 <td style="padding:5px;">
-                    <input name="_marketCode" id="_marketCode" style="width:100%" data-options="label:'市场:', validType:'length[0,20]'"
+                    <input name="_marketCode" id="_marketCode" style="width:100%" data-options="label:'市场:', validType:'length[0,20]', editable:false"
                         required="true" />
                     <#comboProvider _id="_marketCode" _provider='firmProvider' _queryParams='{emptyText:"-- 全部 --"}'/>
                 </td>
             </tr>
             <tr>
                 <td style="padding:5px;">
-                    <input name="_channel" id="_channel" style="width:100%" data-options="label:'通道:', validType:'length[0,20]'"  required="true"/>
+                    <input name="_channel" id="_channel" style="width:100%" data-options="label:'通道:', validType:'length[0,20]' ,onChange:channelSelectFun, editable:false" required="true" />
                     <#comboProvider _id="_channel" _provider='marketChannelProvider' _queryParams='{emptyText:"-- 全部 --"}'/>
+                </td>
+            </tr>
+            <tr id="tr_companyName">
+                <td style="padding:5px;">
+                    <input class="easyui-textbox" name="_companyName" id="_companyName" style="width:100%" data-options="label:'企业名称:', validType:'length[0,50]',required: false"/>
                 </td>
             </tr>
             <tr>
@@ -117,6 +136,48 @@
     </form>
 
     </div>
+
+ <!-- 隐藏查看框 -->
+ <div id="viewDlg" class="easyui-dialog" resizable="false" constrain="true" shadow="true" draggable="false" title="市场/通道信息" style="padding:10px;width: 420px;" modal="true" border="thin" closed="true"
+      data-options="
+                    height: 520
+                ">
+     <form id="_view_form" class="easyui-form" method="post" fit="true" align="center">
+         <table width="100%">
+             <tr>
+                 <td style="padding:5px;">
+                     <input class="easyui-textbox" name="_view_marketCode" id="_view_marketCode" style="width:100%" data-options="label:'市场:', validType:'length[0,20]',cls:'noborder'"
+                            required="true" />
+                 </td>
+             </tr>
+             <tr>
+                 <td style="padding:5px;">
+                     <input class="easyui-textbox" name="_view_channel" id="_view_channel" style="width:100%" data-options="label:'通道:', validType:'length[0,20]' ,cls:'noborder'" />
+                 </td>
+             </tr>
+             <tr id="tr_view_companyName">
+                 <td style="padding:5px;">
+                     <input class="easyui-textbox" name="_view_companyName" id="_view_companyName" style="width:100%" data-options="label:'企业名称:', validType:'length[0,50]',cls:'noborder'"/>
+                 </td>
+             </tr>
+             <tr>
+                 <td style="padding:5px;">
+                     <input class="easyui-textbox" name="_view_signature" id="_view_signature" style="width:100%" data-options="label:'签名:', validType:'length[0,50]' ,cls:'noborder'" />
+                 </td>
+             </tr>
+             <tr>
+                 <td style="padding:5px;">
+                     <input class="easyui-textbox" name="_view_accessKey" id="_view_accessKey" style="width:100%" data-options="label:'AccessKey:', validType:'length[0,50]' ,cls:'noborder'"/>
+                 </td>
+             </tr>
+             <tr>
+                 <td style="padding:5px;">
+                     <input class="easyui-passwordbox" name="_view_secret" id="_view_secret" style="width:100%" data-options="label:'Secret:', validType:'length[0,255]' ,cls:'noborder'"/>
+                 </td>
+             </tr>
+         </table>
+     </form>
+ </div>
     <!-- ====================================================================================================================== -->
     <!-- style & script 分隔线 -->
     <!-- ====================================================================================================================== -->
@@ -145,6 +206,26 @@
 
             formData["_secret"] = secret;
             $('#_form').form('load', formData);
+        }
+
+        /**
+         * 查看用户信息
+         */
+        function openDetail() {
+            var selected = $("#grid").datagrid("getSelected");
+            if (null == selected) {
+                swal('警告', '请选中一条数据', 'warning');
+                return;
+            }
+            $('#viewDlg').dialog('open');
+            $('#viewDlg').dialog('center');
+            var formData = $.extend({}, selected);
+            formData = addKeyStartWith(formData, "_view_");
+            $('#_view_form').form('clear');
+            $('#_view_form').form('load', formData);
+            $('#viewDlg input[class^=easyui-]').textbox("readonly", true);
+            $('#viewDlg input[class^=easyui-]').textbox("editable", false);
+
         }
 
         function saveOrUpdate(){
@@ -289,6 +370,13 @@
                         }
                     },
                     {
+                        iconCls:'icon-detail',
+                        text:'详情',
+                        handler:function(){
+                            openDetail();
+                        }
+                    },
+                    {
                         iconCls:'icon-remove',
                         text:'删除',
                         handler:function(){
@@ -300,6 +388,43 @@
             //表格仅显示下边框
             $('#grid').datagrid('getPanel').removeClass('lines-both lines-no lines-right lines-bottom').addClass("lines-bottom");
             queryGrid();
+
+            //企业名称隐藏
+            channelSelectFun();
+            //新增，修改帮组提示
+            $('#_accessKey').textbox({
+                icons: [{
+                    iconCls:'icon-help',
+                    handler: function(){
+                        showAccessKeyhelp();
+                    }
+                }]
+            });
+
+            $('#_secret').textbox({
+                icons: [{
+                    iconCls:'icon-help',
+                    handler: function(){
+                        showSecrethelp();
+                    }
+                }]
+            });
+
         })
+
+
+        function showAccessKeyhelp() {
+            swal('提示',"此处填写的内容，根据不同通道运营商所对应的信息不同，分别为：\n" +
+                "阿里大于：填写AccessKey  ID；\n" +
+                "中国移动云MAS：填写apid；\n" +
+                "网建短信通：填写UID，即登录名；");
+        }
+        function showSecrethelp() {
+            alert("此处填写的内容，根据不同通道运营商所对应的信息不同，分别为：\n" +
+                "阿里大于：填写AccessKey  Secret；\n" +
+                "中国移动云MAS：填写secretKey；\n" +
+                "网建短信通：填写Key；");
+
+        }
     </script>
 </#body>
