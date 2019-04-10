@@ -1,6 +1,5 @@
 package com.diligrp.message.service.remote.impl;
 
-import cn.hutool.core.bean.BeanUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.aliyuncs.CommonRequest;
 import com.aliyuncs.CommonResponse;
@@ -12,12 +11,8 @@ import com.aliyuncs.http.MethodType;
 import com.aliyuncs.profile.DefaultProfile;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.BaseOutput;
-import com.diligrp.message.common.enums.MessageSendEnum;
-import com.diligrp.message.domain.SendLog;
 import com.diligrp.message.service.remote.IMessageService;
 import org.springframework.stereotype.Component;
-
-import java.util.Date;
 
 /**
  * <B>阿里大于通道实现</B>
