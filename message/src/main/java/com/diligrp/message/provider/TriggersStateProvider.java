@@ -58,7 +58,7 @@ public class TriggersStateProvider implements ValueProvider {
         if (null == object) {
             return null;
         }
-        ValuePair<?> valuePair = BUFFER.stream().filter(val -> object.toString().equals(val.getValue())).findFirst().orElseGet(null);
+        ValuePair<?> valuePair = BUFFER.stream().filter(val -> object.toString().equals(val.getValue().toString())).findFirst().orElseGet(null);
         if (null != valuePair) {
             return valuePair.getText();
         }

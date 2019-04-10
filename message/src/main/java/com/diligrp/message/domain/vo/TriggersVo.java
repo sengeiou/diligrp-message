@@ -24,7 +24,7 @@ public class TriggersVo extends Triggers {
     private String groupChannel;
 
     /**
-     * 联合分组后的，通道代码，默认以,隔开
+     * 联合分组后的，模板代码，默认以,隔开
      */
     @Column(name = "`group_template_code`")
     private String groupTemplateCode;
@@ -65,4 +65,5 @@ public class TriggersVo extends Triggers {
     public void setTemplateList(List<TriggersTemplate> templateList) {
         this.templateList = templateList;
     }
+
 }

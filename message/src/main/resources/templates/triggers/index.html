@@ -51,28 +51,28 @@
                align="center" fit="true" striped="true" idField="id" data-options="onDblClickRow:openUpdate, onHeaderContextMenu:headerContextMenu">
             <thead>
                 <tr>
-                    <th width="8%" data-options="field:'marketCode', _provider:'firmProvider', sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                    <th width="10%" data-options="field:'marketCode', _provider:'firmProvider', sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                         所属市场
                     </th>
-                    <th width="8%" data-options="field:'systemCode',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                    <th width="10%" data-options="field:'systemCode',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                         所属系统
                     </th>
-                    <th width="8%" data-options="field:'sceneCode', _provider:'dataDictionaryValueProvider',_queryParams:{'dd_code':'message_scene'},   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                    <th width="10%" data-options="field:'sceneCode',  _provider:'dataDictionaryValueProvider',_queryParams:{'dd_code':'message_scene'},   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                         应用场景
                     </th>
-                    <th width="8%" data-options="field:'sceneCode',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                    <th width="10%" data-options="field:'sceneCode',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                         场景编码
                     </th>
-                    <th width="8%" data-options="field:'enabled',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                    <th width="10%" data-options="field:'enabled', _provider:'triggersStateProvider',  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                         状态
                     </th>
-                    <th width="8%" data-options="field:'enabled',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                    <th width="20%" data-options="field:'groupChannel', _provider:'groupChannelProvider',  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                         模板来源
                     </th>
-                    <th width="8%" data-options="field:'enabled',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                    <th width="20%" data-options="field:'groupTemplateCode',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                         模板编码
                     </th>
-                    <th width="8%" data-options="field:'created',  _provider:'datetimeProvider', sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                    <th width="15%" data-options="field:'created',  _provider:'datetimeProvider', sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                         创建时间
                     </th>
                 </tr>
