@@ -9,6 +9,7 @@
     <result column="market_code" jdbcType="VARCHAR" property="marketCode" />
     <result column="channel" jdbcType="VARCHAR" property="channel" />
     <result column="signature" jdbcType="VARCHAR" property="signature" />
+    <result column="company_name" property="companyName" />
     <result column="access_key" jdbcType="VARCHAR" property="accessKey" />
     <result column="secret" jdbcType="VARCHAR" property="secret" />
     <result column="created" jdbcType="TIMESTAMP" property="created" />
@@ -18,7 +19,7 @@
     <!--
       WARNING - @mbg.generated
     -->
-    id, market_code, channel, signature, access_key, secret, created, modified
+    id, market_code, channel, signature, company_name, access_key, secret, created, modified
   </sql>
   <select id="selectBy" parameterType="java.lang.Long" resultMap="BaseResultMap">
     <!--

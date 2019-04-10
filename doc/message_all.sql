@@ -65,6 +65,7 @@ create table message_market_channel
    market_code          varchar(20) not null comment '市场编码',
    channel              varchar(20) comment '通道编码',
    signature            varchar(50) comment '通道签名',
+   company_name         varchar(50) comment '企业名称',
    access_key           varchar(50) comment '通道账号',
    secret               varchar(255) comment '通道密码',
    created              datetime not null default current_timestamp comment '创建时间',

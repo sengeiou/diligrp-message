@@ -41,6 +41,12 @@ public class MarketChannel extends BaseDomain {
     private String signature;
 
     /**
+     * 企业名称
+     */
+    @Column(name = "`company_name`")
+    private String companyName;
+
+    /**
      * 通道账号
      */
     @Column(name = "`access_key`")
@@ -71,6 +77,7 @@ public class MarketChannel extends BaseDomain {
      */
     @FieldDef(label="ID")
     @EditMode(editor = FieldEditor.Number, required = true)
+    @Override
     public Long getId() {
         return id;
     }
@@ -80,6 +87,7 @@ public class MarketChannel extends BaseDomain {
      *
      * @param id ID
      */
+    @Override
     public void setId(Long id) {
         this.id = id;
     }
@@ -142,6 +150,14 @@ public class MarketChannel extends BaseDomain {
      */
     public void setSignature(String signature) {
         this.signature = signature;
+    }
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
     }
 
     /**
