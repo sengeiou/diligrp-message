@@ -78,6 +78,9 @@ public class MarketChannelController {
     @RequestMapping(value="/update.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody BaseOutput update(@ModelAttribute MarketChannel marketChannel) throws Exception{
         marketChannel.setSecret(Base64Util.getEncoderString(marketChannel.getSecret()));
+        if (marketChannel.getCompanyName() == null){
+            marketChannel.setCompanyName("");
+        }
         marketChannelService.updateSelective(marketChannel);
         return BaseOutput.success("修改成功");
     }
