@@ -8,6 +8,7 @@ import cn.hutool.extra.template.TemplateEngine;
 import cn.hutool.extra.template.TemplateUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.dili.ss.domain.BaseOutput;
+import com.diligrp.message.common.constant.MessagePushConstant;
 import com.diligrp.message.common.enums.MessageEnum;
 import com.diligrp.message.domain.MarketChannel;
 import com.diligrp.message.domain.SendLog;
@@ -43,6 +44,8 @@ public class SmsServiceImpl implements SmsService {
 
     @Resource
     private AlidayuSmsImpl alidayuSmsImpl;
+    @Resource
+    private ChinaMobileMasImpl chinaMobileMas;
 
     /**
      * 消息发送
@@ -69,24 +72,31 @@ public class SmsServiceImpl implements SmsService {
                 //获取对应的账号
                 MarketChannel marketChannel = marketChannelMap.get(Long.valueOf(s));
                 if (null != marketChannel) {
+                    //根据模板参数等，转换模板内容
+                    String content = produceContent(t.getTemplateContent(), JSONObject.parseObject(sendLog.getParameters()));
                     JSONObject object = new JSONObject();
-                    object.put("accessKey", marketChannel.getAccessKey());
-                    object.put("secret", marketChannel.getSecret());
-                    object.put("sign", marketChannel.getSignature());
-                    object.put("phones", sendLog.getCellphone());
-                    object.put("templateCode", t.getTemplateCode());
-                    object.put("parameters", sendLog.getParameters());
+                    object.put(MessagePushConstant.ACCESS_KEY, marketChannel.getAccessKey());
+                    object.put(MessagePushConstant.SECRET, marketChannel.getSecret());
+                    object.put(MessagePushConstant.SIGN, marketChannel.getSignature());
+                    object.put(MessagePushConstant.PHONES, sendLog.getCellphone());
+                    object.put(MessagePushConstant.TEMPLATE_CODE, t.getTemplateCode());
+                    object.put(MessagePushConstant.PARAMETERS, sendLog.getParameters());
                     BaseOutput<String> output = null;
                     if (t.getChannel().equals(MessageEnum.ChannelEnum.ALIDAYU.getCode())) {
                         output = alidayuSmsImpl.sendSMS(object);
+                    } else if (t.getChannel().equals(MessageEnum.ChannelEnum.CHINA_MOBILE.getCode())) {
+                        object.put(MessagePushConstant.COMPANY_NAME, marketChannel.getCompanyName());
+                        object.put(MessagePushConstant.CONTENT, content);
+                        output = chinaMobileMas.sendSMS(object);
                     }
                     if (null != output) {
                         sendLog.setSendTime(new Date());
                         sendLog.setRequestId(output.getData());
-                        sendLog.setContent(produceContent(t.getTemplateContent(), JSONObject.parseObject(sendLog.getParameters())));
+                        sendLog.setContent(content);
                         if (output.isSuccess()) {
                             sendLog.setBizId(output.getResult());
                             sendLog.setSendState(MessageEnum.SendStateEnum.SUCCEED.getCode());
+                            sendLog.setSendChannel(t.getChannel());
                             flag = true;
                             break;
                         } else {
@@ -95,6 +105,7 @@ public class SmsServiceImpl implements SmsService {
                             log.setSendState(MessageEnum.SendStateEnum.FAILURE.getCode());
                             log.setRemarks(output.getResult());
                             log.setId(null);
+                            log.setSendChannel(t.getChannel());
                             sendLogs.add(log);
                             continue;
                         }

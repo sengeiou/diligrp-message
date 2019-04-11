@@ -19,13 +19,14 @@ import java.util.List;
 /**
  * 由MyBatis Generator工具自动生成
  * This file was generated on 2019-03-31 10:54:30.
+ * @author yuehongbo
  */
 @Service
 public class WhitelistServiceImpl extends BaseServiceImpl<Whitelist, Long> implements WhitelistService {
     @Autowired
     FirmService firmService;
 
-    public WhitelistMapper getActualDao() {
+    public WhitelistMapper getActualMapper() {
         return (WhitelistMapper)getDao();
     }
 
@@ -66,6 +67,11 @@ public class WhitelistServiceImpl extends BaseServiceImpl<Whitelist, Long> imple
         }
 
         return false;
+    }
+
+    @Override
+    public Integer queryValidByMarketCode(Whitelist whitelist) {
+        return getActualMapper().queryValidByMarketCode(whitelist);
     }
 
 }

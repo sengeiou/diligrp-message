@@ -11,6 +11,7 @@ import com.aliyuncs.http.MethodType;
 import com.aliyuncs.profile.DefaultProfile;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.BaseOutput;
+import com.diligrp.message.common.constant.MessagePushConstant;
 import com.diligrp.message.service.remote.IMessageService;
 import org.springframework.stereotype.Component;
 
@@ -27,9 +28,9 @@ public class AlidayuSmsImpl implements IMessageService {
 
     @Override
     public BaseOutput<String> sendSMS(JSONObject object) {
-        DefaultProfile profile = DefaultProfile.getProfile("default", object.getString("accessKey"),object.getString("secret"));
+        DefaultProfile profile = DefaultProfile.getProfile("cn-hangzhou", object.getString(MessagePushConstant.ACCESS_KEY),object.getString(MessagePushConstant.SECRET));
         IAcsClient client = new DefaultAcsClient(profile);
-        CommonRequest request = buildData(object.getString("sign"), object.getString("phones"), object.getString("templateCode"),object.getString("parameters"));
+        CommonRequest request = buildData(object.getString(MessagePushConstant.SIGN), object.getString(MessagePushConstant.PHONES), object.getString(MessagePushConstant.TEMPLATE_CODE),object.getString(MessagePushConstant.PARAMETERS));
         try {
             CommonResponse response = client.getCommonResponse(request);
             if (null != response) {

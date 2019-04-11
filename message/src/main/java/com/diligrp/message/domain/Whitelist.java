@@ -59,6 +59,12 @@ public class Whitelist extends BaseDomain {
     private String source;
 
     /**
+     * 数据如果来源于系统，则记录对应系统中的数据id
+     */
+    @Column(name="`source_id`")
+    private Long sourceId;
+
+    /**
      * 是否删除(1-是;0-否)
      */
     @Column(name = "`deleted`")
@@ -83,6 +89,7 @@ public class Whitelist extends BaseDomain {
      */
     @FieldDef(label="ID")
     @EditMode(editor = FieldEditor.Number, required = true)
+    @Override
     public Long getId() {
         return id;
     }
@@ -92,6 +99,7 @@ public class Whitelist extends BaseDomain {
      *
      * @param id ID
      */
+    @Override
     public void setId(Long id) {
         this.id = id;
     }
@@ -214,6 +222,14 @@ public class Whitelist extends BaseDomain {
      */
     public void setSource(String source) {
         this.source = source;
+    }
+
+    public Long getSourceId() {
+        return sourceId;
+    }
+
+    public void setSourceId(Long sourceId) {
+        this.sourceId = sourceId;
     }
 
     /**

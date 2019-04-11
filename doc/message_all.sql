@@ -167,6 +167,7 @@ create table message_whitelist
    start_date           datetime not null comment '开始日期',
    end_date             datetime not null comment '结束日期',
    source               varchar(20) comment '信息来源(系统、手动添加?具体参考枚举定义)',
+   source_id            bigint comment '数据如果来源于系统，则记录对应系统中的数据id',
    deleted              tinyint comment '是否删除(1-是;0-否)',
    created              datetime not null default current_timestamp comment '创建时间',
    modified             datetime not null default current_timestamp on update current_timestamp comment '修改时间',

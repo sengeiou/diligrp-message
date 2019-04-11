@@ -6,10 +6,12 @@ import com.dili.ss.domain.BaseOutput;
 import com.diligrp.message.common.enums.MessageEnum;
 import com.diligrp.message.domain.SendLog;
 import com.diligrp.message.domain.Triggers;
+import com.diligrp.message.domain.Whitelist;
 import com.diligrp.message.domain.vo.MessageInfoVo;
 import com.diligrp.message.domain.vo.TriggersVo;
 import com.diligrp.message.service.SendLogService;
 import com.diligrp.message.service.TriggersService;
+import com.diligrp.message.service.WhitelistService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -33,6 +35,8 @@ public class MessageInfoHandler {
     private MessageSendTask messageSendTask;
     @Autowired
     private SendLogService sendLogService;
+    @Autowired
+    private WhitelistService whitelistService;
 
     /**
      * 处理接收到的信息
@@ -52,10 +56,21 @@ public class MessageInfoHandler {
         if (CollectionUtil.isEmpty(triggersVo.getTemplateList())) {
             msg.append("模板未配置 ");
         }
+        //如果需要验证白名单，检查用户是否存在白名单中
+        if (triggersVo.getWhitelist()){
+            Whitelist whitelist = new Whitelist();
+            whitelist.setMarketCode(info.getMarketCode());
+            whitelist.setCellphone(info.getCellphone());
+            Integer integer = whitelistService.queryValidByMarketCode(whitelist);
+            if (integer < 1) {
+                msg.append("此用户不在该场景的白名单中");
+            }
+        }
         SendLog sendLog = new SendLog();
         sendLog.setMarketCode(info.getMarketCode());
         sendLog.setSystemCode(info.getSystemCode());
         sendLog.setSceneCode(info.getSceneCode());
+        sendLog.setCellphone(info.getCellphone());
         sendLog.setReceiptTime(new Date());
         sendLog.setRemarks(msg.toString());
         sendLog.setParameters(info.getParameters().toJSONString());
@@ -63,7 +78,6 @@ public class MessageInfoHandler {
             sendLog.setSendState(MessageEnum.SendStateEnum.FAILURE.getCode());
             sendLogService.save(sendLog);
             return BaseOutput.failure().setResult(msg.toString());
-
         }else{
             sendLog.setSendState(MessageEnum.SendStateEnum.WAITING.getCode());
             sendLogService.save(sendLog);

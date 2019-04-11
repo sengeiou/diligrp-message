@@ -12,6 +12,7 @@
     <result column="start_date" jdbcType="TIMESTAMP" property="startDate" />
     <result column="end_date" jdbcType="TIMESTAMP" property="endDate" />
     <result column="source" jdbcType="VARCHAR" property="source" />
+    <result column="source_id" property="sourceId" />
     <result column="deleted" jdbcType="TINYINT" property="deleted" />
     <result column="created" jdbcType="TIMESTAMP" property="created" />
     <result column="modified" jdbcType="TIMESTAMP" property="modified" />
@@ -20,52 +21,15 @@
     <!--
       WARNING - @mbg.generated
     -->
-    id, market_code, customer_name, cellphone, start_date, end_date, source, deleted, 
+    id, market_code, customer_name, cellphone, start_date, end_date, source, source_id, deleted,
     created, modified
   </sql>
-  <select id="selectBy" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    <!--
-      WARNING - @mbg.generated
-    -->
-    select 
-    <include refid="Base_Column_List" />
-    from message_whitelist
-    where id = #{id,jdbcType=BIGINT}
+
+  <!-- 查询某个手机号，在某市场的此时此刻，是否在白名单中 -->
+  <select id="queryValidByMarketCode" resultType="integer" parameterType="com.diligrp.message.domain.Whitelist">
+    <![CDATA[
+        select COUNT(1) from message_whitelist mw where mw.start_date  <= NOW() and end_date >= NOW() and deleted =0 and mw.cellphone=#{cellphone} and mw.market_code=#{marketCode}
+    ]]>
   </select>
-  <update id="updateBy" parameterType="com.diligrp.message.domain.Whitelist">
-    <!--
-      WARNING - @mbg.generated
-    -->
-    update message_whitelist
-    <set>
-      <if test="marketCode != null">
-        market_code = #{marketCode,jdbcType=VARCHAR},
-      </if>
-      <if test="customerName != null">
-        customer_name = #{customerName,jdbcType=VARCHAR},
-      </if>
-      <if test="cellphone != null">
-        cellphone = #{cellphone,jdbcType=VARCHAR},
-      </if>
-      <if test="startDate != null">
-        start_date = #{startDate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="endDate != null">
-        end_date = #{endDate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="source != null">
-        source = #{source,jdbcType=VARCHAR},
-      </if>
-      <if test="deleted != null">
-        deleted = #{deleted,jdbcType=TINYINT},
-      </if>
-      <if test="created != null">
-        created = #{created,jdbcType=TIMESTAMP},
-      </if>
-      <if test="modified != null">
-        modified = #{modified,jdbcType=TIMESTAMP},
-      </if>
-    </set>
-    where id = #{id,jdbcType=BIGINT}
-  </update>
+
 </mapper>

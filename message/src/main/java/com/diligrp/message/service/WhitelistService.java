@@ -23,4 +23,11 @@ public interface WhitelistService extends BaseService<Whitelist, Long> {
      * @return false -- 未包含在已有时间区间； true --- 包含在已有时间区间内
      * */
     boolean checkDate(Whitelist whitelist);
+
+    /**
+     * 查询某个手机号，在某市场的此时此刻，是否在白名单中
+     * @param whitelist
+     * @return
+     */
+    Integer queryValidByMarketCode(Whitelist whitelist);
 }
