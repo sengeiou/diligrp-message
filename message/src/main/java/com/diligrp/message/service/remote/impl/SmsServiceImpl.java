@@ -46,6 +46,8 @@ public class SmsServiceImpl implements SmsService {
     private AlidayuSmsImpl alidayuSmsImpl;
     @Resource
     private ChinaMobileMasImpl chinaMobileMas;
+    @Resource
+    private SmsChineseImpl smsChinese;
 
     /**
      * 消息发送
@@ -88,6 +90,8 @@ public class SmsServiceImpl implements SmsService {
                         object.put(MessagePushConstant.COMPANY_NAME, marketChannel.getCompanyName());
                         object.put(MessagePushConstant.CONTENT, content);
                         output = chinaMobileMas.sendSMS(object);
+                    }else if (t.getChannel().equals(MessageEnum.ChannelEnum.WEBCHINESE_SMS.getCode())){
+                        output = smsChinese.sendSMS(object);
                     }
                     if (null != output) {
                         sendLog.setSendTime(new Date());
