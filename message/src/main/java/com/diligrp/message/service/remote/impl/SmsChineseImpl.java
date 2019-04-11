@@ -38,7 +38,7 @@ public class SmsChineseImpl implements IMessageService {
                 output.setCode(ResultCode.OK);
             } else {
                 output.setCode(String.valueOf(responseCode));
-                output.setResult("网建短信发送返回错误：" + ResponseCode.getResponseCode(responseCode));
+                output.setResult(ResponseCode.getResponseCode(responseCode).getDesc());
             }
             return output;
         } else {
