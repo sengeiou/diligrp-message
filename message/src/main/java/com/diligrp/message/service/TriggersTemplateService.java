@@ -16,5 +16,12 @@ public interface TriggersTemplateService extends BaseService<TriggersTemplate, L
      * @param marketChannelId  市场通道ID,类型String
      * @return List
      * */
-    public List<TriggersTemplate> listByMarketChannelId(String marketChannelId);
+     List<TriggersTemplate> listByMarketChannelId(String marketChannelId);
+
+    /**
+     * 根据场景触发带你删除
+     * @param triggerCode
+     * @return
+     */
+     Integer deleteByTriggerCode(String triggerCode);
 }

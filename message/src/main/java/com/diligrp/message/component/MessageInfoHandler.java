@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import com.dili.ss.domain.BaseOutput;
 import com.diligrp.message.common.enums.MessageEnum;
+import com.diligrp.message.common.enums.TriggersEnum;
 import com.diligrp.message.domain.SendLog;
 import com.diligrp.message.domain.Triggers;
 import com.diligrp.message.domain.Whitelist;
@@ -53,11 +54,12 @@ public class MessageInfoHandler {
             msg.append("应用未配置 ");
         }
         TriggersVo triggersVo = templateList.get(0);
-        if (CollectionUtil.isEmpty(triggersVo.getTemplateList())) {
+        if(TriggersEnum.EnabledStateEnum.DISABLED.getCode().equals(triggersVo.getEnabled())){
+            msg.append("应用场景已禁用 ");
+        }else if (CollectionUtil.isEmpty(triggersVo.getTemplateList())) {
             msg.append("模板未配置 ");
-        }
-        //如果需要验证白名单，检查用户是否存在白名单中
-        if (triggersVo.getWhitelist()){
+        }else if (triggersVo.getWhitelist()){
+            //如果需要验证白名单，检查用户是否存在白名单中
             Whitelist whitelist = new Whitelist();
             whitelist.setMarketCode(info.getMarketCode());
             whitelist.setCellphone(info.getCellphone());

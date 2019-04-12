@@ -83,7 +83,7 @@ public class TriggersController {
         return BaseOutput.success("删除成功");
     }
 
-    @ApiOperation("跳转到Customer新增页面")
+    @ApiOperation("跳转到Triggers新增页面")
     @RequestMapping(value="/add.html", method = {RequestMethod.GET, RequestMethod.POST})
     public String add(ModelMap modelMap, @RequestParam(name="id", required = false) Long id) throws Exception {
         UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
@@ -91,5 +91,12 @@ public class TriggersController {
             throw new RuntimeException("未登录");
         }
         return "triggers/edit";
+    }
+
+    @ApiOperation(value = "Triggers的禁启用", notes = "Triggers的禁启用")
+    @RequestMapping(value = "/doEnable.action", method = {RequestMethod.GET, RequestMethod.POST})
+    @ResponseBody
+    public BaseOutput doEnable(Long id,Boolean enable){
+        return triggersService.updateEnable(id,enable);
     }
 }

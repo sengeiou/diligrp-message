@@ -1,6 +1,7 @@
 package com.diligrp.message.service;
 
 import com.dili.ss.base.BaseService;
+import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.EasyuiPageOutput;
 import com.diligrp.message.domain.Triggers;
 import com.diligrp.message.domain.vo.TriggersVo;
@@ -29,4 +30,12 @@ public interface TriggersService extends BaseService<Triggers, Long> {
      * @return
      */
     List<TriggersVo> selectForUnionTemplate(Triggers triggers);
+
+    /**
+     * 根据用户ID，操作启禁用
+     * @param id ID
+     * @param enable 是否启用(true-启用，false-禁用)
+     * @return
+     */
+    BaseOutput updateEnable(Long id, Boolean enable);
 }

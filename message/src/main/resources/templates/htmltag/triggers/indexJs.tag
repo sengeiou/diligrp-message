@@ -52,33 +52,58 @@
         });
     }
 
+    /**
+     * datagrid行点击事件
+     * 目前用于来判断 启禁用是否可点
+     */
+    function onClickRow(index,row) {
+        var state = row.$_enabled;
+        if (state == 0){
+            //当用户状态为 禁用，可操作 启用
+            $('#play_btn').linkbutton('enable');
+            $('#stop_btn').linkbutton('disable');
+        }else if(state == 1){
+            //当用户状态为正常时，则只能操作 禁用
+            $('#stop_btn').linkbutton('enable');
+            $('#play_btn').linkbutton('disable');
+        } else{
+            //其它情况，按钮不可用
+            $('#stop_btn').linkbutton('disable');
+            $('#play_btn').linkbutton('disable');
+        }
+    }
+
     //根据主键删除
     function del() {
         var selected = $("#triggerGrid").datagrid("getSelected");
         if (null == selected) {
-            swal('警告','请选中一条数据', 'warning');
+            swal({
+                title: '警告',
+                text: '请选中一条数据',
+                type: 'warning',
+                width: 300,
+            });
             return;
         }
-        <#swalConfirm swalTitle="您确认想要删除记录吗？">
-                $.ajax({
-                    type: "POST",
-                    url: "${contextPath}/triggers/delete.action",
-                    data: {id:selected.id},
-                    processData:true,
-                    dataType: "json",
-                    async : true,
-                    success: function (data) {
-                        if(data.code=="200"){
-                            $("#triggerGrid").datagrid("reload");
-                            $('#dlg').dialog('close');
-                        }else{
-                            swal('错误',data.result, 'error');
-                        }
-                    },
-                    error: function(){
-                        swal('错误', '远程访问失败', 'error');
+        <#swalConfirm swalTitle="删除后，将无法推送消息！是否确定删除？">
+            $.ajax({
+                type: "POST",
+                url: "${contextPath}/triggers/delete.action",
+                data: {id:selected.id},
+                processData:true,
+                dataType: "json",
+                async : true,
+                success: function (data) {
+                    if(data.success){
+                        $("#triggerGrid").datagrid("reload");
+                    }else{
+                        swal('错误',data.result, 'error');
                     }
-                });
+                },
+                error: function(){
+                    swal('错误', '远程访问失败', 'error');
+                }
+            });
         </#swalConfirm>
     }
     //表格查询
@@ -97,6 +122,64 @@
     //清空表单
     function clearQueryForm() {
         $('#queryForm').form('clear');
+    }
+
+    /**
+     * 禁启用操作
+     * @param enable 是否启用:true-启用
+     */
+    function doEnable(enable) {
+        var selected = $("#triggerGrid").datagrid("getSelected");
+        if (null == selected) {
+            swal({
+                title: '警告',
+                text: '请选中一条数据',
+                type: 'warning',
+                width: 300,
+            });
+            return;
+        }
+        var msg = (enable || 'true' == enable) ? '请确认是否启用' : '请确认是否禁用';
+        swal({
+            title: msg,
+            type: 'question',
+            showCancelButton: true,
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+        }).then((result) => {
+            if(result.value){
+                $.ajax({
+                    type: "POST",
+                    url: "${contextPath}/triggers/doEnable.action",
+                    data: {id: selected.id, enable: enable},
+                    processData:true,
+                    dataType: "json",
+                    async : true,
+                    success: function (ret) {
+                        if(ret.success){
+                            $("#triggerGrid").datagrid("reload");
+                            $('#stop_btn').linkbutton('disable');
+                            $('#play_btn').linkbutton('disable');
+                        }else{
+                            swal(
+                                '错误',
+                                ret.result,
+                                'error'
+                            );
+                        }
+                    },
+                    error: function(){
+                        swal(
+                            '错误',
+                            '远程访问失败',
+                            'error'
+                        );
+                    }
+                });
+            }
+        });
     }
 
     //表格表头右键菜单
@@ -179,6 +262,15 @@
                              openUpdate();
                          }
                      },
+                </#resource>
+                <#resource code="deleteTrigger">
+                    {
+                        iconCls:'icon-remove',
+                        text:'删除',
+                        handler:function(){
+                            del();
+                        }
+                    },
                 </#resource>
                 <#resource code="enabledTrigger">
                     {

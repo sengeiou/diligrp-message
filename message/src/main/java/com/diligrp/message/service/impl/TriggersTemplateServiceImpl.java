@@ -5,6 +5,7 @@ import com.diligrp.message.domain.TriggersTemplate;
 import com.diligrp.message.mapper.TriggersTemplateMapper;
 import com.diligrp.message.service.TriggersTemplateService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -15,13 +16,20 @@ import java.util.List;
 @Service
 public class TriggersTemplateServiceImpl extends BaseServiceImpl<TriggersTemplate, Long> implements TriggersTemplateService {
 
-    public TriggersTemplateMapper getActualDao() {
+    public TriggersTemplateMapper getActualMapper() {
         return (TriggersTemplateMapper)getDao();
     }
 
     @Override
     public List<TriggersTemplate> listByMarketChannelId(String marketChannelId) {
+        return this.getActualMapper().selectByMarketChannelId(marketChannelId);
+    }
 
-        return this.getActualDao().selectByMarketChannelId(marketChannelId);
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Integer deleteByTriggerCode(String triggerCode) {
+        TriggersTemplate template = new TriggersTemplate();
+        template.setTemplateCode(triggerCode);
+        return getActualMapper().delete(template);
     }
 }
