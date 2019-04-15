@@ -130,5 +130,37 @@ public class MessageEnum {
         }
     }
 
+    /**
+     * 系统信息枚举定义
+     */
+    public enum SystemEnum {
 
+        TOLL("toll", "神农"),
+        JMSF("jmsf", "进门收费"),
+        ;
+
+        private String name;
+        private String code;
+
+        SystemEnum(String code, String name){
+            this.code = code;
+            this.name = name;
+        }
+
+        public static SystemEnum getSystem(String code) {
+            for (MessageEnum.SystemEnum se : MessageEnum.SystemEnum.values()) {
+                if (se.getCode().equals(code)) {
+                    return se;
+                }
+            }
+            return null;
+        }
+
+        public String getCode() {
+            return code;
+        }
+        public String getName() {
+            return name;
+        }
+    }
 }

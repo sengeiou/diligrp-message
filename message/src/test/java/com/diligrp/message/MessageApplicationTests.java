@@ -31,8 +31,8 @@ public class MessageApplicationTests {
     @Test
     public void testChinaMobileMas(){
         JSONObject object = new JSONObject();
-        object.put(MessagePushConstant.ACCESS_KEY, "zhuxuegang@diligrp.com");
-        object.put(MessagePushConstant.SECRET, "c0978121c3893cf9ddbc");
+        object.put(MessagePushConstant.ACCESS_KEY, "shenyangdili");
+        object.put(MessagePushConstant.SECRET, "4e3412a51439f0c8ce80");
         object.put(MessagePushConstant.SIGN, "地利");
         object.put(MessagePushConstant.PHONES, "17608176657");
         object.put(MessagePushConstant.CONTENT, "你好,验证码为123456");

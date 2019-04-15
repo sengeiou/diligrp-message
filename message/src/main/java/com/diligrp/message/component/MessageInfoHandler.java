@@ -2,6 +2,7 @@ package com.diligrp.message.component;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson.JSONObject;
 import com.dili.ss.domain.BaseOutput;
 import com.diligrp.message.common.enums.MessageEnum;
 import com.diligrp.message.common.enums.TriggersEnum;
@@ -13,7 +14,9 @@ import com.diligrp.message.domain.vo.TriggersVo;
 import com.diligrp.message.service.SendLogService;
 import com.diligrp.message.service.TriggersService;
 import com.diligrp.message.service.WhitelistService;
+import com.diligrp.message.utils.MessageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -29,6 +32,9 @@ import java.util.List;
  */
 @Component
 public class MessageInfoHandler {
+
+    @Value("${message.enable}")
+    private Boolean messageSend;
 
     @Autowired
     private TriggersService triggersService;
@@ -81,12 +87,20 @@ public class MessageInfoHandler {
             sendLogService.save(sendLog);
             return BaseOutput.failure().setResult(msg.toString());
         }else{
-            sendLog.setSendState(MessageEnum.SendStateEnum.WAITING.getCode());
-            sendLogService.save(sendLog);
-            //目前只有短信，则直接注册到短信任务中
-            messageSendTask.registerSMS(sendLog.getId(),new Date(),triggersVo.getTemplateList());
+            if (messageSend) {
+                sendLog.setSendState(MessageEnum.SendStateEnum.WAITING.getCode());
+                sendLogService.save(sendLog);
+                //目前只有短信，则直接注册到短信任务中
+                messageSendTask.registerSMS(sendLog.getId(), new Date(), triggersVo.getTemplateList());
+            } else {
+                //如果配置的该环境不需要发送短信，则直接记录发送信息
+                String content = MessageUtil.produceMsgContent(triggersVo.getTemplateList().get(0).getTemplateContent(), JSONObject.parseObject(sendLog.getParameters()));
+                sendLog.setContent(content);
+                sendLog.setRemarks("该环境已配置禁用短信发送");
+                sendLog.setSendState(MessageEnum.SendStateEnum.SUCCEED.getCode());
+                sendLogService.save(sendLog);
+            }
             return BaseOutput.success();
         }
-
     }
 }

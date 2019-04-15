@@ -3,38 +3,31 @@
     <!-- ====================================================================================================================== -->
     <!-- 上方布局 -->
     <!-- ====================================================================================================================== -->
-    <div region="north" height="auto" align="center">
+    <div region="north" height="auto" align="center" border="false">
+        <div id="nav" style="padding-left:15px;padding-top:10px;" align="left">
+            <#nav/>
+        </div>
         <!-- =========================================================表单========================================================= -->
-        <div class="easyui-panel" style="width:100%;" align="left">
+        <div class="easyui-panel" style="width:100%;" align="left" border="false">
             <form id="form" class="easyui-form" method="post" fit="true">
-                <table style="padding:10px;">
-                    <tr>
-                        <td style="padding:5px;">
-                            <input name="marketCode" id="marketCode" style="width:100%" labelAlign="right" data-options="label:'市场:', validType:'length[0,20]'" />
-                            <#comboProvider _id="marketCode" _provider='firmProvider' _queryParams='{emptyText:"-- 全部 --"}'/>
-                        </td>
-                        <td style="padding:5px;">
-                            <input name="source" id="source" style="width:100%" labelAlign="right" data-options="label:'来源:', validType:'length[0,20]'" />
-                            <#comboProvider _id="source" _provider='messageSourceProvider' _queryParams='{emptyText:"-- 全部 --"}'/>
-                        </td>
-                        <!--<td style="padding:5px;">-->
-                            <!--<input class="easyui-datebox" name="startTime" editable="false" id="startTime"-->
-                                   <!--labelAlign="right" data-options="label:' 有效时间:'" style="width: 250px;"/>-->
-                            <!-- - <input class="easyui-datebox" editable="false" name="endTime" id="endTime"-->
-                                     <!--labelAlign="right" style="width: 150px;"/>-->
-                        <!--</td>-->
-                        <td style="padding:5px;">
-                            <input class="easyui-textbox" name="keywords" id="keywords" style="width:100%" data-options="prompt:'姓名/手机号码', validType:'length[0,20]'" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="padding-left:28px;padding-top: 10px; padding-bottom: 10px;">
-                            <a href="#" class="easyui-linkbutton" iconCls="icon-search" id="queryBtn"
-                               onclick="queryGrid()">查询</a>&nbsp;&nbsp;
-                            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-clear" onclick="clearForm()">清除</a>
-                        </td>
-                    </tr>
-                </table>
+                <div class="search-wrap">
+                    <div class="search-item">
+                        <input name="marketCode" id="marketCode" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" data-options="label:'市场:', editable:false" />
+                        <#comboProvider _id="marketCode" _provider='firmProvider' _queryParams='{emptyText:"-- 全部 --"}'/>
+                    </div>
+                    <div class="search-item">
+                        <input name="source" id="source" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" data-options="label:'来源:',editable:false" />
+                        <#comboProvider _id="source" _provider='messageSourceProvider' _queryParams='{emptyText:"-- 全部 --"}'/>
+                    </div>
+                    <div class="search-item">
+                        <input class="easyui-textbox" name="keywords" id="keywords" style="width:100%" data-options="prompt:'姓名/手机号码', validType:'length[0,20]'" />
+                    </div>
+                    <div class="search-wrap-btn">
+                        <a href="#" class="easyui-linkbutton" iconCls="icon-search" id="queryBtn"
+                           onclick="queryGrid()">查询</a>&nbsp;&nbsp;
+                        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-clear" onclick="clearForm()">清除</a>
+                    </div>
+                </div>
             </form>
         </div>
     </div>
@@ -44,7 +37,7 @@
     <!-- 表格 -->
     <div region="center" style="width:100%;" height="auto">
         <!-- =========================================================表格========================================================= -->
-        <table class="easyui-datagrid" title="Whitelist列表" id="grid" fitColumns="true" noheader="true"
+        <table class="easyui-datagrid" title="白名单列表" id="grid" fitColumns="true" noheader="true"
                pagination="true" pageSize="30" pageNumber="1" pagePosition="top" rownumbers="false" remoteSort="false"
                loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="false" sortName="marketCode"
                align="center" fit="true" striped="true" idField="id" data-options="">

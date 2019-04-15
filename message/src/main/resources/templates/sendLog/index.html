@@ -15,7 +15,7 @@
                             </td>
                             <td style="padding:5px;">
                                 <input name="systemCode" id="systemCode" style="width:100%" labelAlign="right" data-options="label:'所属系统:', validType:'length[0,20]'" />
-                                <#comboProvider _id="systemCode" _provider='firmProvider' _queryParams='{emptyText:"-- 全部 --"}'/>
+                                <#comboProvider _id="systemCode" _provider='systemProvider' _queryParams='{emptyText:"-- 全部 --"}'/>
 
                             </td>
                             <td style="padding:5px;">
@@ -73,7 +73,7 @@
                         <th width="5%" data-options="field:'marketCode', _provider:'firmProvider',  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                             市场
                         </th>
-                        <th width="10%" data-options="field:'systemCode', _provider:'firmProvider',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        <th width="10%" data-options="field:'systemCode', _provider:'systemProvider',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                             所属系统
                         </th>
                         <th width="10%" data-options="field:'sceneCode', _provider:'dataDictionaryValueProvider', _queryParams:{'dd_code':'message_scene'},  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">

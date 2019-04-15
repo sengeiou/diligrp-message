@@ -16,6 +16,7 @@ import com.diligrp.message.domain.TriggersTemplate;
 import com.diligrp.message.service.MarketChannelService;
 import com.diligrp.message.service.SendLogService;
 import com.diligrp.message.service.remote.SmsService;
+import com.diligrp.message.utils.MessageUtil;
 import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -75,7 +76,7 @@ public class SmsServiceImpl implements SmsService {
                 MarketChannel marketChannel = marketChannelMap.get(Long.valueOf(s));
                 if (null != marketChannel) {
                     //根据模板参数等，转换模板内容
-                    String content = produceContent(t.getTemplateContent(), JSONObject.parseObject(sendLog.getParameters()));
+                    String content = MessageUtil.produceMsgContent(t.getTemplateContent(), JSONObject.parseObject(sendLog.getParameters()));
                     JSONObject object = new JSONObject();
                     object.put(MessagePushConstant.ACCESS_KEY, marketChannel.getAccessKey());
                     object.put(MessagePushConstant.SECRET, marketChannel.getSecret());
@@ -129,18 +130,4 @@ public class SmsServiceImpl implements SmsService {
             sendLogService.batchInsert(sendLogs);
         }
     }
-
-    /**
-     * 渲染模板数据
-     *
-     * @param resource 模板内容
-     * @param data    填充数据对象
-     * @return 渲染后的数据
-     */
-    private String produceContent(String resource, Map<String, Object> data) {
-        TemplateEngine engine = TemplateUtil.createEngine(new TemplateConfig("templates", TemplateConfig.ResourceMode.STRING));
-        Template template = engine.getTemplate(resource);
-        return template.render(data);
-    }
-
 }
