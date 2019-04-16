@@ -12,139 +12,123 @@
         overflow: auto;
     }
 </style>
-<div class="templatewrap" id="templatewrap" style="width: 360px;">
-    <div class="template-item">
-        <input class="easyui-combobox" name="marketCode" style="width:100%" labelAlign="right" data-options="label:'市场:',
-        url:'${contextPath}/provider/getLookupList.action',
-        method:'POST',
-        queryParams: {provider: 'firmProvider'}" />
-    </div>
-    <div class="template-item">
-        <input class="easyui-combobox" name="systemCode" style="width:100%" labelAlign="right" data-options="label:'所属系统:',
-        url:'${contextPath}/provider/getLookupList.action',
-        method:'POST',
-        queryParams: {provider: 'firmProvider'}" />
-    </div>
-    <div class="template-item">
-        <input class="easyui-combobox" name="sceneCode" style="width:100%" labelAlign="right" data-options="label:'应用场景:',
-        url:'${contextPath}/provider/getLookupList.action',
-        method:'POST',
-        queryParams: {provider: 'firmProvider'}" />
-    </div>
-    <div class="template-item">
-        <input class="easyui-combobox" name="whitelist" style="width:100%" labelAlign="right" data-options="label:'应用白名单:',
-        url:'${contextPath}/provider/getLookupList.action',
-        method:'POST',
-        queryParams: {provider: 'firmProvider'}" />
-    </div>
+<form id="_form" class="easyui-form" method="post" fit="true">
+    <div class="templatewrap" id="templatewrap" style="width: 360px;">
+        <div class="template-base">
+            <input name="_id" type="hidden">
+            <div class="template-item">
+                <input class="easyui-combobox" name="marketCode" style="width:100%" labelAlign="right" data-options="label:'市场:',
+                            url:'${contextPath}/provider/getLookupList.action',
+                            method:'POST',
+                            queryParams: {provider: 'firmProvider'}" />
+            </div>
+            <div class="template-item">
+                <input class="easyui-combobox" name="systemCode" style="width:100%" labelAlign="right" data-options="label:'所属系统:',
+                            url:'${contextPath}/provider/getLookupList.action',
+                            method:'POST',
+                            queryParams: {provider: 'firmProvider'}" />
+            </div>
+            <div class="template-item">
+                <input class="easyui-combobox" name="sceneCode" style="width:100%" labelAlign="right" data-options="label:'应用场景:',
+                            url:'${contextPath}/provider/getLookupList.action',
+                            method:'POST',
+                            queryParams: {provider: 'firmProvider'}" />
+            </div>
+            <div class="template-item">
+                <input class="easyui-combobox" name="whitelist" style="width:100%" labelAlign="right" data-options="label:'应用白名单:',
+                        url:'${contextPath}/provider/getLookupList.action',
+                        method:'POST',
+                        queryParams: {provider: 'firmProvider'}" />
+            </div>
+        </div>
 
-    <div class="template-group-origin">
         <div class="template-group">
             <h4 class="template-group-title">模板</h4>
+            <input type="hidden" name="templateId" >
             <div class="template-item">
-                <input class="easyui-combobox" name="channel" style="width:100%" labelAlign="right" data-options="label:'模板来源:'" />
+                <input class="easyui-combobox" name="channel" style="width:100%" labelAlign="right" data-options="label:'模板来源:',
+                                url:'${contextPath}/provider/getLookupList.action',
+                                method:'POST',
+                                queryParams: {provider: 'firmProvider'}" />
             </div>
             <div class="template-item">
-                <input class="easyui-combobox" name="marketChannelIds" style="width:100%" labelAlign="right" data-options="label:'AccessKey:',multiple:true" />
+                <input class="easyui-combobox" name="marketChannelIds" style="width:100%" labelAlign="right" data-options="label:'AccessKey:',multiple:true,
+                                url:'${contextPath}/provider/getLookupList.action',
+                                method:'POST',
+                                queryParams: {provider: 'firmProvider'}" />
             </div>
             <div class="template-item">
-                <input class="easyui-textbox" name="templateName" style="width:100%" labelAlign="right" data-options="label:'模板名称:'" />
+                <input class="easyui-textbox" name="templateName" style="width:100%" labelAlign="right" data-options="label:'模板名称:',
+                                url:'${contextPath}/provider/getLookupList.action',
+                                method:'POST',
+                                queryParams: {provider: 'firmProvider'}" />
             </div>
             <div class="template-item">
-                <input class="easyui-textbox" name="templateCode" style="width:100%" labelAlign="right" data-options="label:'模板CODE:'" />
+                <input class="easyui-textbox" name="templateCode" style="width:100%" labelAlign="right" data-options="label:'模板CODE:',
+                                url:'${contextPath}/provider/getLookupList.action',
+                                method:'POST',
+                                queryParams: {provider: 'firmProvider'}" />
             </div>
             <div class="template-item">
-                <input class="easyui-textbox" name="templateContent" style="width:100%" labelAlign="right" data-options="label:'模板内容:', height: '80px', multiline: true" />
+                <input class="easyui-textbox" name="templateContent" style="width:100%" labelAlign="right" data-options="label:'模板内容:', height: '80px', multiline: true,
+                                url:'${contextPath}/provider/getLookupList.action',
+                                method:'POST',
+                                queryParams: {provider: 'firmProvider'}" />
             </div>
             <div class="edit-limit">
-                <a href="#" class="easyui-linkbutton template-plus-btn" data-options="iconCls:'icon-add'">add</a>
-                <a href="#" class="easyui-linkbutton template-minus-btn" data-options="iconCls:'icon-add'"></a>
+                <a href="#" class="easyui-linkbutton template-plus-btn" data-options="iconCls:'icon-add'">plus</a>
+                <a href="#" class="easyui-linkbutton template-minus-btn" data-options="iconCls:'icon-add'">minus</a>
             </div>
         </div>
     </div>
+</form>
 
-    <div class="template-group">
-        <h4 class="template-group-title">模板</h4>
-        <div class="template-item">
-            <input class="easyui-combobox" name="channel" style="width:100%" labelAlign="right" data-options="label:'模板来源:',
-        url:'${contextPath}/provider/getLookupList.action',
-        method:'POST',
-        queryParams: {provider: 'firmProvider'}" />
-        </div>
-        <div class="template-item">
-            <input class="easyui-combobox" name="marketChannelIds" style="width:100%" labelAlign="right" data-options="label:'AccessKey:',multiple:true,
-        url:'${contextPath}/provider/getLookupList.action',
-        method:'POST',
-        queryParams: {provider: 'firmProvider'}" />
-        </div>
-        <div class="template-item">
-            <input class="easyui-textbox" name="templateName" style="width:100%" labelAlign="right" data-options="label:'模板名称:',
-        url:'${contextPath}/provider/getLookupList.action',
-        method:'POST',
-        queryParams: {provider: 'firmProvider'}" />
-        </div>
-        <div class="template-item">
-            <input class="easyui-textbox" name="templateCode" style="width:100%" labelAlign="right" data-options="label:'模板CODE:',
-        url:'${contextPath}/provider/getLookupList.action',
-        method:'POST',
-        queryParams: {provider: 'firmProvider'}" />
-        </div>
-        <div class="template-item">
-            <input class="easyui-textbox" name="templateContent" style="width:100%" labelAlign="right" data-options="label:'模板内容:', height: '80px', multiline: true,
-        url:'${contextPath}/provider/getLookupList.action',
-        method:'POST',
-        queryParams: {provider: 'firmProvider'}" />
-        </div>
-        <div class="edit-limit">
-            <a href="#" class="easyui-linkbutton template-plus-btn" data-options="iconCls:'icon-add'">add</a>
-            <a href="#" class="easyui-linkbutton template-minus-btn" data-options="iconCls:'icon-add'"></a>
+
+<div class="easyui-layout" fit="true">
+
+    <!-- 基本信息表单 -->
+    <div style="padding-top:50px" align="center">
+        <div  class="easyui-panel" style="width: 96%;" title="基本信息" border="false" >
+
+            <!--追加得模板-->
+            <!--<div class="template-group-origin">
+                <div class="template-group">
+                    <h4 class="template-group-title">模板</h4>
+                    <input type="hidden" name="templateId" >
+                    <div class="template-item">
+                        <input class="easyui-combobox" name="channel" style="width:100%" labelAlign="right" data-options="label:'模板来源:',
+                            url:'${contextPath}/provider/getLookupList.action',
+                            method:'POST',
+                            queryParams: {provider: 'firmProvider'}" />
+                    </div>
+                    <div class="template-item">
+                        <input class="easyui-combobox" name="marketChannelIds" style="width:100%" labelAlign="right" data-options="label:'AccessKey:',multiple:true" />
+                    </div>
+                    <div class="template-item">
+                        <input class="easyui-textbox" name="templateName" style="width:100%" labelAlign="right" data-options="label:'模板名称:'" />
+                    </div>
+                    <div class="template-item">
+                        <input class="easyui-textbox" name="templateCode" style="width:100%" labelAlign="right" data-options="label:'模板CODE:'" />
+                    </div>
+                    <div class="template-item">
+                        <input class="easyui-textbox" name="templateContent" style="width:100%" labelAlign="right" data-options="label:'模板内容:', height: '80px', multiline: true" />
+                    </div>
+                    <div class="edit-limit">
+                        <a href="#" class="easyui-linkbutton template-plus-btn" data-options="iconCls:'icon-add'">add</a>
+                        <a href="#" class="easyui-linkbutton template-minus-btn" data-options="iconCls:'icon-add'"></a>
+                    </div>
+                </div>
+            </div>-->
+
+            <!--<form action=""></form>-->
+
+            <div class="">
+                <a href="#" class="easyui-linkbutton" iconCls="icon-search" id="record-save-btn" >保存</a>
+            </div>
         </div>
     </div>
-
 </div>
 
-<!--<div class="easyui-layout" fit="true">-->
-
-    <!--&lt;!&ndash; 基本信息表单 &ndash;&gt;-->
-    <!--<div style="padding-top:50px" align="center">-->
-        <!--<div  class="easyui-panel" style="width: 96%;" title="基本信息" border="false" >-->
-            <!--<form id="_form" class="easyui-form" method="post" fit="true">-->
-                <!--<input name="_id" id="_id" type="hidden">-->
-                <!--<div class="templatewrap"></div>-->
-            <!--</form>-->
-        <!--</div>-->
-    <!--</div>-->
-<!--</div>-->
-<script>
-
-    var flagCount = 0;
-    $('.template-group-origin').css({height: 0, overflow: 'hidden'});
-    $('.templatewrap').on('click', '.template-plus-btn', function(){
-        if($('.template-group').length < 11) {
-            console.log('plus:--------');
-            let id = new Date().valueOf();
-            let template = $('.template-group-origin .template-group').clone(true, true);
-            $(template).attr('id', id);
-            $(template).find('.template-item [name]').each(function(index, el){
-                let name = $(el).attr('name') + flagCount;
-                console.log($(el).attr('name', name))
-            });
-            $('.templatewrap').append($(template));
-
-            $.parser.parse($('#'+ id).parent() );
-            // $.parser.parse('#templatewrap' );
-
-        }
-    });
-    $('.templatewrap').on('click', '.template-minus-btn', function(){
-        if($('.template-group').length > 2) {
-            console.log('minus:-----');
-            $(this).parents('.template-group').remove();
-            $('.templatewrap .template-group:last-child');
-        }
-    });
-
-
-</script>
+<#triggers_editJs />
 
 </#body>
