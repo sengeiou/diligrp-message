@@ -1,6 +1,7 @@
 package com.diligrp.message.domain;
 
 import com.dili.ss.domain.BaseDomain;
+import com.dili.ss.domain.annotation.FindInSet;
 import com.dili.ss.metadata.FieldEditor;
 import com.dili.ss.metadata.annotation.EditMode;
 import com.dili.ss.metadata.annotation.FieldDef;
@@ -47,9 +48,10 @@ public class SendLog extends BaseDomain {
     private String sceneCode;
 
     /**
-     * 电话号码
+     * 电话号码,多个以英文逗号隔开
      */
     @Column(name = "`cellphone`")
+    @FindInSet
     private String cellphone;
 
     /**
@@ -213,8 +215,8 @@ public class SendLog extends BaseDomain {
      *
      * @return cellphone - 电话号码
      */
-    @FieldDef(label="电话号码", maxLength = 20)
-    @EditMode(editor = FieldEditor.Text, required = false)
+    @FieldDef(label="电话号码", maxLength = 1000)
+    @EditMode(editor = FieldEditor.Text)
     public String getCellphone() {
         return cellphone;
     }
