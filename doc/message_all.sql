@@ -194,7 +194,7 @@ create table message_send_log
    market_code          varchar(20) comment '来源市场',
    system_code          varchar(20) comment '来源系统',
    scene_code           varchar(50) comment '应用场景',
-   cellphone            varchar(20) comment '电话号码',
+   cellphone            varchar(1000) comment '电话号码,多个以英文逗号分隔',
    receipt_time         datetime comment '接收时间',
    parameters           json comment '请求参数',
    content              varchar(255) comment '消息内容',
