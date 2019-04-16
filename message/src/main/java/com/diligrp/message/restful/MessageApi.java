@@ -9,7 +9,6 @@ import com.diligrp.message.component.MessageInfoHandler;
 import com.diligrp.message.domain.Whitelist;
 import com.diligrp.message.domain.vo.MessageInfoVo;
 import com.diligrp.message.service.WhitelistService;
-import com.google.gson.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -50,6 +49,7 @@ public class MessageApi {
         try {
             return messageInfoHandler.handler(messageInfoVo);
         }catch (Exception e){
+            e.printStackTrace();
             return BaseOutput.failure("操作异常").setCode(ResultCode.APP_ERROR);
         }
     }

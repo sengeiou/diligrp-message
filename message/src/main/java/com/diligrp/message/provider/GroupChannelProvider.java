@@ -40,6 +40,6 @@ public class GroupChannelProvider implements ValueProvider {
         for (String s : split) {
             strb.append(MessageEnum.ChannelEnum.getChannelEnum(s).getName()).append(" ");
         }
-        return null;
+        return strb.toString();
     }
 }

@@ -2,10 +2,6 @@ package com.diligrp.message.service.remote.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.extra.template.Template;
-import cn.hutool.extra.template.TemplateConfig;
-import cn.hutool.extra.template.TemplateEngine;
-import cn.hutool.extra.template.TemplateUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.dili.ss.domain.BaseOutput;
 import com.diligrp.message.common.constant.MessagePushConstant;
@@ -16,6 +12,7 @@ import com.diligrp.message.domain.TriggersTemplate;
 import com.diligrp.message.service.MarketChannelService;
 import com.diligrp.message.service.SendLogService;
 import com.diligrp.message.service.remote.SmsService;
+import com.diligrp.message.utils.Base64Util;
 import com.diligrp.message.utils.MessageUtil;
 import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,17 +76,17 @@ public class SmsServiceImpl implements SmsService {
                     String content = MessageUtil.produceMsgContent(t.getTemplateContent(), JSONObject.parseObject(sendLog.getParameters()));
                     JSONObject object = new JSONObject();
                     object.put(MessagePushConstant.ACCESS_KEY, marketChannel.getAccessKey());
-                    object.put(MessagePushConstant.SECRET, marketChannel.getSecret());
+                    object.put(MessagePushConstant.SECRET, Base64Util.getDecoderString(marketChannel.getSecret()));
                     object.put(MessagePushConstant.SIGN, marketChannel.getSignature());
                     object.put(MessagePushConstant.PHONES, sendLog.getCellphone());
                     object.put(MessagePushConstant.TEMPLATE_CODE, t.getTemplateCode());
                     object.put(MessagePushConstant.PARAMETERS, sendLog.getParameters());
+                    object.put(MessagePushConstant.CONTENT, content);
                     BaseOutput<String> output = null;
                     if (t.getChannel().equals(MessageEnum.ChannelEnum.ALIDAYU.getCode())) {
                         output = alidayuSmsImpl.sendSMS(object);
                     } else if (t.getChannel().equals(MessageEnum.ChannelEnum.CHINA_MOBILE.getCode())) {
                         object.put(MessagePushConstant.COMPANY_NAME, marketChannel.getCompanyName());
-                        object.put(MessagePushConstant.CONTENT, content);
                         output = chinaMobileMas.sendSMS(object);
                     }else if (t.getChannel().equals(MessageEnum.ChannelEnum.WEBCHINESE_SMS.getCode())){
                         output = smsChinese.sendSMS(object);
@@ -120,13 +117,14 @@ public class SmsServiceImpl implements SmsService {
                 }
             }
         }
-        //如果最后，都没没有发送成功
+        //如果有一个成功的
         if (flag) {
-            sendLogService.delete(sendLogId);
-            sendLogService.batchInsert(sendLogs);
-        } else {
-            //如果有一个成功的
             sendLogService.update(sendLog);
+        } else {
+            //如果最后，都没没有发送成功
+            sendLogService.delete(sendLogId);
+        }
+        if (CollectionUtil.isNotEmpty(sendLogs)){
             sendLogService.batchInsert(sendLogs);
         }
     }

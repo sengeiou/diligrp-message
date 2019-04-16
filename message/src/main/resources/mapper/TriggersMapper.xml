@@ -72,8 +72,8 @@
     <!-- 根据条件聚合查询触发点及模板信息 -->
     <select id="selectForUnionTemplate" resultMap="unionTemplateMap" parameterType="com.diligrp.message.domain.Triggers">
         select
-        <include refid="Base_Column_List"/>
-        from message_triggers_template
+        mt.*
+        from message_triggers mt
         <include refid="QUERY_WHERE_CLAUSE" />
     </select>
 

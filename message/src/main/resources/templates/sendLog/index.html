@@ -3,58 +3,50 @@
         <!-- ====================================================================================================================== -->
         <!-- 上方布局 -->
         <!-- ====================================================================================================================== -->
-        <div region="north" height="auto" align="center">
+        <div region="north" height="auto" align="center" border="false">
+            <div id="nav" style="padding-left:15px;padding-top:10px;" align="left">
+                <#nav/>
+            </div>
             <!-- =========================================================表单========================================================= -->
-            <div class="easyui-panel" style="width:100%;" align="left">
+            <div class="easyui-panel" style="width:100%;" align="left" border="false">
                 <form id="form" class="easyui-form" method="post" fit="true">
-                    <table style="padding:10px;">
-                        <tr>
-                            <td style="padding:5px;">
-                                <input name="marketCode" id="marketCode" style="width:100%" labelAlign="right" data-options="label:'市场:', validType:'length[0,20]'" />
-                                <#comboProvider _id="marketCode" _provider='firmProvider' _queryParams='{emptyText:"-- 全部 --"}'/>
-                            </td>
-                            <td style="padding:5px;">
-                                <input name="systemCode" id="systemCode" style="width:100%" labelAlign="right" data-options="label:'所属系统:', validType:'length[0,20]'" />
-                                <#comboProvider _id="systemCode" _provider='systemProvider' _queryParams='{emptyText:"-- 全部 --"}'/>
-
-                            </td>
-                            <td style="padding:5px;">
-                                <input name="sceneCode" id="sceneCode" style="width:100%" labelAlign="right" data-options="label:'业务场景:', validType:'length[0,50]'" />
-                                <#comboProvider _id="sceneCode" _provider='dataDictionaryValueProvider' _queryParams='{dd_code:"message_scene",emptyText:"-- 全部 --"}'/>
-
-                            </td>
-                            <td style="padding:5px;">
-                                <input name="sendChannel" id="sendChannel" style="width:100%" labelAlign="right" data-options="label:'通道:', validType:'length[0,20]'" />
-                                <#comboProvider _id="sendChannel" _provider='marketChannelProvider' _queryParams='{emptyText:"-- 全部 --"}'/>
-
-                            </td>
-                            <td style="padding:5px;">
-                                <input name="sendState" id="sendState" style="width:100%" labelAlign="right" data-options="label:'发送状态:', validType:'length[0,20]'" />
-                                <#comboProvider _id="sendState" _provider='sendStateProvider' _queryParams='{emptyText:"-- 全部 --"}'/>
-
-                            </td>
-
-                        </tr>
-                        <tr>
-                            <td style="padding:5px;">
-                                <input class="easyui-datetimebox" name="startSendTime" editable="false" id="startSendTime"
-                                       labelAlign="right" data-options="label:' 发送时间:'" style="width: 250px;"/>
-                                - <input class="easyui-datetimebox" editable="false" name="endSendTime" id="endSendTime"
-                                         labelAlign="right" style="width: 150px;"/>
-                            </td>
-                            <td style="padding:5px;">
-                                <input class="easyui-textbox" name="cellphone" id="cellphone" style="width:100%" labelAlign="right" data-options="label:'电话号码:', validType:'length[0,20]'" />
-
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="padding-left:28px;padding-top: 10px; padding-bottom: 10px;">
-                                <a href="#" class="easyui-linkbutton" iconCls="icon-search" id="queryBtn"
-                                   onclick="queryGrid()">查询</a>&nbsp;&nbsp;
-                                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-clear" onclick="clearForm()">清除</a>
-                            </td>
-                        </tr>
-                    </table>
+                    <div class="search-wrap">
+                        <div class="search-item">
+                            <input name="marketCode" id="marketCode" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false" data-options="label:'市场:'" />
+                            <#comboProvider _id="marketCode" _provider='firmProvider' _queryParams='{emptyText:"-- 全部 --"}'/>
+                        </div>
+                        <div class="search-item">
+                            <input name="systemCode" id="systemCode" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false" data-options="label:'所属系统:'" />
+                            <#comboProvider _id="systemCode" _provider='systemProvider' _queryParams='{emptyText:"-- 全部 --"}'/>
+                        </div>
+                        <div class="search-item">
+                            <input name="sceneCode" id="sceneCode" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false" data-options="label:'业务场景:'" />
+                            <#comboProvider _id="sceneCode" _provider='dataDictionaryValueProvider' _queryParams='{dd_code:"message_scene",emptyText:"-- 全部 --"}'/>
+                        </div>
+                        <div class="search-item">
+                            <input name="sendChannel" id="sendChannel" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false" data-options="label:'通道:'" />
+                            <#comboProvider _id="sendChannel" _provider='marketChannelProvider' _queryParams='{emptyText:"-- 全部 --"}'/>
+                        </div>
+                        <div class="search-item">
+                            <input name="sendState" id="sendState" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false" data-options="label:'发送状态:'" />
+                            <#comboProvider _id="sendState" _provider='sendStateProvider' _queryParams='{emptyText:"-- 全部 --"}'/>
+                        </div>
+                        <div class="search-item long-item">
+                            <input class="easyui-datetimebox" name="startSendTime" editable="false" id="startSendTime"
+                                   labelAlign="right" data-options="label:' 发送时间:'" style="width: 58%"/>
+                            <span style="width: 2%;">-</span>
+                            <input class="easyui-datetimebox" editable="false" name="endSendTime" id="endSendTime"
+                                     labelAlign="right" style="width: 39%"/>
+                        </div>
+                        <div class="search-item">
+                            <input class="easyui-textbox" name="cellphone" id="cellphone" style="width:100%" labelAlign="right" data-options="label:'电话号码:'" />
+                        </div>
+                        <div class="search-wrap-btn">
+                            <a href="#" class="easyui-linkbutton" iconCls="icon-search" id="queryBtn"
+                               onclick="queryGrid()">查询</a>&nbsp;&nbsp;
+                            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-clear" onclick="clearForm()">清除</a>
+                        </div>
+                    </div>
                 </form>
             </div>
         </div>
@@ -62,7 +54,7 @@
         <!-- 中央布局 -->
         <!-- ====================================================================================================================== -->
         <!-- 表格 -->
-        <div region="center" style="width:100%;" height="auto">
+        <div region="center" style="width:100%;" height="auto" border="false">
             <!-- =========================================================表格========================================================= -->
             <table class="easyui-datagrid" title="SendLog列表" id="grid" fitColumns="true" noheader="true"
                    pagination="true" pageSize="30" pageNumber="1" pagePosition="top" rownumbers="false" remoteSort="true"

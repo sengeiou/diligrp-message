@@ -35,12 +35,12 @@
     <!-- 中央布局 -->
     <!-- ====================================================================================================================== -->
     <!-- 表格 -->
-    <div region="center" style="width:100%;" height="auto">
+    <div region="center" style="width:100%;" height="auto" border="false">
         <!-- =========================================================表格========================================================= -->
         <table class="easyui-datagrid" title="白名单列表" id="grid" fitColumns="true" noheader="true"
                pagination="true" pageSize="30" pageNumber="1" pagePosition="top" rownumbers="false" remoteSort="false"
                loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="false" sortName="marketCode"
-               align="center" fit="true" striped="true" idField="id" data-options="">
+               align="center" fit="true" striped="true" idField="id" data-options="onLoadSuccess:clearGridSelectedAndChecked">
             <thead>
             <tr>
                 <th width="10%" data-options="field:'marketCode', _provider:'firmProvider',  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">

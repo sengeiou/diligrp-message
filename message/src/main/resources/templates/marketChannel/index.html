@@ -45,12 +45,12 @@
         <!-- 中央布局 -->
         <!-- ====================================================================================================================== -->
         <!-- 表格 -->
-        <div region="center" style="width:100%;" height="auto">
+        <div region="center" style="width:100%;" height="auto" border="false">
             <!-- =========================================================表格========================================================= -->
             <table class="easyui-datagrid" title="市场/通道列表" id="grid" fitColumns="true" noheader="true"
                    pagination="true" pageSize="30" pageNumber="1" pagePosition="top" rownumbers="false" remoteSort="true"
                    loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="false" sortName="created" sortOrder="desc"
-                   align="center" fit="true" striped="true" idField="id" data-options="onDblClickRow:openUpdate, onHeaderContextMenu:headerContextMenu">
+                   align="center" fit="true" striped="true" idField="id" data-options="onDblClickRow:openUpdate, onHeaderContextMenu:headerContextMenu,onLoadSuccess:clearGridSelectedAndChecked">
                 <thead>
                     <tr>
                         <th width="0%" data-options="field:'$_marketCode',_index:1, _provider:'marketCodeProvider', hidden:true"></th>

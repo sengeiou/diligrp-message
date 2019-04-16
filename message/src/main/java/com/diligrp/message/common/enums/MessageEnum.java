@@ -137,6 +137,7 @@ public class MessageEnum {
 
         TOLL("toll", "神农"),
         JMSF("jmsf", "进门收费"),
+        PICKER("picker","接车管理"),
         ;
 
         private String name;

@@ -1,5 +1,6 @@
 package com.diligrp.message.utils;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Base64;
 
 public class Base64Util {
@@ -12,8 +13,12 @@ public class Base64Util {
     }
 
     //解码
-    public static String getDecoderString(String encodedText) throws Exception{
+    public static String getDecoderString(String encodedText) {
         final Base64.Decoder decoder = Base64.getDecoder();
-        return new String(decoder.decode(encodedText), "UTF-8");
+        try {
+            return new String(decoder.decode(encodedText), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            return null;
+        }
     }
 }

@@ -7,7 +7,6 @@ import com.dili.ss.domain.BaseOutput;
 import com.diligrp.message.common.enums.MessageEnum;
 import com.diligrp.message.common.enums.TriggersEnum;
 import com.diligrp.message.domain.SendLog;
-import com.diligrp.message.domain.Triggers;
 import com.diligrp.message.domain.Whitelist;
 import com.diligrp.message.domain.vo.MessageInfoVo;
 import com.diligrp.message.domain.vo.TriggersVo;
@@ -50,30 +49,33 @@ public class MessageInfoHandler {
      * @param info
      */
     public BaseOutput handler(MessageInfoVo info){
-        Triggers triggers = new Triggers();
+        TriggersVo triggers = new TriggersVo();
         triggers.setMarketCode(info.getMarketCode());
         triggers.setSystemCode(info.getSystemCode());
         triggers.setSceneCode(info.getSceneCode());
         List<TriggersVo> templateList = triggersService.selectForUnionTemplate(triggers);
         StringBuffer msg = new StringBuffer();
+        TriggersVo triggersVo = new TriggersVo();
         if (CollectionUtil.isEmpty(templateList)) {
             msg.append("应用未配置 ");
-        }
-        TriggersVo triggersVo = templateList.get(0);
-        if(TriggersEnum.EnabledStateEnum.DISABLED.getCode().equals(triggersVo.getEnabled())){
-            msg.append("应用场景已禁用 ");
-        }else if (CollectionUtil.isEmpty(triggersVo.getTemplateList())) {
-            msg.append("模板未配置 ");
-        }else if (triggersVo.getWhitelist()){
-            //如果需要验证白名单，检查用户是否存在白名单中
-            Whitelist whitelist = new Whitelist();
-            whitelist.setMarketCode(info.getMarketCode());
-            whitelist.setCellphone(info.getCellphone());
-            Integer integer = whitelistService.queryValidByMarketCode(whitelist);
-            if (integer < 1) {
-                msg.append("此用户不在该场景的白名单中");
+        }else{
+            triggersVo = templateList.get(0);
+            if(TriggersEnum.EnabledStateEnum.DISABLED.getCode().equals(triggersVo.getEnabled())){
+                msg.append("应用场景已禁用 ");
+            }else if (CollectionUtil.isEmpty(triggersVo.getTemplateList())) {
+                msg.append("模板未配置 ");
+            }else if (triggersVo.getWhitelist()){
+                //如果需要验证白名单，检查用户是否存在白名单中
+                Whitelist whitelist = new Whitelist();
+                whitelist.setMarketCode(info.getMarketCode());
+                whitelist.setCellphone(info.getCellphone());
+                Integer integer = whitelistService.queryValidByMarketCode(whitelist);
+                if (integer < 1) {
+                    msg.append("此用户不在该场景的白名单中");
+                }
             }
         }
+
         SendLog sendLog = new SendLog();
         sendLog.setMarketCode(info.getMarketCode());
         sendLog.setSystemCode(info.getSystemCode());
@@ -81,7 +83,9 @@ public class MessageInfoHandler {
         sendLog.setCellphone(info.getCellphone());
         sendLog.setReceiptTime(new Date());
         sendLog.setRemarks(msg.toString());
-        sendLog.setParameters(info.getParameters().toJSONString());
+        if (StrUtil.isNotBlank(info.getParameters())){
+            sendLog.setParameters(info.getParameters());
+        }
         if (StrUtil.isNotBlank(msg)){
             sendLog.setSendState(MessageEnum.SendStateEnum.FAILURE.getCode());
             sendLogService.save(sendLog);
@@ -98,6 +102,7 @@ public class MessageInfoHandler {
                 sendLog.setContent(content);
                 sendLog.setRemarks("该环境已配置禁用短信发送");
                 sendLog.setSendState(MessageEnum.SendStateEnum.SUCCEED.getCode());
+                sendLog.setSendTime(new Date());
                 sendLogService.save(sendLog);
             }
             return BaseOutput.success();
