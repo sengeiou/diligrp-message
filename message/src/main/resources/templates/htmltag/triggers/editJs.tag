@@ -10,22 +10,25 @@
         '                    <h4 class="template-group-title">模板</h4>\n' +
         '                    <input type="hidden" name="templateId" >\n' +
         '                    <div class="template-item">\n' +
-        '                        <input class="easyui-combobox" name="channel" style="width:100%" labelAlign="right" data-options="label:\'模板来源:\',\n' +
+        '                        <input class="easyui-combobox" name="channel" style="width:100%" labelAlign="right" panelHeight="auto" editable="false" required="true" data-options="label:\'&lowast;模板来源:\',\n' +
         '                            url:\'${contextPath}/provider/getLookupList.action\',\n' +
         '                            method:\'POST\',\n' +
-        '                            queryParams: {provider: \'firmProvider\'}" />\n' +
+        '                            queryParams: {provider: \'marketChannelProvider\',queryParams:\'{required:true}\'}" />\n' +
         '                    </div>\n' +
         '                    <div class="template-item">\n' +
-        '                        <input class="easyui-combobox" name="marketChannelIds" style="width:100%" labelAlign="right" data-options="label:\'AccessKey:\',multiple:true" />\n' +
+        '                        <input class="easyui-combobox" name="marketChannelIds" style="width:100%" labelAlign="right" panelHeight="auto" editable="false" required="true" data-options="label:\'&lowast;AccessKey:\',multiple:true,' +
+        '                           url:\'${contextPath}/provider/getLookupList.action\',\n' +
+        '                            method:\'POST\',\n' +
+        '                            queryParams: {provider: \'firmProvider\',queryParams:\'{required:true}\'}" />\n' +
         '                    </div>\n' +
         '                    <div class="template-item">\n' +
-        '                        <input class="easyui-textbox" name="templateName" style="width:100%" labelAlign="right" data-options="label:\'模板名称:\'" />\n' +
+        '                        <input class="easyui-textbox" name="templateName" style="width:100%" labelAlign="right" data-options="label:\'模板名称:\',validType:\'length[0,50]\'" />\n' +
         '                    </div>\n' +
         '                    <div class="template-item">\n' +
-        '                        <input class="easyui-textbox" name="templateCode" style="width:100%" labelAlign="right" data-options="label:\'模板CODE:\'" />\n' +
+        '                        <input class="easyui-textbox" name="templateCode" style="width:100%" labelAlign="right" data-options="label:\'模板CODE:\',validType:\'length[0,20]\'" />\n' +
         '                    </div>\n' +
         '                    <div class="template-item">\n' +
-        '                        <input class="easyui-textbox" name="templateContent" style="width:100%" labelAlign="right" data-options="label:\'模板内容:\', height: \'80px\', multiline: true" />\n' +
+        '                        <input class="easyui-textbox" name="templateContent" style="width:100%" labelAlign="right" required="true" data-options="label:\'&lowast;模板内容:\', height: \'80px\', multiline: true,validType:\'length[1,255]\'" />\n' +
         '                    </div>\n' +
         '                    <div class="edit-limit">\n' +
         '                        <a href="#" class="easyui-linkbutton template-plus-btn" data-options="iconCls:\'icon-add\'">add</a>\n' +
@@ -69,6 +72,9 @@
     // 保存数据
     $('#record-save-btn').linkbutton({
         onClick: function(){
+            if(!$('#_form').form("validate")){
+                return;
+            }
             let baseData = $('#_form .template-base input').serializeObject();
             $('#_form .template-group').each(function(index,el){
                 let group = $(el).find('input').serializeObject();
@@ -78,8 +84,28 @@
             });
             saveData = Object.assign({},baseData,templateData);
             console.log(saveData);
+            $.ajax({
+                type: "POST",
+                url: "${contextPath}/triggers/save.action",
+                data: {jsonParams:JSON.stringify(saveData)},
+                processData:true,
+                dataType: "json",
+                traditional: true,
+                async : true,
+                success: function (ret) {
+                    if(ret.success){
+                        window.location.href = "${contextPath}/triggers/index.html";
+                    }else{
+                        saveData = {};
+                        swal('错误',ret.result, 'error');
+                    }
+                },
+                error: function(){
+                    swal('错误', '远程访问失败', 'error');
+                }
+            });
+
         }
     })
-
 
 </script>

@@ -1,5 +1,7 @@
 package com.diligrp.message.controller;
 
+import cn.hutool.core.collection.CollectionUtil;
+import com.alibaba.fastjson.JSONObject;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.uap.sdk.domain.UserTicket;
 import com.dili.uap.sdk.session.SessionContext;
@@ -11,6 +13,8 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -53,25 +57,17 @@ public class TriggersController {
         return triggersService.listPageForEasyui(triggers, true).toString();
     }
 
-    @ApiOperation("新增Triggers")
+    @ApiOperation("保存Triggers")
     @ApiImplicitParams({
 		@ApiImplicitParam(name="Triggers", paramType="form", value = "Triggers的form信息", required = true, dataType = "string")
 	})
-    @RequestMapping(value="/insert.action", method = {RequestMethod.GET, RequestMethod.POST})
-    public @ResponseBody BaseOutput insert(@ModelAttribute Triggers triggers) {
-        triggersService.insertSelective(triggers);
+    @RequestMapping(value="/save.action", method = {RequestMethod.GET, RequestMethod.POST})
+    public @ResponseBody BaseOutput save(String jsonParams) {
+        TriggersVo triggersVo = JSONObject.parseObject(jsonParams, TriggersVo.class);
+
         return BaseOutput.success("新增成功");
     }
 
-    @ApiOperation("修改Triggers")
-    @ApiImplicitParams({
-		@ApiImplicitParam(name="Triggers", paramType="form", value = "Triggers的form信息", required = true, dataType = "string")
-	})
-    @RequestMapping(value="/update.action", method = {RequestMethod.GET, RequestMethod.POST})
-    public @ResponseBody BaseOutput update(@ModelAttribute Triggers triggers) {
-        triggersService.updateSelective(triggers);
-        return BaseOutput.success("修改成功");
-    }
 
     @ApiOperation("删除Triggers")
     @ApiImplicitParams({
@@ -98,5 +94,17 @@ public class TriggersController {
     @ResponseBody
     public BaseOutput doEnable(Long id,Boolean enable){
         return triggersService.updateEnable(id,enable);
+    }
+
+    @ApiOperation(value = "Triggers中检查市场-系统-场景对应的关系是否存在", notes = "检查市场-系统-场景对应的关系是否存在")
+    @RequestMapping(value = "/checkNotExist.action", method = {RequestMethod.GET, RequestMethod.POST})
+    @ResponseBody
+    public BaseOutput checkNotExist(String marketCode,String systemCode,String sceneCode){
+        Boolean notExist = triggersService.checkNotExist(marketCode, systemCode, sceneCode);
+        if (notExist) {
+            return BaseOutput.success();
+        } else {
+            return BaseOutput.failure();
+        }
     }
 }

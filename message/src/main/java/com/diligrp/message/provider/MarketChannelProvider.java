@@ -13,6 +13,9 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * @author yuehongbo
+ */
 @Component
 public class MarketChannelProvider implements ValueProvider {
     private static final List<ValuePair<?>> BUFFER = new ArrayList<>();

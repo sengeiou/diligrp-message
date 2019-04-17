@@ -17,7 +17,7 @@
                         </div>
                         <div class="search-item">
                             <input name="systemCode" id="systemCode" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false" data-options="label:'所属系统:'" />
-                            <#comboProvider _id="systemCode" _provider='systemProvider' _queryParams='{emptyText:"-- 全部 --"}'/>
+                            <#comboProvider _id="systemCode" _provider='dataDictionaryValueProvider' _queryParams='{dd_code:"system_code",emptyText:"-- 全部 --"}'/>
                         </div>
                         <div class="search-item">
                             <input name="sceneCode" id="sceneCode" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false" data-options="label:'业务场景:'" />
@@ -58,14 +58,14 @@
             <!-- =========================================================表格========================================================= -->
             <table class="easyui-datagrid" title="SendLog列表" id="grid" fitColumns="true" noheader="true"
                    pagination="true" pageSize="30" pageNumber="1" pagePosition="top" rownumbers="false" remoteSort="true"
-                   loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="false" sortName="marketCode"
+                   loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="false" sortName="id" sortOrder="desc"
                    align="center" fit="true" striped="true" idField="id">
                 <thead>
                     <tr>
                         <th width="5%" data-options="field:'marketCode', _provider:'firmProvider',  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                             市场
                         </th>
-                        <th width="10%" data-options="field:'systemCode', _provider:'systemProvider',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        <th width="10%" data-options="field:'systemCode', _provider:'dataDictionaryValueProvider', _queryParams:{'dd_code':'system_code'},   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                             所属系统
                         </th>
                         <th width="10%" data-options="field:'sceneCode', _provider:'dataDictionaryValueProvider', _queryParams:{'dd_code':'message_scene'},  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">

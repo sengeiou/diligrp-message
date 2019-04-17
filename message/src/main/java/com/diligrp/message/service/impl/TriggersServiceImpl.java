@@ -98,6 +98,26 @@ public class TriggersServiceImpl extends BaseServiceImpl<Triggers, Long> impleme
     }
 
     @Override
+    public Boolean checkNotExist(String marketCode, String systemCode, String sceneCode) {
+        Triggers triggers = new Triggers();
+        triggers.setMarketCode(marketCode);
+        triggers.setSystemCode(systemCode);
+        triggers.setSceneCode(sceneCode);
+        List<Triggers> list = this.list(triggers);
+        return CollectionUtil.isEmpty(list);
+
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public BaseOutput saveInfo(TriggersVo triggersVo) {
+        if (null == triggersVo){
+            return BaseOutput.failure("数据为空");
+        }
+        return null;
+    }
+
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public int delete(Long id) {
         Triggers triggers = this.get(id);

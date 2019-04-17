@@ -38,4 +38,20 @@ public interface TriggersService extends BaseService<Triggers, Long> {
      * @return
      */
     BaseOutput updateEnable(Long id, Boolean enable);
+
+    /**
+     * 检查市场-系统-场景对应的关系是否不存在
+     * @param marketCode
+     * @param systemCode
+     * @param sceneCode
+     * @return true-不存在;false-存在
+     */
+    Boolean checkNotExist(String marketCode,String systemCode,String sceneCode);
+
+    /**
+     * 保存触发点信息
+     * @param triggersVo
+     * @return
+     */
+    BaseOutput saveInfo(TriggersVo triggersVo);
 }

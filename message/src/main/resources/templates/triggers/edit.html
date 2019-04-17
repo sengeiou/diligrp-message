@@ -12,33 +12,57 @@
         overflow: auto;
     }
 </style>
+<script type="text/javascript">
+    /**
+     * 检查市场-系统-场景对应的关系是否不存在
+     */
+    function checkNotExist() {
+        var id = $('#id').val();
+        if (null != id){
+            var marketCode = $('#marketCode').combobox("getValue");
+            var systemCode = $('#systemCode').combobox("getValue");
+            var sceneCode = $('#sceneCode').combobox("getValue");
+            if (null != marketCode && null != systemCode && null != sceneCode){
+                $.ajax({
+                    type: "POST",
+                    url: "${contextPath}/triggers/checkNotExist.action",
+                    data: {marketCode:marketCode,systemCode:systemCode,sceneCode:sceneCode},
+                    processData:true,
+                    dataType: "json",
+                    async : true,
+                    success: function (ret) {
+                        if(!ret.success){
+                            swal('错误',"市场-系统-场景对应关系已存在，不能重复添加", 'error');
+                            return;
+                        }
+                    },
+                    error: function(){
+                        swal('错误', '远程访问失败', 'error');
+                    }
+                });
+            }
+        }
+    }
+</script>
 <form id="_form" class="easyui-form" method="post" fit="true">
     <div class="templatewrap" id="templatewrap" style="width: 360px;">
         <div class="template-base">
-            <input name="_id" type="hidden">
+            <input name="_id" id="id" type="hidden">
             <div class="template-item">
-                <input class="easyui-combobox" name="marketCode" style="width:100%" labelAlign="right" data-options="label:'市场:',
-                            url:'${contextPath}/provider/getLookupList.action',
-                            method:'POST',
-                            queryParams: {provider: 'firmProvider'}" />
+                <input  name="marketCode" id="marketCode" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false" required="true" data-options="label:'&lowast;市场:',onChange:checkNotExist" />
+                <#comboProvider _id="marketCode" _provider='firmProvider' _queryParams='{required:true}'/>
             </div>
             <div class="template-item">
-                <input class="easyui-combobox" name="systemCode" style="width:100%" labelAlign="right" data-options="label:'所属系统:',
-                            url:'${contextPath}/provider/getLookupList.action',
-                            method:'POST',
-                            queryParams: {provider: 'firmProvider'}" />
+                <input name="systemCode" id="systemCode" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false" required="true" data-options="label:'&lowast;所属系统:',onChange:checkNotExist" />
+                <#comboProvider _id="systemCode" _provider='dataDictionaryValueProvider' _queryParams='{dd_code:"system_code",required:true}'/>
             </div>
             <div class="template-item">
-                <input class="easyui-combobox" name="sceneCode" style="width:100%" labelAlign="right" data-options="label:'应用场景:',
-                            url:'${contextPath}/provider/getLookupList.action',
-                            method:'POST',
-                            queryParams: {provider: 'firmProvider'}" />
+                <input name="sceneCode" id="sceneCode" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false" required="true" data-options="label:'&lowast;应用场景:',onChange:checkNotExist" />
+                <#comboProvider _id="sceneCode" _provider='dataDictionaryValueProvider' _queryParams='{dd_code:"message_scene",required:true}'/>
             </div>
             <div class="template-item">
-                <input class="easyui-combobox" name="whitelist" style="width:100%" labelAlign="right" data-options="label:'应用白名单:',
-                        url:'${contextPath}/provider/getLookupList.action',
-                        method:'POST',
-                        queryParams: {provider: 'firmProvider'}" />
+                <input name="whitelist" id="whitelist" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false" required="true" data-options="label:'&lowast;应用白名单:'" />
+                <#comboProvider _id="whitelist" _provider='booleanProvider' _queryParams='{required:true}'/>
             </div>
         </div>
 
@@ -46,34 +70,25 @@
             <h4 class="template-group-title">模板</h4>
             <input type="hidden" name="templateId" >
             <div class="template-item">
-                <input class="easyui-combobox" name="channel" style="width:100%" labelAlign="right" data-options="label:'模板来源:',
+                <input class="easyui-combobox" name="channel" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false" required="true" data-options="label:'&lowast;模板来源:',
+                                url:'${contextPath}/provider/getLookupList.action',
+                                method:'POST',
+                                queryParams: {provider: 'marketChannelProvider',queryParams:'{required:true}'}" />
+            </div>
+            <div class="template-item">
+                <input class="easyui-combobox" name="marketChannelIds" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false" required="true" data-options="label:'&lowast;AccessKey:',multiple:true,
                                 url:'${contextPath}/provider/getLookupList.action',
                                 method:'POST',
                                 queryParams: {provider: 'firmProvider'}" />
             </div>
             <div class="template-item">
-                <input class="easyui-combobox" name="marketChannelIds" style="width:100%" labelAlign="right" data-options="label:'AccessKey:',multiple:true,
-                                url:'${contextPath}/provider/getLookupList.action',
-                                method:'POST',
-                                queryParams: {provider: 'firmProvider'}" />
+                <input class="easyui-textbox" name="templateName" style="width:100%" labelAlign="right" data-options="label:'模板名称:',validType:'length[0,50]'" />
             </div>
             <div class="template-item">
-                <input class="easyui-textbox" name="templateName" style="width:100%" labelAlign="right" data-options="label:'模板名称:',
-                                url:'${contextPath}/provider/getLookupList.action',
-                                method:'POST',
-                                queryParams: {provider: 'firmProvider'}" />
+                <input class="easyui-textbox" name="templateCode" style="width:100%" labelAlign="right" data-options="label:'模板CODE:',validType:'length[0,20]'" />
             </div>
             <div class="template-item">
-                <input class="easyui-textbox" name="templateCode" style="width:100%" labelAlign="right" data-options="label:'模板CODE:',
-                                url:'${contextPath}/provider/getLookupList.action',
-                                method:'POST',
-                                queryParams: {provider: 'firmProvider'}" />
-            </div>
-            <div class="template-item">
-                <input class="easyui-textbox" name="templateContent" style="width:100%" labelAlign="right" data-options="label:'模板内容:', height: '80px', multiline: true,
-                                url:'${contextPath}/provider/getLookupList.action',
-                                method:'POST',
-                                queryParams: {provider: 'firmProvider'}" />
+                <input class="easyui-textbox" name="templateContent" style="width:100%" labelAlign="right" required="true" data-options="label:'&lowast;模板内容:', height: '80px', multiline: true,validType:'length[1,255]'" />
             </div>
             <div class="edit-limit">
                 <a href="#" class="easyui-linkbutton template-plus-btn" data-options="iconCls:'icon-add'">plus</a>

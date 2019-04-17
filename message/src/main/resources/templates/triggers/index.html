@@ -19,7 +19,7 @@
                     <div class="search-item">
                         <input name="systemCode" id="systemCode" style="width:100%" labelAlign="right" editable="false"
                                labelAlign="right" panelWidth="auto" panelHeight="auto" label="所属系统:" />
-                        <#comboProvider _id="systemCode" _provider='systemProvider' _queryParams='{emptyText:"-- 全部 --"}'/>
+                        <#comboProvider _id="systemCode" _provider='dataDictionaryValueProvider' _queryParams='{dd_code:"system_code",emptyText:"-- 全部 --"}'/>
                     </div>
                     <div class="search-item">
                         <input name="sceneCode" id="sceneCode" style="width:100%" labelAlign="right" editable="false"
@@ -54,7 +54,7 @@
                     <th width="10%" data-options="field:'marketCode', _provider:'firmProvider', sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                         所属市场
                     </th>
-                    <th width="10%" data-options="field:'systemCode',  _provider:'systemProvider', sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                    <th width="10%" data-options="field:'systemCode',  _provider:'dataDictionaryValueProvider',_queryParams:{'dd_code':'system_code'},  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                         所属系统
                     </th>
                     <th width="10%" data-options="field:'sceneCode',  _provider:'dataDictionaryValueProvider',_queryParams:{'dd_code':'message_scene'},   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">

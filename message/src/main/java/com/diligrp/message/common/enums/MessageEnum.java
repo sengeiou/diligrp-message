@@ -131,35 +131,35 @@ public class MessageEnum {
     }
 
     /**
-     * 系统信息枚举定义
+     * boolean类型的枚举定义
      */
-    public enum SystemEnum {
+    public enum BooleanEnum {
 
-        TOLL("toll", "神农"),
-        JMSF("jmsf", "进门收费"),
-        PICKER("picker","接车管理"),
+        FALSE(false, "否"),
+        TRUE(true, "是"),
         ;
 
         private String name;
-        private String code;
+        private Boolean code;
 
-        SystemEnum(String code, String name){
+        BooleanEnum(Boolean code, String name){
             this.code = code;
             this.name = name;
         }
 
-        public static SystemEnum getSystem(String code) {
-            for (MessageEnum.SystemEnum se : MessageEnum.SystemEnum.values()) {
-                if (se.getCode().equals(code)) {
-                    return se;
+        public static BooleanEnum getBoolean(Boolean code) {
+            for (BooleanEnum be : BooleanEnum.values()) {
+                if (be.getCode().equals(code)) {
+                    return be;
                 }
             }
             return null;
         }
 
-        public String getCode() {
+        public Boolean getCode() {
             return code;
         }
+
         public String getName() {
             return name;
         }
