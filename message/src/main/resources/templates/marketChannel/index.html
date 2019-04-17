@@ -359,6 +359,7 @@
                 pager.pagination({
                     <#controls_paginationOpts/>,
                     buttons:[
+                    <#resource code="addMarketChannel">
                     {
                         iconCls:'icon-add',
                         text:'新增',
@@ -366,6 +367,8 @@
                             openInsert();
                         }
                     },
+                    </#resource>
+                    <#resource code="editMarketChannel">
                     {
                         iconCls:'icon-edit',
                         text:'修改',
@@ -373,6 +376,8 @@
                             openUpdate();
                         }
                     },
+                    </#resource>
+                    <#resource code="detailMarketChannel">
                     {
                         iconCls:'icon-detail',
                         text:'详情',
@@ -380,6 +385,8 @@
                             openDetail();
                         }
                     },
+                    </#resource>
+                    <#resource code="deleteMarketChannel">
                     {
                         iconCls:'icon-remove',
                         text:'删除',
@@ -387,6 +394,7 @@
                             del();
                         }
                     }
+                     </#resource>
                 ]
             });
             //表格仅显示下边框
