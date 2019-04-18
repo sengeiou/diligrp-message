@@ -10,13 +10,13 @@
         '                    <h4 class="template-group-title">模板</h4>\n' +
         '                    <input type="hidden" name="templateId" >\n' +
         '                    <div class="template-item">\n' +
-        '                        <input class="easyui-combobox" name="channel" style="width:100%" labelAlign="right" panelHeight="auto" editable="false" required="true" data-options="onLoadSuccess:onComboLoadSuccessSelectOne,label:\'&lowast;模板来源:\',\n' +
+        '                        <input class="easyui-combobox" id="channel" name="channel" style="width:100%" labelAlign="right" panelHeight="auto" editable="false" required="true" data-options="onLoadSuccess:onComboLoadSuccessSelectOne,onChange: originChange,label:\'&lowast;模板来源:\',\n' +
         '                            url:\'${contextPath}/provider/getLookupList.action\',\n' +
         '                            method:\'POST\',\n' +
         '                            queryParams: {provider: \'marketChannelProvider\',queryParams:\'{required:true}\'}" />\n' +
         '                    </div>\n' +
         '                    <div class="template-item">\n' +
-        '                        <input class="easyui-combobox" name="marketChannelIds" style="width:100%" labelAlign="right" panelHeight="auto" editable="false" required="true" data-options="label:\'&lowast;AccessKey:\',multiple:true,' +
+        '                        <input class="easyui-combobox" id="marketChannelIds" name="marketChannelIds" style="width:100%" labelAlign="right" panelHeight="auto" editable="false" required="true" data-options="label:\'&lowast;AccessKey:\',multiple:true,' +
         '                           url:\'${contextPath}/provider/getLookupList.action\',\n' +
         '                            method:\'POST\',\n' +
         '                            queryParams: {provider: \'firmProvider\',queryParams:\'{required:true}\'}" />\n' +
@@ -42,13 +42,13 @@
     // 添加一个模板
     $('.templatewrap').on('click', '.template-plus-btn', function(){
         if($('.template-group').length < 10) {
-            /*let id = new Date().valueOf();
+            let id = new Date().valueOf();
             let template = $('.template-group-origin .template-group').clone(true, true);
             $(template).attr('id', id);
             $(template).find('.template-item [name]').each(function(index, el){
                 let name = $(el).attr('name') + flagCount;
                 $(el).attr('name', name);
-            });*/
+            });
             $('.templatewrap').append(templateOrigin);
             $.parser.parse('.template-group:last-child');
             flagCount++;
@@ -63,6 +63,9 @@
             $('.templatewrap .template-group:last-child');
         }
     });
+
+
+
 
     // 保存的数据
     var saveData = {};
@@ -106,9 +109,14 @@
             });
 
         }
-    })
-    
-    function getMarketChannel() {
+    });
+
+
+
+    // 来源改变联动∗AccessKey:
+
+    function originChange() {
+        var that = $(this);
         var marketCode = $('#marketCode').combobox("getValue");
         if (null == marketCode || ''==marketCode){
             swal({
@@ -120,7 +128,7 @@
             return;
         }
         //拿当前的这个channel 的值
-        var channel = '';
+        var channel = $(this).combobox('getValue');
         $.ajax({
             type: "POST",
             url: "${contextPath}/triggers/getChannelKey.action",
@@ -131,7 +139,14 @@
             success: function (ret) {
                 if(ret.success){
                     //获取 ret.data
-                    var data = ret.data;
+                    let data = [];
+                    ret.data.forEach(function(el, index){
+                        console.log('el', el.accessKey)
+                        data.push({"text": el.accessKey, value: el.id})
+                    });
+                    that.parents('.template-group').find('#marketChannelIds').combobox('loadData', data )
+
+
                     //渲染。。。。。。
                 }else{
 
