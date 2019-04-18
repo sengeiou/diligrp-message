@@ -22,7 +22,7 @@ public class BooleanProvider implements ValueProvider {
 
     static {
         BUFFER.addAll(Stream.of(MessageEnum.BooleanEnum.values())
-                .map(e -> new ValuePairImpl<>(e.getName(), e.getCode()))
+                .map(e -> new ValuePairImpl<>(e.getName(), e.getCode().toString()))
                 .collect(Collectors.toList()));
     }
 

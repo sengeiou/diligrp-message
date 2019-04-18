@@ -67,7 +67,7 @@ public class SmsServiceImpl implements SmsService {
         Boolean flag = false;
         List<SendLog> sendLogs = Lists.newArrayList();
         for (TriggersTemplate t : templateList) {
-            String[] chanelId = t.getMarketChannelIds().split("#");
+            String[] chanelId = t.getMarketChannelIds().split(",");
             for (String s : chanelId) {
                 //获取对应的账号
                 MarketChannel marketChannel = marketChannelMap.get(Long.valueOf(s));

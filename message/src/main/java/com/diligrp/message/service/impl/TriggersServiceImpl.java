@@ -3,6 +3,7 @@ package com.diligrp.message.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson.JSON;
 import com.dili.ss.base.BaseServiceImpl;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.EasyuiPageOutput;
@@ -27,6 +28,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * 由MyBatis Generator工具自动生成
@@ -162,6 +165,7 @@ public class TriggersServiceImpl extends BaseServiceImpl<Triggers, Long> impleme
                 t.setTriggerCode(code);
                 t.setCreated(new Date());
                 t.setModified(new Date());
+                t.setMarketChannelIds(produceChannelIds(t.getMarketChannelIds()));
             });
             triggersTemplateService.batchInsert(templateList);
         }
@@ -177,5 +181,20 @@ public class TriggersServiceImpl extends BaseServiceImpl<Triggers, Long> impleme
         }
         triggersTemplateService.deleteByTriggerCode(triggers.getTriggerCode());
         return super.delete(id);
+    }
+
+    /**
+     * 生成存储的channelIds
+     * @param params
+     * @return
+     */
+    private String produceChannelIds(String params) {
+        if (StrUtil.isNotBlank(params)) {
+            if (params.indexOf(",") < 0) {
+                params = "[" + params + "]";
+            }
+            return JSON.parseArray(params).stream().filter(Objects::nonNull).map(Object::toString).filter(StrUtil::isNotBlank).collect(Collectors.joining(","));
+        }
+        return null;
     }
 }

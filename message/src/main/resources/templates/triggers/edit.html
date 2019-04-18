@@ -100,36 +100,64 @@
                             <#comboProvider _id="whitelist" _provider='booleanProvider' _queryParams='{required:true}' _value="${triggers.whitelist!}"/>
                         </div>
                     </div>
+                    <%if (has(triggersTemplateList)){ for(triggersTemplate in triggersTemplateList){%>
+                        <div class="template-group">
+                            <h4 class="template-group-title">模板</h4>
+                            <input type="hidden" name="templateId" value="${triggersTemplate.id}" >
+                            <div class="template-item">
+                                <input class="easyui-combobox" id="channel" name="channel" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false" required="true" data-options="label:'&lowast;模板来源:',onLoadSuccess:onComboLoadSuccessSelectOne,onChange:originChange,
+                                        url:'${contextPath}/provider/getLookupList.action',
+                                        method:'POST',
+                                        onLoadSuccess:function(){ $(this).combobox('select', '${triggersTemplate.channel}');},
+                                        queryParams: {provider: 'marketChannelProvider',queryParams:'{required:true}'}" />
+                            </div>
+                            <div class="template-item">
+                                <input class="easyui-combobox" id="marketChannelIds" name="marketChannelIds" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false" required="true" data-options="label:'&lowast;AccessKey:',multiple:true,
+                                        onLoadSuccess:function(){ $(this).combobox('setValues', [${triggersTemplate.marketChannelIds}]);}" />
+                            </div>
+                            <div class="template-item">
+                                <input class="easyui-textbox" name="templateName" value="${triggersTemplate.templateName!}" style="width:100%" labelAlign="right" data-options="label:'模板名称:',validType:'length[0,50]'" />
+                            </div>
+                            <div class="template-item">
+                                <input class="easyui-textbox" name="templateCode" value="${triggersTemplate.templateCode!}" style="width:100%" labelAlign="right" data-options="label:'模板CODE:',validType:'length[0,20]'" />
+                            </div>
+                            <div class="template-item">
+                                <input class="easyui-textbox" name="templateContent" value="${triggersTemplate.templateContent!}" style="width:100%" labelAlign="right" required="true" data-options="label:'&lowast;模板内容:', height: '80px', multiline: true,validType:'length[1,255]'" />
+                            </div>
+                            <div class="edit-limit">
+                                <a href="#" class="easyui-linkbutton template-plus-btn" data-options="iconCls:'icon-add'">plus</a>
+                                <a href="#" class="easyui-linkbutton template-minus-btn" data-options="iconCls:'icon-add'">minus</a>
+                            </div>
+                        </div>
+                    <%}}else{%>
+                        <div class="template-group">
+                            <h4 class="template-group-title">模板</h4>
+                            <input type="hidden" name="templateId" >
+                            <div class="template-item">
+                                <input class="easyui-combobox" id="channel" name="channel" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false" required="true" data-options="label:'&lowast;模板来源:',onLoadSuccess:onComboLoadSuccessSelectOne,onChange:originChange,
+                                    url:'${contextPath}/provider/getLookupList.action',
+                                    method:'POST',
+                                    queryParams: {provider: 'marketChannelProvider',queryParams:'{required:true}'}" />
+                            </div>
+                            <div class="template-item">
+                                <input class="easyui-combobox" id="marketChannelIds" name="marketChannelIds" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false" required="true" data-options="label:'&lowast;AccessKey:',multiple:true" />
+                            </div>
+                            <div class="template-item">
+                                <input class="easyui-textbox" name="templateName" style="width:100%" labelAlign="right" data-options="label:'模板名称:',validType:'length[0,50]'" />
+                            </div>
+                            <div class="template-item">
+                                <input class="easyui-textbox" name="templateCode" style="width:100%" labelAlign="right" data-options="label:'模板CODE:',validType:'length[0,20]'" />
+                            </div>
+                            <div class="template-item">
+                                <input class="easyui-textbox" name="templateContent" style="width:100%" labelAlign="right" required="true" data-options="label:'&lowast;模板内容:', height: '80px', multiline: true,validType:'length[1,255]'" />
+                            </div>
+                            <div class="edit-limit">
+                                <a href="#" class="easyui-linkbutton template-plus-btn" data-options="iconCls:'icon-add'">plus</a>
+                                <a href="#" class="easyui-linkbutton template-minus-btn" data-options="iconCls:'icon-add'">minus</a>
+                            </div>
+                        </div>
+                    <%}%>
 
-                    <div class="template-group">
-                        <h4 class="template-group-title">模板</h4>
-                        <input type="hidden" name="templateId" >
-                        <div class="template-item">
-                            <input class="easyui-combobox" id="channel" name="channel" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false" required="true" data-options="label:'&lowast;模板来源:',onLoadSuccess:onComboLoadSuccessSelectOne,onChange:originChange,
-                                url:'${contextPath}/provider/getLookupList.action',
-                                method:'POST',
-                                queryParams: {provider: 'marketChannelProvider',queryParams:'{required:true}'}" />
-                        </div>
-                        <div class="template-item">
-                            <input class="easyui-combobox" id="marketChannelIds" name="marketChannelIds" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false" required="true" data-options="label:'&lowast;AccessKey:',multiple:true,
-                                url:'${contextPath}/provider/getLookupList.action',
-                                method:'POST',
-                                queryParams: {provider: 'firmProvider'}" />
-                        </div>
-                        <div class="template-item">
-                            <input class="easyui-textbox" name="templateName" style="width:100%" labelAlign="right" data-options="label:'模板名称:',validType:'length[0,50]'" />
-                        </div>
-                        <div class="template-item">
-                            <input class="easyui-textbox" name="templateCode" style="width:100%" labelAlign="right" data-options="label:'模板CODE:',validType:'length[0,20]'" />
-                        </div>
-                        <div class="template-item">
-                            <input class="easyui-textbox" name="templateContent" style="width:100%" labelAlign="right" required="true" data-options="label:'&lowast;模板内容:', height: '80px', multiline: true,validType:'length[1,255]'" />
-                        </div>
-                        <div class="edit-limit">
-                            <a href="#" class="easyui-linkbutton template-plus-btn" data-options="iconCls:'icon-add'">plus</a>
-                            <a href="#" class="easyui-linkbutton template-minus-btn" data-options="iconCls:'icon-add'">minus</a>
-                        </div>
-                    </div>
                 </div>
             </form>
 

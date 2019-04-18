@@ -117,12 +117,6 @@
         var that = $(this);
         var marketCode = $('#marketCode').combobox("getValue");
         if (null == marketCode || ''==marketCode){
-            swal({
-                title: '警告',
-                text: '请先选择市场',
-                type: 'warning',
-                width: 300,
-            });
             return;
         }
         //拿当前的这个channel 的值

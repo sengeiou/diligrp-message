@@ -99,7 +99,7 @@ public class TriggersController {
                 modelMap.put("triggers",triggers);
                 List<TriggersTemplate> triggersTemplates = triggersTemplateService.selectByTriggerCode(triggers.getTriggerCode());
                 if (CollectionUtil.isNotEmpty(triggersTemplates)){
-                    modelMap.put("triggersTemplates",triggersTemplates);
+                    modelMap.put("triggersTemplateList",triggersTemplates);
                 }
             }
         }
