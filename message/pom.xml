@@ -72,6 +72,7 @@
     </profiles>
 
     <build>
+        <finalName>message</finalName>
         <!-- 资源文件过滤 -->
         <resources>
             <resource>

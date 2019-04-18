@@ -5,8 +5,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.uap.sdk.domain.UserTicket;
 import com.dili.uap.sdk.session.SessionContext;
+import com.diligrp.message.domain.MarketChannel;
 import com.diligrp.message.domain.Triggers;
 import com.diligrp.message.domain.vo.TriggersVo;
+import com.diligrp.message.service.MarketChannelService;
 import com.diligrp.message.service.TriggersService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -32,6 +34,8 @@ public class TriggersController {
 
     @Autowired
     private TriggersService triggersService;
+    @Autowired
+    private MarketChannelService marketChannelService;
 
     @ApiOperation("跳转到Triggers页面")
     @RequestMapping(value="/index.html", method = RequestMethod.GET)
@@ -106,5 +110,15 @@ public class TriggersController {
         } else {
             return BaseOutput.failure();
         }
+    }
+
+    @ApiOperation(value = "Triggers中获取市场通道的Key", notes = "获取市场通道的Key")
+    @RequestMapping(value = "/getChannelKey.action", method = {RequestMethod.GET, RequestMethod.POST})
+    @ResponseBody
+    public BaseOutput getChannelKey(String marketCode,String channel){
+        MarketChannel marketChannel = new MarketChannel();
+        marketChannel.setMarketCode(marketCode);
+        marketChannel.setChannel(channel);
+        return BaseOutput.success().setData(marketChannelService.list(marketChannel));
     }
 }

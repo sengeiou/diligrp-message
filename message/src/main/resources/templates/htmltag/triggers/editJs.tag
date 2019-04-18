@@ -107,5 +107,41 @@
 
         }
     })
+    
+    function getMarketChannel() {
+        var marketCode = $('#marketCode').combobox("getValue");
+        if (null == marketCode || ''==marketCode){
+            swal({
+                title: '警告',
+                text: '请先选择市场',
+                type: 'warning',
+                width: 300,
+            });
+            return;
+        }
+        //拿当前的这个channel 的值
+        var channel = '';
+        $.ajax({
+            type: "POST",
+            url: "${contextPath}/triggers/getChannelKey.action",
+            data: {marketCode:marketCode,channel:channel},
+            processData:true,
+            dataType: "json",
+            async : true,
+            success: function (ret) {
+                if(ret.success){
+                    //获取 ret.data
+                    var data = ret.data;
+                    //渲染。。。。。。
+                }else{
+
+                    swal('错误',ret.result, 'error');
+                }
+            },
+            error: function(){
+                swal('错误', '远程访问失败', 'error');
+            }
+        });
+    }
 
 </script>

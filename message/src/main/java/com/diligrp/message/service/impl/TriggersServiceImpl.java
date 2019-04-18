@@ -117,25 +117,31 @@ public class TriggersServiceImpl extends BaseServiceImpl<Triggers, Long> impleme
         if (null == triggersVo){
             return BaseOutput.failure("数据为空");
         }
+        String triggerCode = "";
         /**
          * ID为空，则为新增操作，ID不为空，则为修改操作
          */
         if (null == triggersVo.getId()){
-            String triggerCode = sequenceNumberService.getBizNumberByType(BizNumberTypeEnum.TRIGGERS);
+            triggerCode = sequenceNumberService.getBizNumberByType(BizNumberTypeEnum.TRIGGERS);
             triggersVo.setTriggerCode(triggerCode);
             Triggers triggers = new Triggers();
             BeanUtil.copyProperties(triggersVo,triggers);
             triggers.setEnabled(TriggersEnum.EnabledStateEnum.DISABLED.getCode());
             this.insertSelective(triggers);
-            List<TriggersTemplate> templateList = triggersVo.getTemplateList();
+        }else {
+            Triggers triggers = this.get(triggersVo.getId());
+            triggerCode = triggers.getTriggerCode();
+        }
+        final String code = triggerCode;
+        List<TriggersTemplate> templateList = triggersVo.getTemplateList();
+        if (CollectionUtil.isNotEmpty(templateList)){
             templateList.stream().forEach(t->{
-                t.setTriggerCode(triggerCode);
+                t.setTriggerCode(code);
             });
 
-        }else {
-
         }
-        return null;
+
+        return BaseOutput.success();
     }
 
     @Override
