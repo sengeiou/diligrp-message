@@ -68,8 +68,7 @@ public class TriggersController {
     @RequestMapping(value="/save.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody BaseOutput save(String jsonParams) {
         TriggersVo triggersVo = JSONObject.parseObject(jsonParams, TriggersVo.class);
-
-        return BaseOutput.success("新增成功");
+        return triggersService.saveInfo(triggersVo);
     }
 
 
@@ -103,8 +102,8 @@ public class TriggersController {
     @ApiOperation(value = "Triggers中检查市场-系统-场景对应的关系是否存在", notes = "检查市场-系统-场景对应的关系是否存在")
     @RequestMapping(value = "/checkNotExist.action", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
-    public BaseOutput checkNotExist(String marketCode,String systemCode,String sceneCode){
-        Boolean notExist = triggersService.checkNotExist(marketCode, systemCode, sceneCode);
+    public BaseOutput checkNotExist(String marketCode,String systemCode,String sceneCode,Long selfId){
+        Boolean notExist = triggersService.checkNotExist(marketCode, systemCode, sceneCode,selfId);
         if (notExist) {
             return BaseOutput.success();
         } else {

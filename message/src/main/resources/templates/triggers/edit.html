@@ -22,7 +22,7 @@
                 $.ajax({
                     type: "POST",
                     url: "${contextPath}/triggers/checkNotExist.action",
-                    data: {marketCode:marketCode,systemCode:systemCode,sceneCode:sceneCode},
+                    data: {marketCode:marketCode,systemCode:systemCode,sceneCode:sceneCode,selfId:id},
                     processData:true,
                     dataType: "json",
                     async : true,
