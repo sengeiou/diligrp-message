@@ -5,8 +5,7 @@
 
 
     // 模板
-    var templateOrigin = '<div class="template-group-origin">\n' +
-        '                <div class="template-group">\n' +
+    var templateOrigin = '<div class="template-group">\n' +
         '                    <h4 class="template-group-title">模板</h4>\n' +
         '                    <input type="hidden" name="templateId" >\n' +
         '                    <div class="template-item">\n' +
@@ -31,7 +30,6 @@
         '                        <a href="#" class="easyui-linkbutton template-plus-btn" data-options="iconCls:\'icon-add\'">add</a>\n' +
         '                        <a href="#" class="easyui-linkbutton template-minus-btn" data-options="iconCls:\'icon-add\'"></a>\n' +
         '                    </div>\n' +
-        '                </div>\n' +
         '            </div>';
 
 
@@ -47,7 +45,7 @@
                 $(el).attr('name', name);
             });
             $('.templatewrap').append(templateOrigin);
-            $.parser.parse('.template-group:last-child');
+            $.parser.parse('#templatewrap .template-group:last-child');
             flagCount++;
         }
     });
@@ -108,47 +106,5 @@
 
         }
     });
-
-
-
-    // 来源改变联动∗AccessKey:
-
-    function originChange() {
-        var that = $(this);
-        var marketCode = $('#marketCode').combobox("getValue");
-        if (null == marketCode || ''==marketCode){
-            return;
-        }
-        //拿当前的这个channel 的值
-        var channel = $(this).combobox('getValue');
-        $.ajax({
-            type: "POST",
-            url: "${contextPath}/triggers/getChannelKey.action",
-            data: {marketCode:marketCode,channel:channel},
-            processData:true,
-            dataType: "json",
-            async : true,
-            success: function (ret) {
-                if(ret.success){
-                    //获取 ret.data
-                    let data = [];
-                    ret.data.forEach(function(el, index){
-                        console.log('el', el.accessKey)
-                        data.push({"text": el.accessKey, value: el.id})
-                    });
-                    that.parents('.template-group').find('#marketChannelIds').combobox('loadData', data )
-
-
-                    //渲染。。。。。。
-                }else{
-
-                    swal('错误',ret.result, 'error');
-                }
-            },
-            error: function(){
-                swal('错误', '远程访问失败', 'error');
-            }
-        });
-    }
 
 </script>
