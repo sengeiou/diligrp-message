@@ -8,12 +8,13 @@ import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.EasyuiPageOutput;
 import com.dili.ss.metadata.ValueProviderUtils;
 import com.dili.ss.util.POJOUtils;
-import com.dili.uap.sdk.domain.Firm;
-import com.dili.uap.sdk.session.SessionContext;
+import com.diligrp.message.common.enums.BizNumberTypeEnum;
 import com.diligrp.message.common.enums.TriggersEnum;
 import com.diligrp.message.domain.Triggers;
+import com.diligrp.message.domain.TriggersTemplate;
 import com.diligrp.message.domain.vo.TriggersVo;
 import com.diligrp.message.mapper.TriggersMapper;
+import com.diligrp.message.service.SequenceNumberService;
 import com.diligrp.message.service.TriggersService;
 import com.diligrp.message.service.TriggersTemplateService;
 import com.diligrp.message.service.remote.FirmService;
@@ -42,6 +43,8 @@ public class TriggersServiceImpl extends BaseServiceImpl<Triggers, Long> impleme
     private FirmService firmService;
     @Autowired
     private TriggersTemplateService triggersTemplateService;
+    @Autowired
+    private SequenceNumberService sequenceNumberService;
 
     /**
      * 根据实体查询easyui分页结果， 支持用metadata信息中字段对应的provider构建数据
@@ -113,6 +116,24 @@ public class TriggersServiceImpl extends BaseServiceImpl<Triggers, Long> impleme
     public BaseOutput saveInfo(TriggersVo triggersVo) {
         if (null == triggersVo){
             return BaseOutput.failure("数据为空");
+        }
+        /**
+         * ID为空，则为新增操作，ID不为空，则为修改操作
+         */
+        if (null == triggersVo.getId()){
+            String triggerCode = sequenceNumberService.getBizNumberByType(BizNumberTypeEnum.TRIGGERS);
+            triggersVo.setTriggerCode(triggerCode);
+            Triggers triggers = new Triggers();
+            BeanUtil.copyProperties(triggersVo,triggers);
+            triggers.setEnabled(TriggersEnum.EnabledStateEnum.DISABLED.getCode());
+            this.insertSelective(triggers);
+            List<TriggersTemplate> templateList = triggersVo.getTemplateList();
+            templateList.stream().forEach(t->{
+                t.setTriggerCode(triggerCode);
+            });
+
+        }else {
+
         }
         return null;
     }

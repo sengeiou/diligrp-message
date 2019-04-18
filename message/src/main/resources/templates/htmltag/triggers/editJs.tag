@@ -10,7 +10,7 @@
         '                    <h4 class="template-group-title">模板</h4>\n' +
         '                    <input type="hidden" name="templateId" >\n' +
         '                    <div class="template-item">\n' +
-        '                        <input class="easyui-combobox" name="channel" style="width:100%" labelAlign="right" panelHeight="auto" editable="false" required="true" data-options="label:\'&lowast;模板来源:\',\n' +
+        '                        <input class="easyui-combobox" name="channel" style="width:100%" labelAlign="right" panelHeight="auto" editable="false" required="true" data-options="onLoadSuccess:onComboLoadSuccessSelectOne,label:\'&lowast;模板来源:\',\n' +
         '                            url:\'${contextPath}/provider/getLookupList.action\',\n' +
         '                            method:\'POST\',\n' +
         '                            queryParams: {provider: \'marketChannelProvider\',queryParams:\'{required:true}\'}" />\n' +

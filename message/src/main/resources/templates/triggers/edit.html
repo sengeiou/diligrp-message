@@ -49,19 +49,19 @@
         <div class="template-base">
             <input name="_id" id="id" type="hidden">
             <div class="template-item">
-                <input  name="marketCode" id="marketCode" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false" required="true" data-options="label:'&lowast;市场:',onChange:checkNotExist" />
+                <input  name="marketCode" id="marketCode" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false" required="true" data-options="label:'&lowast;市场:',onLoadSuccess:onComboLoadSuccessSelectOne,onChange:checkNotExist" />
                 <#comboProvider _id="marketCode" _provider='firmProvider' _queryParams='{required:true}'/>
             </div>
             <div class="template-item">
-                <input name="systemCode" id="systemCode" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false" required="true" data-options="label:'&lowast;所属系统:',onChange:checkNotExist" />
+                <input name="systemCode" id="systemCode" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false" required="true" data-options="label:'&lowast;所属系统:',onLoadSuccess:onComboLoadSuccessSelectOne,onChange:checkNotExist" />
                 <#comboProvider _id="systemCode" _provider='dataDictionaryValueProvider' _queryParams='{dd_code:"system_code",required:true}'/>
             </div>
             <div class="template-item">
-                <input name="sceneCode" id="sceneCode" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false" required="true" data-options="label:'&lowast;应用场景:',onChange:checkNotExist" />
+                <input name="sceneCode" id="sceneCode" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false" required="true" data-options="label:'&lowast;应用场景:',onLoadSuccess:onComboLoadSuccessSelectOne,onChange:checkNotExist" />
                 <#comboProvider _id="sceneCode" _provider='dataDictionaryValueProvider' _queryParams='{dd_code:"message_scene",required:true}'/>
             </div>
             <div class="template-item">
-                <input name="whitelist" id="whitelist" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false" required="true" data-options="label:'&lowast;应用白名单:'" />
+                <input name="whitelist" id="whitelist" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false" required="true" data-options="label:'&lowast;应用白名单:',onLoadSuccess:onComboLoadSuccessSelectOne" />
                 <#comboProvider _id="whitelist" _provider='booleanProvider' _queryParams='{required:true}'/>
             </div>
         </div>
@@ -70,7 +70,7 @@
             <h4 class="template-group-title">模板</h4>
             <input type="hidden" name="templateId" >
             <div class="template-item">
-                <input class="easyui-combobox" name="channel" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false" required="true" data-options="label:'&lowast;模板来源:',
+                <input class="easyui-combobox" name="channel" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false" required="true" data-options="label:'&lowast;模板来源:',onLoadSuccess:onComboLoadSuccessSelectOne,
                                 url:'${contextPath}/provider/getLookupList.action',
                                 method:'POST',
                                 queryParams: {provider: 'marketChannelProvider',queryParams:'{required:true}'}" />
