@@ -12,6 +12,7 @@
          }
      }
      </script>
+
     <div class="easyui-layout" fit="true">
         <!-- ====================================================================================================================== -->
         <!-- 上方布局 -->
@@ -365,8 +366,8 @@
                         text:'新增',
                         handler:function(){
                             openInsert();
-                            $('#_marketCode').combobox('setValue', $('#_marketCode').combobox('getData')[0].text);
-                            $('#_channel').combobox('setValue', $('#_channel').combobox('getData')[0].text);
+                            $('#_marketCode').combobox('setValue', $('#_marketCode').combobox('getData')[0].value);
+                            $('#_channel').combobox('setValue', $('#_channel').combobox('getData')[0].value);
                         }
                     },
                     </#resource>
