@@ -93,7 +93,7 @@
                 <td style="padding:5px;">
                     <input name="_marketCode" id="_marketCode" style="width:100%" panelWidth="auto" panelHeight="auto" editable="false" data-options="label:'所属市场:'"
                            required="true" />
-                    <#comboProvider _id="_marketCode" _provider='firmProvider' _queryParams='{required:true}'/>
+                    <#comboProvider _id="_marketCode" _provider='firmProvider' _queryParams='{emptyText:"-- 请选择 --"}' />
                 </td>
             </tr>
             <tr>
