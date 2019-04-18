@@ -16,10 +16,7 @@
         '                            queryParams: {provider: \'marketChannelProvider\',queryParams:\'{required:true}\'}" />\n' +
         '                    </div>\n' +
         '                    <div class="template-item">\n' +
-        '                        <input class="easyui-combobox" id="marketChannelIds" name="marketChannelIds" style="width:100%" labelAlign="right" panelHeight="auto" editable="false" required="true" data-options="label:\'&lowast;AccessKey:\',multiple:true,' +
-        '                           url:\'${contextPath}/provider/getLookupList.action\',\n' +
-        '                            method:\'POST\',\n' +
-        '                            queryParams: {provider: \'firmProvider\',queryParams:\'{required:true}\'}" />\n' +
+        '                        <input class="easyui-combobox" id="marketChannelIds" name="marketChannelIds" style="width:100%" labelAlign="right" panelHeight="auto" editable="false" required="true" data-options="label:\'&lowast;AccessKey:\',multiple:true" />\n' +
         '                    </div>\n' +
         '                    <div class="template-item">\n' +
         '                        <input class="easyui-textbox" name="templateName" style="width:100%" labelAlign="right" data-options="label:\'模板名称:\',validType:\'length[0,50]\'" />\n' +
@@ -104,6 +101,7 @@
                     }
                 },
                 error: function(){
+                    saveData = {};
                     swal('错误', '远程访问失败', 'error');
                 }
             });

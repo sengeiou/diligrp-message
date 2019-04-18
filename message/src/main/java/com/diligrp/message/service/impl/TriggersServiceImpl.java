@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -101,14 +102,26 @@ public class TriggersServiceImpl extends BaseServiceImpl<Triggers, Long> impleme
     }
 
     @Override
-    public Boolean checkNotExist(String marketCode, String systemCode, String sceneCode) {
+    public Boolean checkNotExist(String marketCode, String systemCode, String sceneCode,Long selfId) {
         Triggers triggers = new Triggers();
         triggers.setMarketCode(marketCode);
         triggers.setSystemCode(systemCode);
         triggers.setSceneCode(sceneCode);
         List<Triggers> list = this.list(triggers);
-        return CollectionUtil.isEmpty(list);
-
+        if (CollectionUtil.isEmpty(list)) {
+            return true;
+        } else {
+            if (list.size() > 1) {
+                return false;
+            }
+            if (null != selfId) {
+                Triggers temp = list.get(0);
+                if (temp.getId().equals(selfId)) {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 
     @Override
@@ -116,6 +129,10 @@ public class TriggersServiceImpl extends BaseServiceImpl<Triggers, Long> impleme
     public BaseOutput saveInfo(TriggersVo triggersVo) {
         if (null == triggersVo){
             return BaseOutput.failure("数据为空");
+        }
+        Boolean notExist = this.checkNotExist(triggersVo.getMarketCode(), triggersVo.getSystemCode(), triggersVo.getSceneCode(), triggersVo.getId());
+        if (!notExist) {
+            return BaseOutput.failure("市场-系统-场景对应关系已存在，不能重复添加");
         }
         String triggerCode = "";
         /**
@@ -129,18 +146,25 @@ public class TriggersServiceImpl extends BaseServiceImpl<Triggers, Long> impleme
             triggers.setEnabled(TriggersEnum.EnabledStateEnum.DISABLED.getCode());
             this.insertSelective(triggers);
         }else {
-            Triggers triggers = this.get(triggersVo.getId());
-            triggerCode = triggers.getTriggerCode();
+            Triggers old = this.get(triggersVo.getId());
+            triggerCode = old.getTriggerCode();
+            old.setSystemCode(triggersVo.getSystemCode());
+            old.setMarketCode(triggersVo.getMarketCode());
+            old.setSceneCode(triggersVo.getSceneCode());
+            old.setWhitelist(triggersVo.getWhitelist());
+            this.updateSelective(old);
+            triggersTemplateService.deleteByTriggerCode(triggerCode);
         }
         final String code = triggerCode;
         List<TriggersTemplate> templateList = triggersVo.getTemplateList();
         if (CollectionUtil.isNotEmpty(templateList)){
             templateList.stream().forEach(t->{
                 t.setTriggerCode(code);
+                t.setCreated(new Date());
+                t.setModified(new Date());
             });
-
+            triggersTemplateService.batchInsert(templateList);
         }
-
         return BaseOutput.success();
     }
 

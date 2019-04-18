@@ -44,9 +44,10 @@ public interface TriggersService extends BaseService<Triggers, Long> {
      * @param marketCode
      * @param systemCode
      * @param sceneCode
+     * @param selfId 自身ID(用于判断是否是自己本身)
      * @return true-不存在;false-存在
      */
-    Boolean checkNotExist(String marketCode,String systemCode,String sceneCode);
+    Boolean checkNotExist(String marketCode,String systemCode,String sceneCode,Long selfId);
 
     /**
      * 保存触发点信息
