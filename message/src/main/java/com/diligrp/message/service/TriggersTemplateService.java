@@ -24,4 +24,11 @@ public interface TriggersTemplateService extends BaseService<TriggersTemplate, L
      * @return
      */
      Integer deleteByTriggerCode(String triggerCode);
+
+    /**
+     * 根据触发code查询模板信息
+     * @param triggerCode
+     * @return
+     */
+    List<TriggersTemplate> selectByTriggerCode(String triggerCode);
 }

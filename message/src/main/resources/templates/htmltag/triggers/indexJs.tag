@@ -1,7 +1,7 @@
 <script type="text/javascript">
     //打开新增窗口
     function openInsert(){
-        window.location.href="${contextPath}/triggers/add.html";
+        window.location.href="${contextPath}/triggers/toEdit.html";
     }
 
     //打开修改窗口
@@ -11,45 +11,7 @@
             swal('警告','请选中一条数据', 'warning');
             return;
         }
-        $('#dlg').dialog('open');
-        $('#dlg').dialog('center');
-        formFocus("_form", "_triggerCode");
-        var formData = $.extend({},selected);
-        formData = addKeyStartWith(getOriginalData(formData),"_");
-        $('#_form').form('load', formData);
-    }
-
-    function saveOrUpdate(){
-        if(!$('#_form').form("validate")){
-            return;
-        }
-        var _formData = removeKeyStartWith($("#_form").serializeObject(),"_");
-        var _url = null;
-        //没有id就新增
-        if(_formData.id == null || _formData.id==""){
-            _url = "${contextPath}/triggers/insert.action";
-        }else{//有id就修改
-            _url = "${contextPath}/triggers/update.action";
-        }
-        $.ajax({
-            type: "POST",
-            url: _url,
-            data: _formData,
-            processData:true,
-            dataType: "json",
-            async : true,
-            success: function (data) {
-                if(data.code=="200"){
-                    $("#triggerGrid").datagrid("reload");
-                    $('#dlg').dialog('close');
-                }else{
-                    swal('错误',data.result, 'error');
-                }
-            },
-            error: function(){
-                swal('错误', '远程访问失败', 'error');
-            }
-        });
+        window.location.href="${contextPath}/triggers/toEdit.html?id="+selected["id"];
     }
 
     /**

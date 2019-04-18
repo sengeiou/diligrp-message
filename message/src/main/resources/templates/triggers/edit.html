@@ -82,22 +82,22 @@
             <form id="_form" class="easyui-form" method="post" fit="true">
                 <div class="templatewrap" id="templatewrap" style="width: 360px;">
                     <div class="template-base">
-                        <input name="_id" id="id" type="hidden">
+                        <input name="_id" id="id" value="${triggers.id!}" type="hidden">
                         <div class="template-item">
                             <input  name="marketCode" id="marketCode" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false" required="true" data-options="label:'&lowast;市场:',onLoadSuccess:onComboLoadSuccessSelectOne,onChange:checkNotExist" />
-                            <#comboProvider _id="marketCode" _provider='firmProvider' _queryParams='{required:true}'/>
+                            <#comboProvider _id="marketCode" _provider='firmProvider' _queryParams='{required:true}' _value="${triggers.marketCode!}" />
                         </div>
                         <div class="template-item">
                             <input name="systemCode" id="systemCode" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false" required="true" data-options="label:'&lowast;所属系统:',onLoadSuccess:onComboLoadSuccessSelectOne,onChange:checkNotExist" />
-                            <#comboProvider _id="systemCode" _provider='dataDictionaryValueProvider' _queryParams='{dd_code:"system_code",required:true}'/>
+                            <#comboProvider _id="systemCode" _provider='dataDictionaryValueProvider' _queryParams='{dd_code:"system_code",required:true}' _value="${triggers.systemCode!}"/>
                         </div>
                         <div class="template-item">
                             <input name="sceneCode" id="sceneCode" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false" required="true" data-options="label:'&lowast;应用场景:',onLoadSuccess:onComboLoadSuccessSelectOne,onChange:checkNotExist" />
-                            <#comboProvider _id="sceneCode" _provider='dataDictionaryValueProvider' _queryParams='{dd_code:"message_scene",required:true}'/>
+                            <#comboProvider _id="sceneCode" _provider='dataDictionaryValueProvider' _queryParams='{dd_code:"message_scene",required:true}' _value="${triggers.sceneCode!}"/>
                         </div>
                         <div class="template-item">
                             <input name="whitelist" id="whitelist" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false" required="true" data-options="label:'&lowast;应用白名单:',onLoadSuccess:onComboLoadSuccessSelectOne" />
-                            <#comboProvider _id="whitelist" _provider='booleanProvider' _queryParams='{required:true}'/>
+                            <#comboProvider _id="whitelist" _provider='booleanProvider' _queryParams='{required:true}' _value="${triggers.whitelist!}"/>
                         </div>
                     </div>
 

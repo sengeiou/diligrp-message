@@ -12,6 +12,7 @@ import java.util.List;
 /**
  * 由MyBatis Generator工具自动生成
  * This file was generated on 2019-03-31 10:53:25.
+ * @author yuehongbo
  */
 @Service
 public class TriggersTemplateServiceImpl extends BaseServiceImpl<TriggersTemplate, Long> implements TriggersTemplateService {
@@ -31,5 +32,10 @@ public class TriggersTemplateServiceImpl extends BaseServiceImpl<TriggersTemplat
         TriggersTemplate template = new TriggersTemplate();
         template.setTemplateCode(triggerCode);
         return getActualMapper().delete(template);
+    }
+
+    @Override
+    public List<TriggersTemplate> selectByTriggerCode(String triggerCode) {
+        return getActualMapper().selectByTriggerCode(triggerCode);
     }
 }

@@ -8,4 +8,11 @@ import java.util.List;
 public interface TriggersTemplateMapper extends MyMapper<TriggersTemplate> {
 
     List<TriggersTemplate> selectByMarketChannelId(String marketChannelId);
+
+    /**
+     * 根据触发code查询模板信息
+     * @param triggerCode
+     * @return
+     */
+    List<TriggersTemplate> selectByTriggerCode(String triggerCode);
 }

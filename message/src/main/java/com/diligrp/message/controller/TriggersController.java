@@ -7,9 +7,11 @@ import com.dili.uap.sdk.domain.UserTicket;
 import com.dili.uap.sdk.session.SessionContext;
 import com.diligrp.message.domain.MarketChannel;
 import com.diligrp.message.domain.Triggers;
+import com.diligrp.message.domain.TriggersTemplate;
 import com.diligrp.message.domain.vo.TriggersVo;
 import com.diligrp.message.service.MarketChannelService;
 import com.diligrp.message.service.TriggersService;
+import com.diligrp.message.service.TriggersTemplateService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -36,6 +38,8 @@ public class TriggersController {
     private TriggersService triggersService;
     @Autowired
     private MarketChannelService marketChannelService;
+    @Autowired
+    private TriggersTemplateService triggersTemplateService;
 
     @ApiOperation("跳转到Triggers页面")
     @RequestMapping(value="/index.html", method = RequestMethod.GET)
@@ -83,11 +87,21 @@ public class TriggersController {
     }
 
     @ApiOperation("跳转到Triggers新增页面")
-    @RequestMapping(value="/add.html", method = {RequestMethod.GET, RequestMethod.POST})
-    public String add(ModelMap modelMap, @RequestParam(name="id", required = false) Long id) throws Exception {
+    @RequestMapping(value="/toEdit.html", method = {RequestMethod.GET, RequestMethod.POST})
+    public String toEdit(ModelMap modelMap, @RequestParam(name="id", required = false) Long id) throws Exception {
         UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
         if (userTicket == null) {
             throw new RuntimeException("未登录");
+        }
+        if (null != id){
+            Triggers triggers = triggersService.get(id);
+            if (null != triggers){
+                modelMap.put("triggers",triggers);
+                List<TriggersTemplate> triggersTemplates = triggersTemplateService.selectByTriggerCode(triggers.getTriggerCode());
+                if (CollectionUtil.isNotEmpty(triggersTemplates)){
+                    modelMap.put("triggersTemplates",triggersTemplates);
+                }
+            }
         }
         return "triggers/edit";
     }
