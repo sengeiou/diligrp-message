@@ -5,7 +5,6 @@ import com.diligrp.message.domain.Whitelist;
 
 import javax.persistence.Column;
 import javax.persistence.Transient;
-import java.util.Date;
 import java.util.List;
 
 public class WhitelistVo extends Whitelist {

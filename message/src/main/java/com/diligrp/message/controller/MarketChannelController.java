@@ -3,17 +3,15 @@ package com.diligrp.message.controller;
 import com.dili.ss.domain.BaseOutput;
 import com.diligrp.message.domain.MarketChannel;
 import com.diligrp.message.domain.TriggersTemplate;
+import com.diligrp.message.domain.vo.MarketChannelVo;
 import com.diligrp.message.service.MarketChannelService;
 import com.diligrp.message.service.TriggersTemplateService;
+import com.diligrp.message.service.remote.FirmService;
 import com.diligrp.message.utils.Base64Util;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-
-import java.util.Base64;
-import java.util.List;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,6 +20,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.List;
 
 /**
  * 由MyBatis Generator工具自动生成
@@ -35,6 +35,8 @@ public class MarketChannelController {
     MarketChannelService marketChannelService;
     @Autowired
     TriggersTemplateService triggersTemplateService;
+    @Autowired
+    FirmService firmService;
 
     @ApiOperation("跳转到MarketChannel页面")
     @RequestMapping(value="/index.html", method = RequestMethod.GET)
@@ -56,8 +58,9 @@ public class MarketChannelController {
 		@ApiImplicitParam(name="MarketChannel", paramType="form", value = "MarketChannel的form信息", required = false, dataType = "string")
 	})
     @RequestMapping(value="/listPage.action", method = {RequestMethod.GET, RequestMethod.POST})
-    public @ResponseBody String listPage(@ModelAttribute MarketChannel marketChannel) throws Exception {
-        return marketChannelService.listEasyuiPageByExample(marketChannel, true).toString();
+    public @ResponseBody String listPage(@ModelAttribute MarketChannelVo marketChannelVo) throws Exception {
+        marketChannelVo.setAuthMarkets(firmService.getCurrentUserFirmCodes());
+        return marketChannelService.listEasyuiPageByExample(marketChannelVo, true).toString();
     }
 
     @ApiOperation("新增MarketChannel")
