@@ -1,8 +1,6 @@
 <script type="text/javascript">
 
     var flagCount = 0;
-    $('.template-group-origin').css({height: 0, overflow: 'hidden'});
-
 
     // 模板
     var templateOrigin = '<div class="template-group">\n' +
@@ -58,10 +56,6 @@
             $('.templatewrap .template-group:last-child');
         }
     });
-
-
-
-
 
 
     // 保存数据

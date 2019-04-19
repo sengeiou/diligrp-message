@@ -81,9 +81,10 @@
                         ret.data.forEach(function(el, index){
                             data.push({"text": el.accessKey, value: el.id})
                         });
-
-                        that.parents('.template-group').find('#marketChannelIds').combobox('loadData', data ).combobox('setValue', '');
-
+                        that.parents('.template-group').find('#marketChannelIds').combobox('loadData', data );
+                        if (!$('#pageId').val()) {
+                            that.parents('.template-group').find('#marketChannelIds').combobox('setValue', '');
+                        }
                         //渲染。。。。。。
                     }else{
 
@@ -111,8 +112,12 @@
                             ret.data.forEach(function(el, index){
                                 data.push({'text': el.accessKey, 'value': el.id})
                             });
-                            $(el).parents('.template-group').find('#marketChannelIds').combobox('loadData', data ).combobox('setValue', '');;
+                            $(el).parents('.template-group').find('#marketChannelIds').combobox('loadData', data );
                             $(el).parents('.template-group').find('[name="marketChannelIds"]').val('' ).remove();
+
+                            if (!$('#pageId').val()) {
+                                $(el).parents('.template-group').find('#marketChannelIds').combobox('setValue', '');
+                            }
 
                             //渲染。。。。。。
                         }else{
@@ -126,12 +131,7 @@
 
             })
         }
-
-
     }
-
-
-
 
 
 </script>
