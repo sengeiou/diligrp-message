@@ -13,7 +13,7 @@
      * 检查市场-系统-场景对应的关系是否不存在
      */
     function checkNotExist() {
-        var id = $('#id').val();
+        var id = $('#pageId').val();
         if (null != id){
             var marketCode = $('#marketCode').combobox("getValue");
             var systemCode = $('#systemCode').combobox("getValue");
@@ -44,8 +44,10 @@
     function marketOriginChange(){
         // 检查市场-系统-场景对应的关系是否不存在
         checkNotExist();
-        var market = $(this);
-        originChange(market);
+        if (!$('#pageId').val()) {
+            var market = $(this);
+            originChange(market);
+        }
     }
 
     // 来源改变
@@ -80,7 +82,8 @@
                             data.push({"text": el.accessKey, value: el.id})
                         });
 
-                        that.parents('.template-group').find('#marketChannelIds').combobox('loadData', data );
+                        that.parents('.template-group').find('#marketChannelIds').combobox('loadData', data ).combobox('setValue', '');
+
                         //渲染。。。。。。
                     }else{
 
@@ -92,8 +95,8 @@
                 }
             });
         } else if (element.attr('id') === 'marketCode') {
-            $.each($('#channel'), function(index,el){
-                var channel = $(el).combobox('getValue');
+            $.each($('.channel'), function(index,el){
+                var channel = $(el).parents('.template-group').find('#channel').combobox('getValue');
                 $.ajax({
                     type: "POST",
                     url: "${contextPath}/triggers/getChannelKey.action",
@@ -106,9 +109,11 @@
                             //获取 ret.data
                             let data = [];
                             ret.data.forEach(function(el, index){
-                                data.push({"text": el.accessKey, value: el.id})
+                                data.push({'text': el.accessKey, 'value': el.id})
                             });
-                            $(el).parents('.template-group').find('#marketChannelIds').combobox('loadData', data );
+                            $(el).parents('.template-group').find('#marketChannelIds').combobox('loadData', data ).combobox('setValue', '');;
+                            $(el).parents('.template-group').find('[name="marketChannelIds"]').val('' ).remove();
+
                             //渲染。。。。。。
                         }else{
                             swal('错误',ret.result, 'error');
@@ -147,7 +152,7 @@
             <form id="_form" class="easyui-form" method="post" fit="true">
                 <div class="templatewrap" id="templatewrap" style="width: 360px;">
                     <div class="template-base">
-                        <input name="_id" id="id" value="${triggers.id!}" type="hidden">
+                        <input name="_id" id="pageId" value="${triggers.id!}" type="hidden">
                         <div class="template-item">
                             <input  name="marketCode" id="marketCode" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false" required="true" data-options="label:'&lowast;市场:',onLoadSuccess:onComboLoadSuccessSelectOne,onChange:marketOriginChange" />
                             <#comboProvider _id="marketCode" _provider='firmProvider' _queryParams='{required:true}' _value="${triggers.marketCode!}" />
@@ -165,12 +170,13 @@
                             <#comboProvider _id="whitelist" _provider='booleanProvider' _queryParams='{required:true}' _value="${triggers.whitelist!}"/>
                         </div>
                     </div>
+                    <div style="padding-top: 50px"></div>
                     <%if (has(triggersTemplateList)){ for(triggersTemplate in triggersTemplateList){%>
                         <div class="template-group">
                             <h4 class="template-group-title">模板</h4>
                             <input type="hidden" name="templateId" value="${triggersTemplate.id}" >
                             <div class="template-item">
-                                <input class="easyui-combobox" id="channel" name="channel" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false" required="true" data-options="label:'&lowast;模板来源:',onLoadSuccess:onComboLoadSuccessSelectOne,onChange:originChange,
+                                <input class="easyui-combobox" id="channel" name="channel" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false" required="true" data-options="cls: 'channel',label:'&lowast;模板来源:',onLoadSuccess:onComboLoadSuccessSelectOne,onChange:originChange,
                                         url:'${contextPath}/provider/getLookupList.action',
                                         method:'POST',
                                         onLoadSuccess:function(){ $(this).combobox('select', '${triggersTemplate.channel}');},
@@ -199,7 +205,7 @@
                             <h4 class="template-group-title">模板</h4>
                             <input type="hidden" name="templateId" >
                             <div class="template-item">
-                                <input class="easyui-combobox" id="channel" name="channel" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false" required="true" data-options="label:'&lowast;模板来源:',onLoadSuccess:onComboLoadSuccessSelectOne,onChange:originChange,
+                                <input class="easyui-combobox" id="channel" name="channel" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false" required="true" data-options="cls:'channel', label:'&lowast;模板来源:',onLoadSuccess:onComboLoadSuccessSelectOne,onChange:originChange,
                                     url:'${contextPath}/provider/getLookupList.action',
                                     method:'POST',
                                     queryParams: {provider: 'marketChannelProvider',queryParams:'{required:true}'}" />
