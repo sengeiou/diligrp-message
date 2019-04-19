@@ -25,8 +25,8 @@
         '                        <input class="easyui-textbox" name="templateContent" style="width:100%" labelAlign="right" required="true" data-options="label:\'&lowast;模板内容:\', height: \'80px\', multiline: true,validType:\'length[1,255]\'" />\n' +
         '                    </div>\n' +
         '                    <div class="edit-limit">\n' +
-        '                        <a href="#" class="easyui-linkbutton template-plus-btn" data-options="iconCls:\'icon-add\'">add</a>\n' +
-        '                        <a href="#" class="easyui-linkbutton template-minus-btn" data-options="iconCls:\'icon-add\'"></a>\n' +
+        '                        <a href="#" class="easyui-linkbutton template-plus-btn" data-options="iconCls:\'icon-add\'">增加</a>\n' +
+        '                        <a href="#" class="easyui-linkbutton template-minus-btn" data-options="iconCls:\'icon-remove\'">删除</a>\n' +
         '                    </div>\n' +
         '            </div>';
 

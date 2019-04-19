@@ -14,6 +14,16 @@
         window.location.href="${contextPath}/triggers/toEdit.html?id="+selected["id"];
     }
 
+    //打开修改窗口
+    function openDetail(){
+        var selected = $("#triggerGrid").datagrid("getSelected");
+        if (null == selected) {
+            swal('警告','请选中一条数据', 'warning');
+            return;
+        }
+        window.location.href="${contextPath}/triggers/toDetail.html?id="+selected["id"];
+    }
+
     /**
      * datagrid行点击事件
      * 目前用于来判断 启禁用是否可点

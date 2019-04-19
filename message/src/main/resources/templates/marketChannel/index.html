@@ -77,20 +77,13 @@
         </div>
     </div>
     <!-- 隐藏编辑框 -->
-    <div id="dlg" class="easyui-dialog" resizable="false" constrain="true" shadow="true" draggable="false" title="市场/通道信息" style="padding:20px" modal="true" border="thin" closed="true"
+    <div id="dlg" class="easyui-dialog" resizable="false" constrain="true" shadow="true" draggable="false" title="市场/通道信息-编辑" style="padding:20px" modal="true" border="thin" closed="true"
          data-options="
-				iconCls: 'icon-save',
 				height: 480,
 				buttons: [{
 					text:'确认',
 					iconCls:'icon-ok',
 					handler:saveOrUpdate
-				},{
-					text:'取消',
-					iconCls:'icon-cancel',
-					handler:function(){
-						$('#dlg').dialog('close');
-					}
 				}]
 			">
     <form id="_form" class="easyui-form" method="post" fit="true">

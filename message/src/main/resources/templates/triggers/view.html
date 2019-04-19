@@ -9,41 +9,9 @@
     }
 </style>
 <script type="text/javascript">
-    /**
-     * 检查市场-系统-场景对应的关系是否不存在
-     */
-    function checkNotExist() {
-        var id = $('#pageId').val();
-        if (null != id){
-            var marketCode = $('#marketCode').combobox("getValue");
-            var systemCode = $('#systemCode').combobox("getValue");
-            var sceneCode = $('#sceneCode').combobox("getValue");
-            if (null != marketCode && null != systemCode && null != sceneCode){
-                $.ajax({
-                    type: "POST",
-                    url: "${contextPath}/triggers/checkNotExist.action",
-                    data: {marketCode:marketCode,systemCode:systemCode,sceneCode:sceneCode,selfId:id},
-                    processData:true,
-                    dataType: "json",
-                    async : true,
-                    success: function (ret) {
-                        if(!ret.success){
-                            swal('错误',"市场-系统-场景对应关系已存在，不能重复添加", 'error');
-                            return;
-                        }
-                    },
-                    error: function(){
-                        swal('错误', '远程访问失败', 'error');
-                    }
-                });
-            }
-        }
-    }
 
     // 市场改变
     function marketOriginChange(){
-        // 检查市场-系统-场景对应的关系是否不存在
-        checkNotExist();
         if (!$('#pageId').val()) {
             var market = $(this);
             originChange(market);
@@ -56,7 +24,6 @@
         if (null == marketCode || ''==marketCode){
             return;
         }
-
         // easyui事件直接在页面元素内联上调用，拿到$(this)
         if($(this).attr('id') === 'channel') {
             var that = $(this);
@@ -139,7 +106,6 @@
     <div align="center">
 
         <div class="">
-            <a href="#" class="easyui-linkbutton" iconCls="icon-save" id="record-save-btn" >保存</a>&nbsp;&nbsp;
             <a href="${contextPath}/triggers/index.html" class="easyui-linkbutton" iconCls="icon-back" id="record-back-btn" >返回</a>
         </div>
         <div  class="easyui-panel" style="width: 96%;" title="基本信息" border="false" >
@@ -149,19 +115,19 @@
                     <div class="template-base">
                         <input name="_id" id="pageId" value="${triggers.id!}" type="hidden">
                         <div class="template-item">
-                            <input  name="marketCode" id="marketCode" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false" required="true" data-options="label:'&lowast;市场:',onLoadSuccess:onComboLoadSuccessSelectOne,onChange:marketOriginChange" />
+                            <input  name="marketCode" id="marketCode" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false" required="true" data-options="label:'市场:',onChange:marketOriginChange,cls:'noborder', readonly:true, hasDownArrow:false" />
                             <#comboProvider _id="marketCode" _provider='firmProvider' _queryParams='{required:true}' _value="${triggers.marketCode!}" />
                         </div>
                         <div class="template-item">
-                            <input name="systemCode" id="systemCode" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false" required="true" data-options="label:'&lowast;所属系统:',onLoadSuccess:onComboLoadSuccessSelectOne,onChange:checkNotExist" />
+                            <input name="systemCode" id="systemCode" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false" required="true" data-options="label:'所属系统:',cls:'noborder', readonly:true, hasDownArrow:false" />
                             <#comboProvider _id="systemCode" _provider='dataDictionaryValueProvider' _queryParams='{dd_code:"system_code",required:true}' _value="${triggers.systemCode!}"/>
                         </div>
                         <div class="template-item">
-                            <input name="sceneCode" id="sceneCode" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false" required="true" data-options="label:'&lowast;应用场景:',onLoadSuccess:onComboLoadSuccessSelectOne,onChange:checkNotExist" />
+                            <input name="sceneCode" id="sceneCode" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false" required="true" data-options="label:'应用场景:',cls:'noborder', readonly:true, hasDownArrow:false" />
                             <#comboProvider _id="sceneCode" _provider='dataDictionaryValueProvider' _queryParams='{dd_code:"message_scene",required:true}' _value="${triggers.sceneCode!}"/>
                         </div>
                         <div class="template-item">
-                            <input name="whitelist" id="whitelist" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false" required="true" data-options="label:'&lowast;应用白名单:',onLoadSuccess:onComboLoadSuccessSelectOne" />
+                            <input name="whitelist" id="whitelist" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false" required="true" data-options="label:'应用白名单:',cls:'noborder', readonly:true, hasDownArrow:false" />
                             <#comboProvider _id="whitelist" _provider='booleanProvider' _queryParams='{required:true}' _value="${triggers.whitelist!}"/>
                         </div>
                     </div>
@@ -171,65 +137,31 @@
                             <h4 class="template-group-title">模板</h4>
                             <input type="hidden" name="templateId" value="${triggersTemplate.id}" >
                             <div class="template-item">
-                                <input class="easyui-combobox" id="channel" name="channel" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false" required="true" data-options="cls: 'channel',label:'&lowast;模板来源:',onLoadSuccess:onComboLoadSuccessSelectOne,onChange:originChange,
+                                <input class="easyui-combobox" id="channel" name="channel" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false" required="true" data-options="cls: 'channel',label:'模板来源:',onChange:originChange,cls:'noborder', readonly:true, hasDownArrow:false,
                                         url:'${contextPath}/provider/getLookupList.action',
                                         method:'POST',
                                         onLoadSuccess:function(){ $(this).combobox('select', '${triggersTemplate.channel}');},
                                         queryParams: {provider: 'marketChannelProvider',queryParams:'{required:true}'}" />
                             </div>
                             <div class="template-item">
-                                <input class="easyui-combobox" id="marketChannelIds" name="marketChannelIds" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false" required="true" data-options="label:'&lowast;AccessKey:',multiple:true,
+                                <input class="easyui-combobox" id="marketChannelIds" name="marketChannelIds" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false" required="true" data-options="label:'AccessKey:',multiple:true,cls:'noborder', readonly:true, hasDownArrow:false,
                                         onLoadSuccess:function(){ $(this).combobox('setValues', [${triggersTemplate.marketChannelIds}]);}" />
                             </div>
                             <div class="template-item">
-                                <input class="easyui-textbox" name="templateName" value="${triggersTemplate.templateName!}" style="width:100%" labelAlign="right" data-options="label:'模板名称:',validType:'length[0,50]'" />
+                                <input class="easyui-textbox" name="templateName" value="${triggersTemplate.templateName!}" style="width:100%" labelAlign="right" data-options="label:'模板名称:',cls:'noborder', editable:false, readonly:true" />
                             </div>
                             <div class="template-item">
-                                <input class="easyui-textbox" name="templateCode" value="${triggersTemplate.templateCode!}" style="width:100%" labelAlign="right" data-options="label:'模板CODE:',validType:'length[0,20]'" />
+                                <input class="easyui-textbox" name="templateCode" value="${triggersTemplate.templateCode!}" style="width:100%" labelAlign="right" data-options="label:'模板CODE:',cls:'noborder', editable:false, readonly:true" />
                             </div>
                             <div class="template-item">
-                                <input class="easyui-textbox" name="templateContent" value="${triggersTemplate.templateContent!}" style="width:100%" labelAlign="right" required="true" data-options="label:'&lowast;模板内容:', height: '80px', multiline: true,validType:'length[1,255]'" />
-                            </div>
-                            <div class="edit-limit">
-                                <a href="#" class="easyui-linkbutton template-plus-btn" data-options="iconCls:'icon-add'">增加</a>
-                                <a href="#" class="easyui-linkbutton template-minus-btn" data-options="iconCls:'icon-remove'">删除</a>
+                                <input class="easyui-textbox" name="templateContent" value="${triggersTemplate.templateContent!}" style="width:100%" labelAlign="right" required="true" readonly="true" data-options="label:'模板内容:', height: '80px', multiline: true,cls:'noborder', editable:false, readonly:true" />
                             </div>
                         </div>
-                    <%}}else{%>
-                        <div class="template-group">
-                            <h4 class="template-group-title">模板</h4>
-                            <input type="hidden" name="templateId" >
-                            <div class="template-item">
-                                <input class="easyui-combobox" id="channel" name="channel" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false" required="true" data-options="cls:'channel', label:'&lowast;模板来源:',onLoadSuccess:onComboLoadSuccessSelectOne,onChange:originChange,
-                                    url:'${contextPath}/provider/getLookupList.action',
-                                    method:'POST',
-                                    queryParams: {provider: 'marketChannelProvider',queryParams:'{required:true}'}" />
-                            </div>
-                            <div class="template-item">
-                                <input class="easyui-combobox" id="marketChannelIds" name="marketChannelIds" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false" required="true" data-options="label:'&lowast;AccessKey:',multiple:true" />
-                            </div>
-                            <div class="template-item">
-                                <input class="easyui-textbox" name="templateName" style="width:100%" labelAlign="right" data-options="label:'模板名称:',validType:'length[0,50]'" />
-                            </div>
-                            <div class="template-item">
-                                <input class="easyui-textbox" name="templateCode" style="width:100%" labelAlign="right" data-options="label:'模板CODE:',validType:'length[0,20]'" />
-                            </div>
-                            <div class="template-item">
-                                <input class="easyui-textbox" name="templateContent" style="width:100%" labelAlign="right" required="true" data-options="label:'&lowast;模板内容:', height: '80px', multiline: true,validType:'length[1,255]'" />
-                            </div>
-                            <div class="edit-limit">
-                                <a href="#" class="easyui-linkbutton template-plus-btn" data-options="iconCls:'icon-add'">增加</a>
-                                <a href="#" class="easyui-linkbutton template-minus-btn" data-options="iconCls:'icon-remove'">删除</a>
-                            </div>
-                        </div>
-                    <%}%>
-
+                    <%}}%>
                 </div>
             </form>
         </div>
     </div>
 </div>
-
-<#triggers_editJs />
 
 </#body>

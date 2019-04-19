@@ -86,7 +86,7 @@ public class TriggersController {
         return BaseOutput.success("删除成功");
     }
 
-    @ApiOperation("跳转到Triggers新增页面")
+    @ApiOperation("跳转到Triggers编辑页面")
     @RequestMapping(value="/toEdit.html", method = {RequestMethod.GET, RequestMethod.POST})
     public String toEdit(ModelMap modelMap, @RequestParam(name="id", required = false) Long id) throws Exception {
         UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
@@ -133,5 +133,24 @@ public class TriggersController {
         marketChannel.setMarketCode(marketCode);
         marketChannel.setChannel(channel);
         return BaseOutput.success().setData(marketChannelService.list(marketChannel));
+    }
+
+    @ApiOperation("跳转到Triggers新增页面")
+    @RequestMapping(value="/toDetail.html", method = {RequestMethod.GET, RequestMethod.POST})
+    public String toDetail(ModelMap modelMap, @RequestParam(name="id") Long id) {
+        if (null == id) {
+            throw new IllegalArgumentException("参数异常");
+        }
+        if (null != id) {
+            Triggers triggers = triggersService.get(id);
+            if (null != triggers) {
+                modelMap.put("triggers", triggers);
+                List<TriggersTemplate> triggersTemplates = triggersTemplateService.selectByTriggerCode(triggers.getTriggerCode());
+                if (CollectionUtil.isNotEmpty(triggersTemplates)) {
+                    modelMap.put("triggersTemplateList", triggersTemplates);
+                }
+            }
+        }
+        return "triggers/view";
     }
 }
