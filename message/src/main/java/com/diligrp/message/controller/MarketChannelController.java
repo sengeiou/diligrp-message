@@ -95,11 +95,11 @@ public class MarketChannelController {
     @RequestMapping(value="/delete.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody BaseOutput delete(Long id) {
         if (id == null){
-            return BaseOutput.success("删除失败！参数ID为空");
+            return BaseOutput.failure("删除失败！参数ID为空");
         }
         List<TriggersTemplate> list = triggersTemplateService.listByMarketChannelId(String.valueOf(id));
         if (CollectionUtils.isNotEmpty(list)){
-            return BaseOutput.success("删除失败！该通道下还存在消息模板，不能删除！");
+            return BaseOutput.failure("删除失败！该通道下还存在消息模板，不能删除！");
         }
         marketChannelService.delete(id);
         return BaseOutput.success("删除成功");
