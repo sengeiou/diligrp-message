@@ -12,7 +12,7 @@
 
     // 市场改变
     function marketOriginChange(){
-        if (!$('#pageId').val()) {
+        if (!$('#modifyId').val()) {
             var market = $(this);
             originChange(market);
         }
@@ -43,8 +43,8 @@
                             data.push({"text": el.accessKey, value: el.id})
                         });
                         that.parents('.template-group').find('#marketChannelIds').combobox('loadData', data );
-                        if (!$('#pageId').val()) {
-                            that.parents('.template-group').find('#marketChannelIds').combobox('setValue', '');
+                        if (!$('#modifyId').val()) {
+                            that.parents('.template-group').find('#marketChannelIds').combobox('clear');
                         }
                         //渲染。。。。。。
                     }else{
@@ -76,8 +76,8 @@
                             $(el).parents('.template-group').find('#marketChannelIds').combobox('loadData', data );
                             $(el).parents('.template-group').find('[name="marketChannelIds"]').val('' ).remove();
 
-                            if (!$('#pageId').val()) {
-                                $(el).parents('.template-group').find('#marketChannelIds').combobox('setValue', '');
+                            if (!$('#modifyId').val()) {
+                                $(el).parents('.template-group').find('#marketChannelIds').combobox('clear');
                             }
 
                             //渲染。。。。。。
@@ -113,7 +113,7 @@
             <form id="_form" class="easyui-form" method="post" fit="true">
                 <div class="templatewrap" id="templatewrap" style="width: 360px;">
                     <div class="template-base">
-                        <input name="_id" id="pageId" value="${triggers.id!}" type="hidden">
+                        <input name="_id" id="modifyId" value="${triggers.id!}" type="hidden">
                         <div class="template-item">
                             <input  name="marketCode" id="marketCode" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false" required="true" data-options="label:'市场:',onChange:marketOriginChange,cls:'noborder', readonly:true, hasDownArrow:false" />
                             <#comboProvider _id="marketCode" _provider='firmProvider' _queryParams='{required:true}' _value="${triggers.marketCode!}" />

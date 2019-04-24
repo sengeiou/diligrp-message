@@ -13,7 +13,7 @@
      * 检查市场-系统-场景对应的关系是否不存在
      */
     function checkNotExist() {
-        var id = $('#pageId').val();
+        var id = $('#modifyId').val();
         if (null != id){
             var marketCode = $('#marketCode').combobox("getValue");
             var systemCode = $('#systemCode').combobox("getValue");
@@ -44,7 +44,7 @@
     function marketOriginChange(){
         // 检查市场-系统-场景对应的关系是否不存在
         checkNotExist();
-        if (!$('#pageId').val()) {
+        if (!$('#modifyId').val()) {
             var market = $(this);
             originChange(market);
         }
@@ -76,8 +76,9 @@
                             data.push({"text": el.accessKey, value: el.id})
                         });
                         that.parents('.template-group').find('#marketChannelIds').combobox('loadData', data );
-                        if (!$('#pageId').val()) {
-                            that.parents('.template-group').find('#marketChannelIds').combobox('setValue', '');
+
+                        if (!$('#modifyId').val()) {
+                            that.parents('.template-group').find('#marketChannelIds').combobox('clear');
                         }
                         //渲染。。。。。。
                     }else{
@@ -109,8 +110,8 @@
                             $(el).parents('.template-group').find('#marketChannelIds').combobox('loadData', data );
                             $(el).parents('.template-group').find('[name="marketChannelIds"]').val('' ).remove();
 
-                            if (!$('#pageId').val()) {
-                                $(el).parents('.template-group').find('#marketChannelIds').combobox('setValue', '');
+                            if (!$('#modifyId').val()) {
+                                $(el).parents('.template-group').find('#marketChannelIds').combobox('clear');
                             }
 
                             //渲染。。。。。。
@@ -147,7 +148,7 @@
             <form id="_form" class="easyui-form" method="post" fit="true">
                 <div class="templatewrap" id="templatewrap" style="width: 360px;">
                     <div class="template-base">
-                        <input name="_id" id="pageId" value="${triggers.id!}" type="hidden">
+                        <input name="_id" id="modifyId" value="${triggers.id!}" type="hidden">
                         <div class="template-item">
                             <input  name="marketCode" id="marketCode" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false" required="true" data-options="label:'&lowast;市场:',onLoadSuccess:onComboLoadSuccessSelectOne,onChange:marketOriginChange" />
                             <#comboProvider _id="marketCode" _provider='firmProvider' _queryParams='{required:true}' _value="${triggers.marketCode!}" />
@@ -206,7 +207,7 @@
                                     queryParams: {provider: 'marketChannelProvider',queryParams:'{required:true}'}" />
                             </div>
                             <div class="template-item">
-                                <input class="easyui-combobox" id="marketChannelIds" name="marketChannelIds" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false" required="true" data-options="label:'&lowast;AccessKey:',multiple:true" />
+                                <input class="easyui-combobox" id="marketChannelIds" name="marketChannelIds" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false" required="true" data-options="textField:'text',valueField:'value', label:'&lowast;AccessKey:',multiple:true" />
                             </div>
                             <div class="template-item">
                                 <input class="easyui-textbox" name="templateName" style="width:100%" labelAlign="right" data-options="label:'模板名称:',validType:'length[0,50]'" />
