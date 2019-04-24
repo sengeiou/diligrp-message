@@ -30,7 +30,7 @@ public class TriggersTemplateServiceImpl extends BaseServiceImpl<TriggersTemplat
     @Transactional(rollbackFor = Exception.class)
     public Integer deleteByTriggerCode(String triggerCode) {
         TriggersTemplate template = new TriggersTemplate();
-        template.setTemplateCode(triggerCode);
+        template.setTriggerCode(triggerCode);
         return getActualMapper().delete(template);
     }
 

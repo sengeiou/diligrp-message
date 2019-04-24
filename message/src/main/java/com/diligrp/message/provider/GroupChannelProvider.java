@@ -5,10 +5,12 @@ import com.dili.ss.metadata.FieldMeta;
 import com.dili.ss.metadata.ValuePair;
 import com.dili.ss.metadata.ValueProvider;
 import com.diligrp.message.common.enums.MessageEnum;
+import com.google.common.collect.Sets;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * <B>Description</B>
@@ -36,8 +38,9 @@ public class GroupChannelProvider implements ValueProvider {
             return str;
         }
         String[] split = str.split(",");
+        Set<String> sets = Sets.newHashSet(split);
         StringBuffer strb = new StringBuffer();
-        for (String s : split) {
+        for (String s : sets) {
             strb.append(MessageEnum.ChannelEnum.getChannelEnum(s).getName()).append(" ");
         }
         return strb.toString();
