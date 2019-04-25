@@ -66,9 +66,12 @@ public class SmsServiceImpl implements SmsService {
         }
         Boolean flag = false;
         List<SendLog> sendLogs = Lists.newArrayList();
+        //定义标签，用于跳出循环
+        templates:
         for (TriggersTemplate t : templateList) {
-            String[] chanelId = t.getMarketChannelIds().split(",");
-            for (String s : chanelId) {
+            String[] channelId = t.getMarketChannelIds().split(",");
+            channel:
+            for (String s : channelId) {
                 //获取对应的账号
                 MarketChannel marketChannel = marketChannelMap.get(Long.valueOf(s));
                 if (null != marketChannel) {
@@ -88,7 +91,7 @@ public class SmsServiceImpl implements SmsService {
                     } else if (t.getChannel().equals(MessageEnum.ChannelEnum.CHINA_MOBILE.getCode())) {
                         object.put(MessagePushConstant.COMPANY_NAME, marketChannel.getCompanyName());
                         output = chinaMobileMas.sendSMS(object);
-                    }else if (t.getChannel().equals(MessageEnum.ChannelEnum.WEBCHINESE_SMS.getCode())){
+                    } else if (t.getChannel().equals(MessageEnum.ChannelEnum.WEBCHINESE_SMS.getCode())) {
                         output = smsChinese.sendSMS(object);
                     }
                     if (null != output) {
@@ -100,7 +103,7 @@ public class SmsServiceImpl implements SmsService {
                             sendLog.setSendState(MessageEnum.SendStateEnum.SUCCEED.getCode());
                             sendLog.setSendChannel(t.getChannel());
                             flag = true;
-                            break;
+                            break templates;
                         } else {
                             SendLog log = new SendLog();
                             BeanUtil.copyProperties(sendLog, log);
