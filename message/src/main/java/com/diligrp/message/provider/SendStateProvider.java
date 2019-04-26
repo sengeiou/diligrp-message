@@ -13,13 +13,16 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * @author yuehongbo
+ */
 @Component
 public class SendStateProvider implements ValueProvider {
     private static final List<ValuePair<?>> BUFFER = new ArrayList<>();
 
     static {
         BUFFER.addAll(Stream.of(MessageEnum.SendStateEnum.values())
-                .map(e -> new ValuePairImpl<>(e.getName(), e.getCode()))
+                .map(e -> new ValuePairImpl<>(e.getName(), String.valueOf(e.getCode())))
                 .collect(Collectors.toList()));
     }
 
