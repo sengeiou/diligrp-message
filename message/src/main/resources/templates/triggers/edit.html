@@ -197,8 +197,7 @@
                                         queryParams: {provider: 'marketChannelProvider',queryParams:'{required:true}'}" />
                             </div>
                             <div class="template-item">
-                                <input class="easyui-combobox" id="marketChannelIds" name="marketChannelIds" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false" required="true" data-options="label:'&lowast;AccessKey:',multiple:true,
-                                        onLoadSuccess:function(){ $(this).combobox('setValues', [${triggersTemplate.marketChannelIds}]);}" />
+                                <input class="easyui-combobox" id="marketChannelIds" name="marketChannelIds" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false" required="true" data-options="cls: 'marketChannelIds',label:'&lowast;AccessKey:',multiple:true,attributes:{'binddata':'${triggersTemplate.marketChannelIds}'}" />
                             </div>
                             <div class="template-item">
                                 <input class="easyui-textbox" name="templateName" value="${triggersTemplate.templateName!}" style="width:100%" labelAlign="right" data-options="label:'模板名称:',validType:'length[0,50]'" />
@@ -252,7 +251,11 @@
 <#triggers_editJs />
 <script type="text/javascript">
     $(function(){
-        marketOriginChange();
+        $.each($('.marketChannelIds'), function(index,el){
+            var options = $(el).parents('.template-group').find('#marketChannelIds').combobox("options");
+            var bindData = options.attributes.binddata;
+            $(el).parents('.template-group').find('#marketChannelIds').combobox("setValues",bindData.split(","));
+        });
     });
 </script>
 </#body>
