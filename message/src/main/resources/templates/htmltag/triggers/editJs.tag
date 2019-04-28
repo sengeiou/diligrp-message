@@ -5,7 +5,7 @@
     // 模板
     var templateOrigin = '<div class="template-group">\n' +
         '                    <h4 class="template-group-title">模板</h4>\n' +
-        '                    <input type="hidden" name="templateId" >\n' +
+        '                    <input type="hidden" name="templateId" id="templateId" >\n' +
         '                    <div class="template-item">\n' +
         '                        <input class="easyui-combobox"  id="channel" name="channel" style="width:100%" labelAlign="right" panelHeight="auto" editable="false" required="true" data-options="cls: \'channel\',onLoadSuccess:onComboLoadSuccessSelectOne,onChange: originChange,label:\'&lowast;模板来源:\',\n' +
         '                            url:\'${contextPath}/provider/getLookupList.action\',\n' +
