@@ -251,11 +251,14 @@
 <#triggers_editJs />
 <script type="text/javascript">
     $(function(){
-        $.each($('.marketChannelIds'), function(index,el){
-            var options = $(el).parents('.template-group').find('#marketChannelIds').combobox("options");
-            var bindData = options.attributes.binddata;
-            $(el).parents('.template-group').find('#marketChannelIds').combobox("setValues",bindData.split(","));
-        });
+        var id = $('#modifyId').val();
+        if (null != id) {
+            $.each($('.marketChannelIds'), function (index, el) {
+                var options = $(el).parents('.template-group').find('#marketChannelIds').combobox("options");
+                var bindData = options.attributes.binddata;
+                $(el).parents('.template-group').find('#marketChannelIds').combobox("setValues", bindData.split(","));
+            });
+        }
     });
 </script>
 </#body>
