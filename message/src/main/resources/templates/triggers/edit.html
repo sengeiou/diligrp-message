@@ -63,12 +63,10 @@
             element = $(this);
         } else {
             element = $('#marketCode');
-
         }
-
         // easyui事件直接在页面元素内联上调用，拿到$(this)
         if($(this).attr('id') === 'channel') {
-        //     var that = $(this);
+            console.info("originChange----channel");
             var channel = $(this).combobox('getValue');
             $.ajax({
                 type: "POST",
@@ -80,22 +78,21 @@
                 success: function (ret) {
                     if(ret.success){
                         //获取 ret.data
-
                         let data = [];
-                        let newDataIds = [];
                         ret.data.forEach(function(el, index){
                             data.push({text: el.accessKey, value: el.id});
-                            newDataIds.push(el.id);
                         });
-
                         $(element).parents('.template-group').find('#marketChannelIds').combobox('loadData', data );
-                        let oldDataIds =  $(element).parents('.template-group').find('#marketChannelIds').combobox('getValues');
-
-                        if (! arrIncludes(newDataIds, oldDataIds)) {
-                            $(element).parents('.template-group').find('#marketChannelIds').combobox('setValues', '');
+                        var isFirst = $(element).parents('.template-group').find('#isFirst');
+                        if (isFirst.val() && isFirst.val() == 'true'){
+                            var options = $(element).parents('.template-group').find('#marketChannelIds').combobox("options");
+                            var bindData = options.attributes.binddata;
+                            $(element).parents('.template-group').find('#marketChannelIds').combobox("setValues", bindData.split(","));
+                            isFirst.val('false');
+                        } else {
+                            $(element).parents('.template-group').find('#marketChannelIds').combobox('clear');
                         }
                     }else{
-
                         swal('错误',ret.result, 'error');
                     }
                 },
@@ -104,6 +101,7 @@
                 }
             });
         } else {
+            console.info("originChange----no  channel");
             $.each($('.channel'), function(index,el){
                 var channel = $(el).parents('.template-group').find('#channel').combobox('getValue');
                 $.ajax({
@@ -117,22 +115,13 @@
                         if(ret.success){
                             //获取 ret.data
                             let data = [];
-                            let newDataIds = [];
                             ret.data.forEach(function(el, index){
                                 data.push({text: el.accessKey, value: el.id});
-                                newDataIds.push(el.id);
                             });
                             $(el).parents('.template-group').find('#marketChannelIds').combobox('loadData', data );
-                            let oldDataIds =  $(el).parents('.template-group').find('#marketChannelIds').combobox('getValues');
-                            if (! arrIncludes(newDataIds, oldDataIds)) {
-                                $(el).parents('.template-group').find('#marketChannelIds').combobox('setValues', '');
-                            }
-
-                            /*if ($('#modifyId').val() === '') {
+                            if ($('#modifyId').val() === '') {
                                 $(el).parents('.template-group').find('#marketChannelIds').combobox('clear');
-                            }*/
-
-                            //渲染。。。。。。
+                            }
                         }else{
                             swal('错误',ret.result, 'error');
                         }
@@ -141,11 +130,9 @@
                         swal('错误', '远程访问失败', 'error');
                     }
                 });
-
             })
         }
     }
-
 
 </script>
 
@@ -197,6 +184,8 @@
                                         queryParams: {provider: 'marketChannelProvider',queryParams:'{required:true}'}" />
                             </div>
                             <div class="template-item">
+                                <!-- 是否首次进入页面 -->
+                                <input type="hidden" id="isFirst" value="true">
                                 <input class="easyui-combobox" id="marketChannelIds" name="marketChannelIds" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false" required="true" data-options="cls: 'marketChannelIds',label:'&lowast;AccessKey:',multiple:true,attributes:{'binddata':'${triggersTemplate.marketChannelIds}'}" />
                             </div>
                             <div class="template-item">
@@ -249,16 +238,4 @@
 </div>
 
 <#triggers_editJs />
-<script type="text/javascript">
-    $(function(){
-        var id = $('#modifyId').val();
-        if (null != id) {
-            $.each($('.marketChannelIds'), function (index, el) {
-                var options = $(el).parents('.template-group').find('#marketChannelIds').combobox("options");
-                var bindData = options.attributes.binddata;
-                $(el).parents('.template-group').find('#marketChannelIds').combobox("setValues", bindData.split(","));
-            });
-        }
-    });
-</script>
 </#body>
