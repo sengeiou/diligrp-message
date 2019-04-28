@@ -66,7 +66,6 @@
         }
         // easyui事件直接在页面元素内联上调用，拿到$(this)
         if($(this).attr('id') === 'channel') {
-            console.info("originChange----channel");
             var channel = $(this).combobox('getValue');
             $.ajax({
                 type: "POST",
@@ -82,16 +81,19 @@
                         ret.data.forEach(function(el, index){
                             data.push({text: el.accessKey, value: el.id});
                         });
-                        $(element).parents('.template-group').find('#marketChannelIds').combobox('loadData', data );
-                        var isFirst = $(element).parents('.template-group').find('#isFirst');
-                        if (isFirst.val() && isFirst.val() == 'true'){
-                            var options = $(element).parents('.template-group').find('#marketChannelIds').combobox("options");
-                            var bindData = options.attributes.binddata;
-                            $(element).parents('.template-group').find('#marketChannelIds').combobox("setValues", bindData.split(","));
-                            isFirst.val('false');
-                        } else {
+                        $(element).parents('.template-group').find('#marketChannelIds').combobox('loadData', data);
+                        if ($('#modifyId').val() === '') {
                             $(element).parents('.template-group').find('#marketChannelIds').combobox('clear');
                         }
+                        // var isFirst = $(element).parents('.template-group').find('#isFirst');
+                        // if (!isFirst.val() || isFirst.val() == 'false'){
+                        //     var options = $(element).parents('.template-group').find('#marketChannelIds').combobox("options");
+                        //     var bindData = options.attributes.binddata;
+                        //     $(element).parents('.template-group').find('#marketChannelIds').combobox("setValues", bindData.split(","));
+                        //     isFirst.val('false');
+                        // } else {
+                        //     $(element).parents('.template-group').find('#marketChannelIds').combobox('clear');
+                        // }
                     }else{
                         swal('错误',ret.result, 'error');
                     }
@@ -101,7 +103,6 @@
                 }
             });
         } else {
-            console.info("originChange----no  channel");
             $.each($('.channel'), function(index,el){
                 var channel = $(el).parents('.template-group').find('#channel').combobox('getValue');
                 $.ajax({
@@ -186,7 +187,17 @@
                             <div class="template-item">
                                 <!-- 是否首次进入页面 -->
                                 <input type="hidden" id="isFirst" value="true">
-                                <input class="easyui-combobox" id="marketChannelIds" name="marketChannelIds" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false" required="true" data-options="cls: 'marketChannelIds',label:'&lowast;AccessKey:',multiple:true,attributes:{'binddata':'${triggersTemplate.marketChannelIds}'}" />
+                                <input class="easyui-combobox" id="marketChannelIds" name="marketChannelIds" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false" required="true" data-options="cls: 'marketChannelIds',label:'&lowast;AccessKey:',multiple:true,attributes:{'binddata':'${triggersTemplate.marketChannelIds}'},
+                                 onLoadSuccess:function(){
+                                    var isFirst = $(this).parents('.template-group').find('#isFirst');
+                                    if (isFirst.val() && isFirst.val() == 'true'){
+                                        $(this).combobox('setValues', [${triggersTemplate.marketChannelIds}]);
+                                        isFirst.val('false');
+                                    }else{
+                                        $(this).combobox('clear');
+                                    }
+                                  }
+                                " />
                             </div>
                             <div class="template-item">
                                 <input class="easyui-textbox" name="templateName" value="${triggersTemplate.templateName!}" style="width:100%" labelAlign="right" data-options="label:'模板名称:',validType:'length[0,50]'" />
