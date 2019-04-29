@@ -121,7 +121,7 @@
                                 data.push({text: el.accessKey, value: el.id});
                             });
                             $(el).parents('.template-group').find('#marketChannelIds').combobox('loadData', data );
-                            var t_id = $(element).parents('.template-group').find('#templateId').val();
+                            var t_id = $(el).parents('.template-group').find('#templateId').val();
                             if ($('#modifyId').val() === '' || typeof(t_id) == "undefined" ||  t_id === '') {
                                 $(el).parents('.template-group').find('#marketChannelIds').combobox('clear');
                             }
@@ -192,6 +192,7 @@
                                 <input class="easyui-combobox" id="marketChannelIds" name="marketChannelIds" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false" required="true" data-options="cls: 'marketChannelIds',label:'&lowast;AccessKey:',multiple:true,attributes:{'binddata':'${triggersTemplate.marketChannelIds}'},
                                  onLoadSuccess:function(){
                                     var isFirst = $(this).parents('.template-group').find('#isFirst');
+
                                     if (isFirst.val() && isFirst.val() == 'true'){
                                         $(this).combobox('setValues', [${triggersTemplate.marketChannelIds}]);
                                         isFirst.val('false');

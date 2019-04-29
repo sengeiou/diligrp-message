@@ -11,7 +11,7 @@
             swal('警告','请选中一条数据', 'warning');
             return;
         }
-        window.location.href="${contextPath}/triggers/toEdit.html?id="+selected["id"];
+        window.location.href="${contextPath}/triggers/toEdit.html?id="+selected["id"]+"&d="+new Date().getTime();
     }
 
     //打开修改窗口
