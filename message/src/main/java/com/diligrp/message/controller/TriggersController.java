@@ -93,6 +93,7 @@ public class TriggersController {
         if (userTicket == null) {
             throw new RuntimeException("未登录");
         }
+        modelMap.put("isFirst","true");
         if (null != id){
             Triggers triggers = triggersService.get(id);
             if (null != triggers){

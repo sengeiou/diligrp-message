@@ -188,7 +188,7 @@
                             </div>
                             <div class="template-item">
                                 <!-- 是否首次进入页面 -->
-                                <input type="hidden" id="isFirst" value="true">
+                                <input type="hidden" id="isFirst" value="${isFirst!}">
                                 <input class="easyui-combobox" id="marketChannelIds" name="marketChannelIds" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false" required="true" data-options="cls: 'marketChannelIds',label:'&lowast;AccessKey:',multiple:true,attributes:{'binddata':'${triggersTemplate.marketChannelIds}'},
                                  onLoadSuccess:function(){
                                     var isFirst = $(this).parents('.template-group').find('#isFirst');
