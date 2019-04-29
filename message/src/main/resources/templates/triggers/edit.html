@@ -74,7 +74,7 @@
                 data: {marketCode:marketCode,channel:channel},
                 processData:true,
                 dataType: "json",
-                async : true,
+                async : false,
                 success: function (ret) {
                     if(ret.success){
                         //获取 ret.data
@@ -115,7 +115,7 @@
                     data: {marketCode:marketCode,channel:channel},
                     processData:true,
                     dataType: "json",
-                    async : true,
+                    async : false,
                     success: function (ret) {
                         if(ret.success){
                             //获取 ret.data
