@@ -66,6 +66,7 @@
         }
         // easyui事件直接在页面元素内联上调用，拿到$(this)
         if($(this).attr('id') === 'channel') {
+            console.info("------ channel");
             var channel = $(this).combobox('getValue');
             $.ajax({
                 type: "POST",
@@ -84,6 +85,7 @@
                         $(element).parents('.template-group').find('#marketChannelIds').combobox('loadData', data);
                         var t_id = $(element).parents('.template-group').find('#templateId').val();
                         if ($('#modifyId').val() === '' || typeof(t_id) == "undefined" ||  t_id === '') {
+                            console.info("------channel clear");
                             $(element).parents('.template-group').find('#marketChannelIds').combobox('clear');
                         }
                         // var isFirst = $(element).parents('.template-group').find('#isFirst');
@@ -104,6 +106,7 @@
                 }
             });
         } else {
+            console.info("------ not channel");
             $.each($('.channel'), function(index,el){
                 var channel = $(el).parents('.template-group').find('#channel').combobox('getValue');
                 $.ajax({
@@ -123,6 +126,7 @@
                             $(el).parents('.template-group').find('#marketChannelIds').combobox('loadData', data );
                             var t_id = $(el).parents('.template-group').find('#templateId').val();
                             if ($('#modifyId').val() === '' || typeof(t_id) == "undefined" ||  t_id === '') {
+                                console.info("------ not channel clear");
                                 $(el).parents('.template-group').find('#marketChannelIds').combobox('clear');
                             }
                         }else{
@@ -191,12 +195,13 @@
                                 <input type="hidden" id="isFirst" value="${isFirst!}">
                                 <input class="easyui-combobox" id="marketChannelIds" name="marketChannelIds" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false" required="true" data-options="cls: 'marketChannelIds',label:'&lowast;AccessKey:',multiple:true,attributes:{'binddata':'${triggersTemplate.marketChannelIds}'},
                                  onLoadSuccess:function(){
-                                    var isFirst = $(this).parents('.template-group').find('#isFirst');
-
-                                    if (isFirst.val() && isFirst.val() == 'true'){
+                                    var isFirst = $(this).parents('.template-group').find('#isFirst').val();
+                                    if (isFirst && isFirst === 'true'){
                                         $(this).combobox('setValues', [${triggersTemplate.marketChannelIds}]);
-                                        isFirst.val('false');
+                                        $(this).parents('.template-group').find('#isFirst').val('false');
+                                        console.info('------isFirst true');
                                     }else{
+                                        console.info('------isFirst---'+ isFirst.val());
                                         $(this).combobox('clear');
                                     }
                                   }
