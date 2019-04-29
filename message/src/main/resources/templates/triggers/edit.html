@@ -82,12 +82,12 @@
                         ret.data.forEach(function(el, index){
                             data.push({text: el.accessKey, value: el.id});
                         });
-                        $(element).parents('.template-group').find('#marketChannelIds').combobox('loadData', data);
                         var t_id = $(element).parents('.template-group').find('#templateId').val();
                         if ($('#modifyId').val() === '' || typeof(t_id) == "undefined" ||  t_id === '') {
                             console.info("------channel clear");
                             $(element).parents('.template-group').find('#marketChannelIds').combobox('clear');
                         }
+                        $(element).parents('.template-group').find('#marketChannelIds').combobox('loadData', data);
                         // var isFirst = $(element).parents('.template-group').find('#isFirst');
                         // if (!isFirst.val() || isFirst.val() == 'false'){
                         //     var options = $(element).parents('.template-group').find('#marketChannelIds').combobox("options");
@@ -123,12 +123,12 @@
                             ret.data.forEach(function(el, index){
                                 data.push({text: el.accessKey, value: el.id});
                             });
-                            $(el).parents('.template-group').find('#marketChannelIds').combobox('loadData', data );
                             var t_id = $(el).parents('.template-group').find('#templateId').val();
                             if ($('#modifyId').val() === '' || typeof(t_id) == "undefined" ||  t_id === '') {
                                 console.info("------ not channel clear");
                                 $(el).parents('.template-group').find('#marketChannelIds').combobox('clear');
                             }
+                            $(el).parents('.template-group').find('#marketChannelIds').combobox('loadData', data );
                         }else{
                             swal('错误',ret.result, 'error');
                         }
