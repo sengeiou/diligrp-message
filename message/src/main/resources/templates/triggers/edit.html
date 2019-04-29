@@ -196,12 +196,19 @@
                                 <input class="easyui-combobox" id="marketChannelIds" name="marketChannelIds" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false" required="true" data-options="cls: 'marketChannelIds',label:'&lowast;AccessKey:',multiple:true,attributes:{'binddata':'${triggersTemplate.marketChannelIds}'},
                                  onLoadSuccess:function(){
                                     var isFirst = $(this).parents('.template-group').find('#isFirst').val();
+                                    var datas = $(this).combobox('getData');
+                                    if(null == datas || datas.length < 1){
+                                        $(this).combobox('clear');
+                                        return;
+                                    }
+                                    console.info('------datas---- ' + datas);
                                     if (isFirst && isFirst === 'true'){
                                         $(this).combobox('setValues', [${triggersTemplate.marketChannelIds}]);
                                         $(this).parents('.template-group').find('#isFirst').val('false');
                                         console.info('------isFirst true');
                                     }else{
                                         console.info('------isFirst---'+ isFirst);
+                                        console.info('------marketChannelIds---'+ ${triggersTemplate.marketChannelIds});
                                         $(this).combobox('clear');
                                     }
                                   }
