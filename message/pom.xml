@@ -173,7 +173,7 @@
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
-            <version>4.5.3</version>
+            <version>4.5.11</version>
         </dependency>
         <dependency>
             <groupId>com.aliyun</groupId>
@@ -222,7 +222,7 @@
         <dependency>
             <groupId>com.dili</groupId>
             <artifactId>commons</artifactId>
-            <version>1.0.12-SNAPSHOT</version>
+            <version>1.0.15-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.dili</groupId>

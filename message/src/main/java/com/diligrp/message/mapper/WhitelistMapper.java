@@ -3,6 +3,8 @@ package com.diligrp.message.mapper;
 import com.dili.ss.base.MyMapper;
 import com.diligrp.message.domain.Whitelist;
 
+import java.util.Set;
+
 /**
  * @author yuehongbo
  */
@@ -13,5 +15,5 @@ public interface WhitelistMapper extends MyMapper<Whitelist> {
      * @param whitelist
      * @return
      */
-    Integer queryValidByMarketCode(Whitelist whitelist);
+    Set<String> queryValidByMarketCode(Whitelist whitelist);
 }

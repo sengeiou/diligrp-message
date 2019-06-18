@@ -26,9 +26,9 @@
   </sql>
 
   <!-- 查询某个手机号，在某市场的此时此刻，是否在白名单中 -->
-  <select id="queryValidByMarketCode" resultType="integer" parameterType="com.diligrp.message.domain.Whitelist">
+  <select id="queryValidByMarketCode" resultType="string" parameterType="com.diligrp.message.domain.Whitelist">
     <![CDATA[
-        select COUNT(1) from message_whitelist mw where mw.start_date  <= NOW() and end_date >= NOW() and deleted =0 and mw.cellphone=#{cellphone} and mw.market_code=#{marketCode}
+        select mw.cellphone from message_whitelist mw where mw.start_date  <= NOW() and end_date >= NOW() and deleted =0 and mw.market_code=#{marketCode}
     ]]>
   </select>
 

@@ -13,8 +13,8 @@ import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 由MyBatis Generator工具自动生成
@@ -46,7 +46,7 @@ public class WhitelistServiceImpl extends BaseServiceImpl<Whitelist, Long> imple
         return listEasyuiPageByExample(whitelistVo, useProvider);
     }
 
-
+    @Override
     public boolean checkDate(Whitelist whitelist) {
         WhitelistVo vo = new WhitelistVo();
         vo.setDeleted(MessageEnum.DeletedEnum.NO.getCode());
@@ -70,7 +70,7 @@ public class WhitelistServiceImpl extends BaseServiceImpl<Whitelist, Long> imple
     }
 
     @Override
-    public Integer queryValidByMarketCode(Whitelist whitelist) {
+    public Set<String> queryValidByMarketCode(Whitelist whitelist) {
         return getActualMapper().queryValidByMarketCode(whitelist);
     }
 

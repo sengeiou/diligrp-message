@@ -71,19 +71,19 @@
                         <th width="10%" data-options="field:'sceneCode', _provider:'dataDictionaryValueProvider', _queryParams:{'dd_code':'message_scene'},  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                             业务场景
                         </th>
-                        <th width="10%" data-options="field:'cellphone',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        <th width="10%" data-options="field:'cellphone',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false',formatter:formatForTip">
                             电话号码
                         </th>
-                        <th width="5%" data-options="field:'sendChannel', _provider:'marketChannelProvider',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        <th width="10%" data-options="field:'sendChannel', _provider:'marketChannelProvider',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                             通道
                         </th>
-                        <th width="40%" data-options="field:'content',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        <th width="30%" data-options="field:'content',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false',formatter:formatForTip">
                             消息内容
                         </th>
-                        <th width="10%" data-options="field:'sendState', _provider:'sendStateProvider',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        <th width="10%" data-options="field:'sendState', _provider:'sendStateProvider',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false',formatter:stateFormatTip">
                             发送状态
                         </th>
-                        <th width="10%" data-options="field:'sendTime',  _provider:'datetimeProvider', sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        <th width="15%" data-options="field:'sendTime',  _provider:'datetimeProvider', sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                             发送时间
                         </th>
                     </tr>
@@ -129,10 +129,10 @@
         }
 
         function initialStartTime(){
-            var now = new Date()
-            now.setHours(0)
-            now.setMinutes(0)
-            now.setSeconds(0)
+            var now = new Date();
+            now.setHours(0);
+            now.setMinutes(0);
+            now.setSeconds(0);
             $('#startSendTime').datetimebox('setValue', convertTime(now));
         }
 
@@ -164,6 +164,29 @@
             $('#grid').datagrid('getPanel').removeClass('lines-both lines-no lines-right lines-bottom').addClass("lines-bottom");
             initialStartTime();
             queryGrid();
-        })
+        });
+
+        /**
+         * 通用格式化显示tip
+         * @param value
+         * @param row
+         * @param index
+         */
+        function formatForTip(value,row,index) {
+            if (value){
+                return "<span title='" + value + "'>" + value + "</span>";
+            }
+            return "";
+        }
+
+        /**
+         * 状态显示栏格式化显示tip
+         * @param value
+         * @param row
+         * @param index
+         */
+        function stateFormatTip(value,row,index) {
+            return "<span title='" + row.remarks + "'>" + value + "</span>";
+        }
     </script>
 </#body>
