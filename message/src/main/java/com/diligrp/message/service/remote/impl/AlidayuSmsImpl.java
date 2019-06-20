@@ -13,7 +13,11 @@ import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.BaseOutput;
 import com.diligrp.message.common.constant.MessagePushConstant;
 import com.diligrp.message.service.remote.IMessageService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+
+import java.sql.SQLException;
 
 /**
  * <B>阿里大于通道实现</B>
@@ -26,11 +30,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class AlidayuSmsImpl implements IMessageService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(AlidayuSmsImpl.class);
+
     @Override
     public BaseOutput<String> sendSMS(JSONObject object) {
         DefaultProfile profile = DefaultProfile.getProfile("cn-hangzhou", object.getString(MessagePushConstant.ACCESS_KEY),object.getString(MessagePushConstant.SECRET));
         IAcsClient client = new DefaultAcsClient(profile);
         CommonRequest request = buildData(object.getString(MessagePushConstant.SIGN), object.getString(MessagePushConstant.PHONES), object.getString(MessagePushConstant.TEMPLATE_CODE),object.getString(MessagePushConstant.PARAMETERS));
+        String result = null;
         try {
             CommonResponse response = client.getCommonResponse(request);
             if (null != response) {
@@ -42,17 +49,22 @@ public class AlidayuSmsImpl implements IMessageService {
                 if ("OK".equals(code.toUpperCase())) {
                     output.setCode(ResultCode.OK);
                     //发送回执ID，可根据该ID在接口QuerySendDetails中查询具体的发送状态
-                    output.setResult(data.getString("BizId"));
+                    result = data.getString("BizId");
                 } else {
                     output.setCode(code);
-                    output.setResult(data.getString("Message"));
+                    result = data.getString("Message");
                 }
+                output.setResult(result);
                 return output;
             }
-        } catch (ServerException e) {
         } catch (ClientException e) {
+            LOGGER.error("阿里大于通道发送异常,requestId:" + e.getMessage(), e);
+            result = "错误类型:[" + e.getErrorType().name() + "],错误code:[" + e.getErrCode() + "],错误信息:[" + e.getErrMsg() + "]";
+        } catch (Exception e) {
+            LOGGER.error("阿里大于通道发送异常," + e.getMessage(), e);
+            result = "系统错误";
         }
-        return BaseOutput.failure();
+        return BaseOutput.failure(result);
     }
 
     /**

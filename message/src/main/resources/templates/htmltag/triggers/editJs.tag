@@ -7,22 +7,22 @@
         '                    <h4 class="template-group-title">模板</h4>\n' +
         '                    <input type="hidden" name="templateId" id="templateId" >\n' +
         '                    <div class="template-item">\n' +
-        '                        <input class="easyui-combobox"  id="channel" name="channel" style="width:100%" labelAlign="right" panelHeight="auto" editable="false" required="true" data-options="cls: \'channel\',onLoadSuccess:onComboLoadSuccessSelectOne,onChange: originChange,label:\'&lowast;模板来源:\',\n' +
+        '                        <input class="easyui-combobox"  id="channel" name="channel" style="width:100%" labelAlign="right" panelHeight="auto" editable="false" required="true" data-options="labelWidth:110,cls: \'channel\',onLoadSuccess:onComboLoadSuccessSelectOne,onChange: originChange,label:\'&lowast;模板来源:\',\n' +
         '                            url:\'${contextPath}/provider/getLookupList.action\',\n' +
         '                            method:\'POST\',\n' +
         '                            queryParams: {provider: \'marketChannelProvider\',queryParams:\'{required:true}\'}" />\n' +
         '                    </div>\n' +
         '                    <div class="template-item">\n' +
-        '                        <input class="easyui-combobox" id="marketChannelIds" name="marketChannelIds" style="width:100%" labelAlign="right" panelHeight="auto" editable="false" required="true" data-options="label:\'&lowast;AccessKey:\',multiple:true" />\n' +
+        '                        <input class="easyui-combobox" id="marketChannelIds" name="marketChannelIds" style="width:100%" labelAlign="right" panelHeight="auto" editable="false" required="true" data-options="labelWidth:110,label:\'&lowast;AccessKey:\',multiple:true" />\n' +
         '                    </div>\n' +
         '                    <div class="template-item">\n' +
-        '                        <input class="easyui-textbox" name="templateName" style="width:100%" labelAlign="right" data-options="label:\'模板名称:\',validType:\'length[0,50]\'" />\n' +
+        '                        <input class="easyui-textbox" name="templateName" style="width:100%" labelAlign="right" data-options="labelWidth:110,label:\'模板名称:\',validType:\'length[0,50]\'" />\n' +
         '                    </div>\n' +
         '                    <div class="template-item">\n' +
-        '                        <input class="easyui-textbox" name="templateCode" style="width:100%" labelAlign="right" data-options="label:\'模板CODE:\',validType:\'length[0,20]\'" />\n' +
+        '                        <input class="easyui-textbox" name="templateCode" style="width:100%" labelAlign="right" data-options="labelWidth:110,label:\'模板CODE:\',validType:\'length[0,20]\'" />\n' +
         '                    </div>\n' +
         '                    <div class="template-item">\n' +
-        '                        <input class="easyui-textbox" name="templateContent" style="width:100%" labelAlign="right" required="true" data-options="label:\'&lowast;模板内容:\', height: \'80px\', multiline: true,validType:\'length[1,255]\'" />\n' +
+        '                        <input class="easyui-textbox" name="templateContent" style="width:100%" labelAlign="right" required="true" data-options="labelWidth:110,label:\'&lowast;模板内容:\', height: \'80px\', multiline: true,validType:\'length[1,255]\'" />\n' +
         '                    </div>\n' +
         '                    <div class="edit-limit">\n' +
         '                        <a href="#" class="easyui-linkbutton template-plus-btn" data-options="iconCls:\'icon-add\'">增加</a>\n' +

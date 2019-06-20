@@ -62,7 +62,10 @@
                    align="center" fit="true" striped="true" idField="id">
                 <thead>
                     <tr>
-                        <th width="5%" data-options="field:'marketCode', _provider:'firmProvider',  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        <th width="13%" data-options="field:'requestCode',  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                            操作码
+                        </th>
+                        <th width="7%" data-options="field:'marketCode', _provider:'firmProvider',  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                             市场
                         </th>
                         <th width="10%" data-options="field:'systemCode', _provider:'dataDictionaryValueProvider', _queryParams:{'dd_code':'system_code'},   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
@@ -77,10 +80,10 @@
                         <th width="10%" data-options="field:'sendChannel', _provider:'marketChannelProvider',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                             通道
                         </th>
-                        <th width="30%" data-options="field:'content',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false',formatter:formatForTip">
+                        <th width="20%" data-options="field:'content',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false',formatter:formatForTip">
                             消息内容
                         </th>
-                        <th width="10%" data-options="field:'sendState', _provider:'sendStateProvider',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false',formatter:stateFormatTip">
+                        <th width="7%" data-options="field:'sendState', _provider:'sendStateProvider',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false',formatter:stateFormatTip">
                             发送状态
                         </th>
                         <th width="15%" data-options="field:'sendTime',  _provider:'datetimeProvider', sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
