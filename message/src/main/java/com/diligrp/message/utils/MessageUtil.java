@@ -1,7 +1,6 @@
 package com.diligrp.message.utils;
 
 import cn.hutool.extra.template.Template;
-import cn.hutool.extra.template.TemplateConfig;
 import cn.hutool.extra.template.TemplateEngine;
 import cn.hutool.extra.template.TemplateUtil;
 
@@ -25,7 +24,7 @@ public class MessageUtil {
      * @return 渲染后的数据
      */
     public static String produceMsgContent(String resource, Map<String, Object> data) {
-        TemplateEngine engine = TemplateUtil.createEngine(new TemplateConfig("templates", TemplateConfig.ResourceMode.STRING));
+        TemplateEngine engine = TemplateUtil.createEngine();
         Template template = engine.getTemplate(resource);
         return template.render(data);
     }
