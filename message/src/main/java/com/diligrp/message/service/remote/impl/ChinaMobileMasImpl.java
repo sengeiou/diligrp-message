@@ -35,7 +35,7 @@ public class ChinaMobileMasImpl implements IMessageService {
             Boolean success = jsonObject.getBoolean("success");
             if (success){
                 output.setCode(ResultCode.OK);
-                output.setResult(jsonObject.getString("mgsGroup"));
+                output.setResult(jsonObject.getString("msgGroup"));
             }else{
                 output.setCode(jsonObject.getString("rspcod"));
                 output.setResult(ResponseCode.getResponseCode(output.getCode()).getDesc());

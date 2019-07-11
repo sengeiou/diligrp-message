@@ -6,6 +6,7 @@ import com.diligrp.MessageApplication;
 import com.diligrp.message.common.constant.MessagePushConstant;
 import com.diligrp.message.service.remote.impl.ChinaMobileMasImpl;
 import com.diligrp.message.service.remote.impl.SmsChineseImpl;
+import com.diligrp.message.utils.Base64Util;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,10 +27,26 @@ import javax.annotation.Resource;
 public class MessageApplicationTests {
 
     @Resource
+    private ChinaMobileMasImpl chinaMobileMas;
+
+    @Resource
     private SmsChineseImpl smsChinese;
 
     @Test
     public void testChinaMobileMas(){
+        JSONObject object = new JSONObject();
+        object.put(MessagePushConstant.ACCESS_KEY, "hebrh");
+        object.put(MessagePushConstant.SECRET, Base64Util.getDecoderString("aGVicmgwMQ=="));
+        object.put(MessagePushConstant.SIGN, "bttBGypys");
+        object.put(MessagePushConstant.COMPANY_NAME, "哈尔滨人和集团");
+        object.put(MessagePushConstant.PHONES, "17608176657");
+        object.put(MessagePushConstant.CONTENT, "你好,验证码为123456");
+        BaseOutput<String> output = chinaMobileMas.sendSMS(object);
+        System.out.println(output);
+    }
+
+    @Test
+    public void testSmsChinese(){
         JSONObject object = new JSONObject();
         object.put(MessagePushConstant.ACCESS_KEY, "shenyangdili");
         object.put(MessagePushConstant.SECRET, "4e3412a51439f0c8ce80");
