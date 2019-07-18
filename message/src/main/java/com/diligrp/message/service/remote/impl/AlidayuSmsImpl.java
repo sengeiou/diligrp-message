@@ -54,7 +54,7 @@ public class AlidayuSmsImpl implements IMessageService {
                     output.setCode(code);
                     result = data.getString("Message");
                 }
-                output.setResult(result);
+                output.setMessage(result);
                 return output;
             }
         } catch (ClientException e) {
