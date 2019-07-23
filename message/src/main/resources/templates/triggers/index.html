@@ -27,6 +27,10 @@
                         <#comboProvider _id="sceneCode" _provider='dataDictionaryValueProvider' _queryParams='{dd_code:"message_scene",emptyText:"-- 全部 --"}'/>
                     </div>
                     <div class="search-item">
+                        <input class="easyui-combobox" name="whitelist" id="whitelist" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false"  data-options="label:'应用白名单:'" />
+                        <#comboProvider _id="whitelist" _provider='booleanProvider'  _queryParams='{emptyText:"-- 全部 --"}'/>
+                    </div>
+                    <div class="search-item">
                         <input name="enabled" id="enabled" style="width:100%" labelAlign="right" editable="false"
                                labelAlign="right" panelWidth="auto" panelHeight="auto" label="状态:" />
                         <#comboProvider _id="enabled" _provider='triggersStateProvider' _queryParams='{emptyText:"-- 全部 --"}'/>
@@ -66,10 +70,13 @@
                     <th width="10%" data-options="field:'enabled', _provider:'triggersStateProvider',  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                         状态
                     </th>
-                    <th width="15%" data-options="field:'groupChannel', _provider:'groupChannelProvider',  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                    <th width="10%" data-options="field:'whitelist', _provider:'booleanProvider',  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        应用白名单
+                    </th>
+                    <th width="12%" data-options="field:'groupChannel', _provider:'groupChannelProvider',  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false',formatter:formatForTip">
                         模板来源
                     </th>
-                    <th width="20%" data-options="field:'groupTemplateCode',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                    <th width="15%" data-options="field:'groupTemplateCode',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false',formatter:formatForTip">
                         模板编码
                     </th>
                     <th width="15%" data-options="field:'created',  _provider:'datetimeProvider', sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">

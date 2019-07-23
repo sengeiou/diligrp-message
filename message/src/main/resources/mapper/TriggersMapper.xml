@@ -57,6 +57,9 @@
             <if test="sceneCode != null and systemCode != ''">
                 and mt.scene_code = #{sceneCode}
             </if>
+            <if test="whitelist != null">
+                and mt.whitelist = #{whitelist}
+            </if>
             <if test="enabled != null">
                 and mt.enabled = #{enabled}
             </if>
