@@ -197,6 +197,7 @@ create table message_send_log
    cellphone            varchar(1000) comment '电话号码,多个以英文逗号分隔',
    receipt_time         datetime comment '接收时间',
    parameters           json comment '请求参数',
+   template_code        varchar(20) COMMENT '指定发送的模板编码',
    content              varchar(255) comment '消息内容',
    send_state           tinyint comment '发送状态',
    send_time            datetime comment '发送时间',

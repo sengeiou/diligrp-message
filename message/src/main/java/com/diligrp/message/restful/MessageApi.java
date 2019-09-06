@@ -44,7 +44,7 @@ public class MessageApi {
     @RequestMapping(value = "/receiveMessage.api", method = {RequestMethod.GET, RequestMethod.POST})
     public BaseOutput batchUpdateNewFlag(@RequestBody @Validated MessageInfoVo messageInfoVo, BindingResult br) {
         if (br.hasErrors()) {
-            return BaseOutput.failure().setResult(br.getFieldError().getDefaultMessage());
+            return BaseOutput.failure().setMessage(br.getFieldError().getDefaultMessage());
         }
         try {
             return messageInfoHandler.handler(messageInfoVo);

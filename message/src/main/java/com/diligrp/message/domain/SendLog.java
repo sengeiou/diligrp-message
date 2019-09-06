@@ -68,6 +68,12 @@ public class SendLog extends BaseDomain {
     private String parameters;
 
     /**
+     * 指定发送模板编码
+     */
+    @Column(name = "`template_code`")
+    private String templateCode;
+
+    /**
      * 消息内容
      */
     @Column(name = "`content`")
@@ -257,6 +263,26 @@ public class SendLog extends BaseDomain {
 
     public void setParameters(String parameters) {
         this.parameters = parameters;
+    }
+
+    /**
+     * 获取指定发送的模板编码
+     *
+     * @return templateCode - 指定发送的模板
+     */
+    @FieldDef(label="指定发送的模板编码", maxLength = 20)
+    @EditMode(editor = FieldEditor.Text, required = false)
+    public String getTemplateCode() {
+        return templateCode;
+    }
+
+    /**
+     * 指定发送的模板编码
+     *
+     * @param templateCode 指定发送的模板编码
+     */
+    public void setTemplateCode(String templateCode) {
+        this.templateCode = templateCode;
     }
 
     /**

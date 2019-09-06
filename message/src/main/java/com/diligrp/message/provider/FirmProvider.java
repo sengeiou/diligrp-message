@@ -1,5 +1,7 @@
 package com.diligrp.message.provider;
 
+import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONPath;
 import com.dili.ss.dto.DTOUtils;
 import com.dili.ss.metadata.FieldMeta;
@@ -9,6 +11,7 @@ import com.dili.ss.metadata.provider.BatchDisplayTextProviderAdaptor;
 import com.dili.uap.sdk.domain.Firm;
 import com.dili.uap.sdk.domain.dto.FirmDto;
 import com.diligrp.message.service.remote.FirmService;
+import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -59,6 +62,15 @@ public class FirmProvider extends BatchDisplayTextProviderAdaptor {
                 FirmDto firmDto = DTOUtils.newDTO(FirmDto.class);
                 firmDto.setCodes(firmCodes);
                 List<Firm> firms = firmService.listByExample(firmDto);
+                if (CollectionUtil.isNotEmpty(firms)) {
+                    //是否需要带上原始值 true 需要
+                    Object withOriginal = JSONPath.read(String.valueOf(metaMap.get(QUERY_PARAMS_KEY)), "/withOriginal");
+                    if (StrUtil.equalsIgnoreCase("true", String.valueOf(withOriginal))) {
+                        firms.forEach(t -> {
+                            t.setName(t.getName() + "【" + t.getCode() + "】");
+                        });
+                    }
+                }
                 return firms;
             }
         }

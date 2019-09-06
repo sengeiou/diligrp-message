@@ -2,6 +2,7 @@ package com.diligrp.message.service.remote.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.dili.ss.domain.BaseOutput;
 import com.diligrp.message.common.constant.MessagePushConstant;
@@ -66,6 +67,19 @@ public class SmsServiceImpl implements SmsService {
         }
         Boolean flag = false;
         List<SendLog> sendLogs = Lists.newArrayList();
+        /**
+         * 如果模板编码不为空，即此次发送为指定模板发送
+         * 所以templateList中需要移除非指定模板的数据
+         */
+        if (StrUtil.isNotBlank(sendLog.getTemplateCode())) {
+            templateList.removeIf(t -> !StrUtil.equalsIgnoreCase(t.getTemplateCode(), sendLog.getTemplateCode()));
+        }
+        if (CollectionUtil.isEmpty(templateList)){
+            sendLog.setSendState(MessageEnum.SendStateEnum.FAILURE.getCode());
+            sendLog.setRemarks("指定的模板编码未配置");
+            sendLogService.update(sendLog);
+            return;
+        }
         //定义标签，用于跳出循环
         templates:
         for (TriggersTemplate t : templateList) {
@@ -125,7 +139,7 @@ public class SmsServiceImpl implements SmsService {
         if (flag) {
             sendLogService.update(sendLog);
         } else {
-            //如果最后，都没没有发送成功
+            //如果都没没有发送成功
             sendLogService.delete(sendLogId);
         }
         if (CollectionUtil.isNotEmpty(sendLogs)){

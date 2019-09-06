@@ -40,6 +40,11 @@ public class MessageInfoVo {
      */
     private String parameters;
 
+    /**
+     * 指定发送模板编码
+     */
+    private String templateCode;
+
     public String getMarketCode() {
         return marketCode;
     }
@@ -69,5 +74,11 @@ public class MessageInfoVo {
     }
     public void setParameters(String parameters) {
         this.parameters = parameters;
+    }
+    public String getTemplateCode() {
+        return templateCode;
+    }
+    public void setTemplateCode(String templateCode) {
+        this.templateCode = templateCode;
     }
 }

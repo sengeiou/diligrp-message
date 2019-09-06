@@ -17,6 +17,7 @@ import com.diligrp.message.service.TriggersService;
 import com.diligrp.message.service.WhitelistService;
 import com.diligrp.message.utils.MessageUtil;
 import com.google.common.collect.Sets;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -33,6 +34,7 @@ import java.util.Set;
  * @author yuehongbo
  * @date 2019/4/3 11:18
  */
+@Slf4j
 @Component
 public class MessageInfoHandler {
 
@@ -77,7 +79,6 @@ public class MessageInfoHandler {
                 //如果需要验证白名单，检查用户是否存在白名单中
                 Whitelist whitelist = new Whitelist();
                 whitelist.setMarketCode(info.getMarketCode());
-                whitelist.setCellphone(info.getCellphone());
                 Set<String> dbData = whitelistService.queryValidByMarketCode(whitelist);
                 if (CollectionUtil.isNotEmpty(dbData)) {
                     for (String phone : phones) {
@@ -94,6 +95,12 @@ public class MessageInfoHandler {
                     }
                 }
             }
+            if (StrUtil.isNotBlank(info.getTemplateCode()) && CollectionUtil.isNotEmpty(triggersVo.getTemplateList())){
+                Boolean matched = triggersVo.getTemplateList().stream().anyMatch(t -> StrUtil.isNotBlank(t.getTemplateCode()) && info.getTemplateCode().trim().equalsIgnoreCase(t.getTemplateCode().trim()));
+                if (!matched){
+                    msg.append("指定的模板未在该场景中配置 ");
+                }
+            }
         }
         SendLog sendLog = new SendLog();
         sendLog.setMarketCode(info.getMarketCode());
@@ -102,6 +109,7 @@ public class MessageInfoHandler {
         sendLog.setCellphone(info.getCellphone());
         sendLog.setReceiptTime(new Date());
         sendLog.setRemarks(msg.toString());
+        sendLog.setTemplateCode(info.getTemplateCode());
         sendLog.setSendTime(DateTime.now());
         if (StrUtil.isNotBlank(info.getParameters())){
             sendLog.setParameters(info.getParameters());
@@ -109,7 +117,8 @@ public class MessageInfoHandler {
         if (StrUtil.isNotBlank(msg)){
             sendLog.setSendState(MessageEnum.SendStateEnum.FAILURE.getCode());
             sendLogService.save(sendLog);
-            return BaseOutput.failure().setResult(msg.toString());
+            log.warn(String.format("信息[%s]-->发送失败[%s]", JSONObject.toJSONString(sendLog), msg));
+            return BaseOutput.failure().setMessage(msg.toString()).setMetadata(sendLog.getRequestCode());
         }else{
             if (messageSend) {
                 if (CollectionUtil.isNotEmpty(notWhiteSet)) {

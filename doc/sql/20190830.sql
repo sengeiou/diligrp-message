@@ -1,0 +1,1 @@
+alter table message_send_log add column template_code varchar(20) COMMENT '指定发送的模板编码' AFTER parameters;
