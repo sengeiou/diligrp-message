@@ -1,5 +1,6 @@
 package com.diligrp.message.service.remote;
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.dto.DTOUtils;
 import com.dili.uap.sdk.domain.DataDictionaryValue;
@@ -48,8 +49,10 @@ public class DataDictionaryRpcService {
                 return Collections.emptyList();
             }
             mails = out.getData().stream().filter(Objects::nonNull).map(DataDictionaryValue::getCode).filter(Objects::nonNull).collect(Collectors.toList());
-            redisUtil.getRedisTemplate().opsForList().leftPushAll(messageErrorEmail, mails);
-            redisUtil.expire(messageErrorEmail, 7, TimeUnit.DAYS);
+            if (CollectionUtil.isNotEmpty(mails)) {
+                redisUtil.getRedisTemplate().opsForList().leftPushAll(messageErrorEmail, mails);
+                redisUtil.expire(messageErrorEmail, 7, TimeUnit.DAYS);
+            }
         } else {
             mails = redisUtil.getRedisTemplate().opsForList().range(messageErrorEmail, 0, redisSize);
         }
