@@ -8,6 +8,7 @@ import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.BaseOutput;
 import com.diligrp.message.common.constant.MessagePushConstant;
 import com.diligrp.message.service.remote.IMessageService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 /**
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Component;
  * @author yuehongbo
  * @date 2019/4/11 14:33
  */
+@Slf4j
 @Component
 public class SmsChineseImpl implements IMessageService {
 
@@ -30,20 +32,25 @@ public class SmsChineseImpl implements IMessageService {
         params.put("Key", object.getString(MessagePushConstant.SECRET));
         params.put("smsMob", object.getString(MessagePushConstant.PHONES));
         params.put("smsText", object.getString(MessagePushConstant.CONTENT));
-        HttpResponse response = HttpUtil.createPost(baseUrl).header(Header.CONTENT_TYPE, "application/x-www-form-urlencoded").header("charset", "utf8").form(params).execute();
-        if (response.isOk()) {
-            Integer responseCode = Integer.valueOf(response.body());
-            BaseOutput output = new BaseOutput();
-            if (responseCode > 0) {
-                output.setCode(ResultCode.OK);
+        try {
+            HttpResponse response = HttpUtil.createPost(baseUrl).header(Header.CONTENT_TYPE, "application/x-www-form-urlencoded").header("charset", "utf8").form(params).execute();
+            if (response.isOk()) {
+                Integer responseCode = Integer.valueOf(response.body());
+                BaseOutput output = new BaseOutput();
+                if (responseCode > 0) {
+                    output.setCode(ResultCode.OK);
+                } else {
+                    output.setCode(String.valueOf(responseCode));
+                    output.setMessage(ResponseCode.getResponseCode(responseCode).getDesc());
+                }
+                return output;
             } else {
-                output.setCode(String.valueOf(responseCode));
-                output.setMessage(ResponseCode.getResponseCode(responseCode).getDesc());
+                response.close();
+                return BaseOutput.failure("调用网建返回错误").setCode(String.valueOf(response.getStatus()));
             }
-            return output;
-        } else {
-            response.close();
-            return BaseOutput.failure("调用网建返回错误").setCode(String.valueOf(response.getStatus()));
+        } catch (Exception e) {
+            log.error("网建通道发送异常," + e.getMessage(), e);
+            return BaseOutput.failure(e.getLocalizedMessage()).setMetadata(e.toString());
         }
     }
 

@@ -3,6 +3,7 @@ package com.diligrp.message.service.remote.impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.extra.mail.MailUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.dili.ss.domain.BaseOutput;
 import com.diligrp.message.common.constant.MessagePushConstant;
@@ -12,6 +13,7 @@ import com.diligrp.message.domain.SendLog;
 import com.diligrp.message.domain.TriggersTemplate;
 import com.diligrp.message.service.MarketChannelService;
 import com.diligrp.message.service.SendLogService;
+import com.diligrp.message.service.remote.DataDictionaryRpcService;
 import com.diligrp.message.service.remote.SmsService;
 import com.diligrp.message.utils.Base64Util;
 import com.diligrp.message.utils.MessageUtil;
@@ -40,13 +42,14 @@ public class SmsServiceImpl implements SmsService {
     private SendLogService sendLogService;
     @Autowired
     private MarketChannelService marketChannelService;
-
     @Resource
     private AlidayuSmsImpl alidayuSmsImpl;
     @Resource
     private ChinaMobileMasImpl chinaMobileMas;
     @Resource
     private SmsChineseImpl smsChinese;
+    @Autowired
+    private DataDictionaryRpcService dataDictionaryRpcService;
 
     /**
      * 消息发送
@@ -127,6 +130,13 @@ public class SmsServiceImpl implements SmsService {
                             log.setId(null);
                             log.setSendChannel(t.getChannel());
                             sendLogs.add(log);
+                            if (null != output.getMetadata() && StrUtil.isNotBlank(String.valueOf(output.getMetadata()))) {
+                                //邮件可能发送失败，但是不影响主业务，此处忽略邮件是否发送成功
+                                try {
+                                    MailUtil.send(dataDictionaryRpcService.listToMail(), "消息发送异常", output.getMetadata().toString(), false);
+                                } catch (Throwable throwable) {
+                                }
+                            }
                             continue;
                         }
                     } else {

@@ -9,6 +9,7 @@ import com.dili.ss.domain.BaseOutput;
 import com.diligrp.message.common.constant.MessagePushConstant;
 import com.diligrp.message.service.remote.IMessageService;
 import com.diligrp.message.utils.EncryptUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.stereotype.Component;
 
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Component;
  * @author yuehongbo
  * @date 2019/4/10 18:03
  */
+@Slf4j
 @Component
 public class ChinaMobileMasImpl implements IMessageService {
 
@@ -27,27 +29,32 @@ public class ChinaMobileMasImpl implements IMessageService {
 
     @Override
     public BaseOutput<String> sendSMS(JSONObject object) {
-        HttpResponse response = HttpUtil.createPost(baseUrl + "/norsubmit").body(getSmsParam(object)).execute();
-        if (response.isOk()){
-            String responseBody = response.body();
-            JSONObject jsonObject = JSONObject.parseObject(responseBody);
-            BaseOutput output = new BaseOutput();
-            Boolean success = jsonObject.getBoolean("success");
-            if (success){
-                output.setCode(ResultCode.OK);
-                output.setMessage(jsonObject.getString("msgGroup"));
-            }else{
-                output.setCode(jsonObject.getString("rspcod"));
-                output.setMessage(ResponseCode.getResponseCode(output.getCode()).getDesc());
+        try {
+            HttpResponse response = HttpUtil.createPost(baseUrl + "/norsubmit").body(getSmsParam(object)).execute();
+            if (response.isOk()) {
+                String responseBody = response.body();
+                JSONObject jsonObject = JSONObject.parseObject(responseBody);
+                BaseOutput output = new BaseOutput();
+                Boolean success = jsonObject.getBoolean("success");
+                if (success) {
+                    output.setCode(ResultCode.OK);
+                    output.setMessage(jsonObject.getString("msgGroup"));
+                } else {
+                    output.setCode(jsonObject.getString("rspcod"));
+                    output.setMessage(ResponseCode.getResponseCode(output.getCode()).getDesc());
+                }
+                return output;
+            } else {
+                response.close();
+                return BaseOutput.failure("调用移动云MAS返回错误").setCode(String.valueOf(response.getStatus()));
             }
-            return output;
-        }else{
-            response.close();
-            return BaseOutput.failure("调用移动云MAS返回错误").setCode(String.valueOf(response.getStatus()));
+        } catch (Exception e) {
+            log.error("移动云MAS通道发送异常," + e.getMessage(), e);
+            return BaseOutput.failure(e.getLocalizedMessage()).setMetadata(e.toString());
         }
     }
 
-    private String getSmsParam(JSONObject object){
+    private String getSmsParam(JSONObject object) {
         Submit submit = new Submit();
         submit.setEcName(object.getString(MessagePushConstant.COMPANY_NAME));
         submit.setApId(object.getString(MessagePushConstant.ACCESS_KEY));

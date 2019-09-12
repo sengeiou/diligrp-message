@@ -13,6 +13,7 @@ import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.BaseOutput;
 import com.diligrp.message.common.constant.MessagePushConstant;
 import com.diligrp.message.service.remote.IMessageService;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -27,10 +28,9 @@ import java.sql.SQLException;
  * @author yuehongbo
  * @date 2019/4/9 14:42
  */
+@Slf4j
 @Component
 public class AlidayuSmsImpl implements IMessageService {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(AlidayuSmsImpl.class);
 
     @Override
     public BaseOutput<String> sendSMS(JSONObject object) {
@@ -38,6 +38,7 @@ public class AlidayuSmsImpl implements IMessageService {
         IAcsClient client = new DefaultAcsClient(profile);
         CommonRequest request = buildData(object.getString(MessagePushConstant.SIGN), object.getString(MessagePushConstant.PHONES), object.getString(MessagePushConstant.TEMPLATE_CODE),object.getString(MessagePushConstant.PARAMETERS));
         String result = null;
+        String metadata = null;
         try {
             CommonResponse response = client.getCommonResponse(request);
             if (null != response) {
@@ -58,13 +59,14 @@ public class AlidayuSmsImpl implements IMessageService {
                 return output;
             }
         } catch (ClientException e) {
-            LOGGER.error("阿里大于通道发送异常,requestId:" + e.getMessage(), e);
+            log.error("阿里大于通道发送异常,requestId:" + e.getMessage(), e);
             result = "错误类型:[" + e.getErrorType().name() + "],错误code:[" + e.getErrCode() + "],错误信息:[" + e.getErrMsg() + "]";
         } catch (Exception e) {
-            LOGGER.error("阿里大于通道发送异常," + e.getMessage(), e);
-            result = "系统错误";
+            log.error("阿里大于通道发送异常," + e.getMessage(), e);
+            result = "系统异常";
+            metadata = e.toString();
         }
-        return BaseOutput.failure(result);
+        return BaseOutput.failure(result).setMetadata(metadata);
     }
 
     /**

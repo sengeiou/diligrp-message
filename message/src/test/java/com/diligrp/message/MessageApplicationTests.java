@@ -1,9 +1,11 @@
 package com.diligrp.message;
 
+import cn.hutool.extra.mail.MailUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.dili.ss.domain.BaseOutput;
 import com.diligrp.MessageApplication;
 import com.diligrp.message.common.constant.MessagePushConstant;
+import com.diligrp.message.service.remote.DataDictionaryRpcService;
 import com.diligrp.message.service.remote.impl.ChinaMobileMasImpl;
 import com.diligrp.message.service.remote.impl.SmsChineseImpl;
 import com.diligrp.message.utils.Base64Util;
@@ -32,6 +34,9 @@ public class MessageApplicationTests {
     @Resource
     private SmsChineseImpl smsChinese;
 
+    @Resource
+    private DataDictionaryRpcService dataDictionaryRpcService;
+
     @Test
     public void testChinaMobileMas(){
         JSONObject object = new JSONObject();
@@ -55,5 +60,15 @@ public class MessageApplicationTests {
         object.put(MessagePushConstant.CONTENT, "你好,验证码为123456");
         BaseOutput<String> output = smsChinese.sendSMS(object);
         System.out.println(output);
+    }
+
+    @Test
+    public void testSendMail() {
+        try {
+            MailUtil.send(dataDictionaryRpcService.listToMail(), "消息发送异常", "测试邮件发送", false);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println(e.toString());
+        }
     }
 }
