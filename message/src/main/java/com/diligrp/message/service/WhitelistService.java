@@ -21,6 +21,7 @@ public interface WhitelistService extends BaseService<Whitelist, Long> {
      * @return
      * */
     EasyuiPageOutput findByWhitelistVo(WhitelistVo whitelistVo, boolean useProvider) throws Exception;
+
     /**
      * 验证白名单用户时间是否包含在已有时间区间
      * @param whitelist 新增对象
@@ -34,4 +35,18 @@ public interface WhitelistService extends BaseService<Whitelist, Long> {
      * @return
      */
     Set<String> queryValidByMarketCode(Whitelist whitelist);
+
+    /**
+     * 更改白名单的状态信息
+     * @param whitelist
+     * @return
+     */
+    Integer updateWhitelistStatus(Whitelist whitelist);
+
+    /**
+     * 保存白名单信息
+     * @param whitelist
+     * @return
+     */
+    Integer saveWhitelist(Whitelist whitelist);
 }

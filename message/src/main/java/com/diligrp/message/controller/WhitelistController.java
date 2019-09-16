@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -63,18 +64,17 @@ public class WhitelistController {
     public @ResponseBody BaseOutput insert(@ModelAttribute Whitelist whitelist) {
         whitelist.setSource(String.valueOf(MessageEnum.MessageSourceEnum.MANUAL.getCode()));
         whitelist.setDeleted(MessageEnum.DeletedEnum.NO.getCode());
-
-        if (whitelist.getEndDate() != null){
-            Calendar c= Calendar.getInstance();
+        if (whitelist.getEndDate() != null) {
+            Calendar c = Calendar.getInstance();
             c.setTime(whitelist.getEndDate());
             c.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH), 23, 59, 59);
-            whitelist.setEndDate(c.getTime());//结束时间 的 23:59:59
+            //结束时间 的 23:59:59
+            whitelist.setEndDate(c.getTime());
         }
-
-        if (whitelistService.checkDate(whitelist) ){
+        if (whitelistService.checkDate(whitelist)) {
             return BaseOutput.failure("新增失败！该时间段与已有时间段存在重复。");
         }
-        whitelistService.insertSelective(whitelist);
+        whitelistService.saveWhitelist(whitelist);
         return BaseOutput.success("新增成功");
     }
 
@@ -97,6 +97,7 @@ public class WhitelistController {
     public @ResponseBody BaseOutput delete(Long id) {
         Whitelist whitelist = whitelistService.get(id);
         whitelist.setDeleted(MessageEnum.DeletedEnum.YES.getCode());
+        whitelist.setModified(new Date());
         whitelistService.updateSelective(whitelist);
         return BaseOutput.success("删除成功");
     }

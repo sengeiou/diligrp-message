@@ -82,9 +82,9 @@ public class MessageApi {
             whitelist.setSourceId(sourceId);
             whitelist.setSource(String.valueOf(MessageEnum.MessageSourceEnum.SYSTEM.getCode()));
             whitelist.setDeleted(MessageEnum.DeletedEnum.NO.getCode());
-            whitelistService.insertSelective(whitelist);
+            whitelistService.saveWhitelist(whitelist);
             return BaseOutput.success();
-        }catch (Exception e){
+        } catch (Exception e) {
             return BaseOutput.failure("操作异常").setCode(ResultCode.APP_ERROR);
         }
     }

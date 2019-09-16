@@ -1,5 +1,7 @@
 package com.diligrp.message.common.enums;
 
+import lombok.Getter;
+
 public class MessageEnum {
 
     public enum ChannelEnum {
@@ -164,4 +166,36 @@ public class MessageEnum {
             return name;
         }
     }
+
+    /**
+     * 白名单状态类型的枚举定义
+     */
+    public enum WhitelistStatus {
+
+        USELESS(10, "待生效"),
+        ACTIVE(20, "生效中"),
+        EXPIRED(30, "已过期"),
+        ;
+
+        @Getter
+        private String name;
+        @Getter
+        private Integer code;
+
+        WhitelistStatus(Integer code, String name) {
+            this.code = code;
+            this.name = name;
+        }
+
+        public static WhitelistStatus getWhitelistStatus(Integer code) {
+            for (WhitelistStatus ws : WhitelistStatus.values()) {
+                if (ws.getCode().equals(code)) {
+                    return ws;
+                }
+            }
+            return null;
+        }
+    }
+
+
 }

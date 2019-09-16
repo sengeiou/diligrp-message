@@ -13,6 +13,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -72,6 +73,43 @@ public class WhitelistServiceImpl extends BaseServiceImpl<Whitelist, Long> imple
     @Override
     public Set<String> queryValidByMarketCode(Whitelist whitelist) {
         return getActualMapper().queryValidByMarketCode(whitelist);
+    }
+
+    @Override
+    public Integer updateWhitelistStatus(Whitelist whitelist) {
+        if (null == whitelist || null == whitelist.getId()) {
+            return 0;
+        }
+        produceStatus(whitelist);
+        Whitelist update = new Whitelist();
+        update.setId(whitelist.getId());
+        update.setStatus(whitelist.getStatus());
+        update.setModified(new Date());
+        return updateSelective(update);
+    }
+
+    @Override
+    public Integer saveWhitelist(Whitelist whitelist) {
+        if (null == whitelist) {
+            return 0;
+        }
+        produceStatus(whitelist);
+        return saveOrUpdateSelective(whitelist);
+    }
+
+    /**
+     * 获取白名单状态值
+     * @param whitelist
+     */
+    private void produceStatus(Whitelist whitelist) {
+        Date now = new Date();
+        if (whitelist.getStartDate().after(now)) {
+            whitelist.setStatus(MessageEnum.WhitelistStatus.USELESS.getCode());
+        } else if (whitelist.getEndDate().before(now)) {
+            whitelist.setStatus(MessageEnum.WhitelistStatus.EXPIRED.getCode());
+        } else {
+            whitelist.setStatus(MessageEnum.WhitelistStatus.ACTIVE.getCode());
+        }
     }
 
 }
