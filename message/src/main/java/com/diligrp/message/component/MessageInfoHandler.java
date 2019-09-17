@@ -138,8 +138,9 @@ public class MessageInfoHandler {
                 String content = MessageUtil.produceMsgContent(triggersVo.getTemplateList().get(0).getTemplateContent(), JSONObject.parseObject(sendLog.getParameters()));
                 sendLog.setContent(content);
                 sendLog.setRemarks("该环境已配置禁用短信发送");
-                sendLog.setSendState(MessageEnum.SendStateEnum.SUCCEED.getCode());
+                sendLog.setSendState(MessageEnum.SendStateEnum.FAILURE.getCode());
                 sendLogService.save(sendLog);
+                log.warn(String.format("信息[%s]-->发送失败[%s]", JSONObject.toJSONString(sendLog), sendLog.getRemarks()));
             }
             return BaseOutput.success();
         }
