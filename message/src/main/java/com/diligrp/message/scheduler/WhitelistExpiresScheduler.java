@@ -11,7 +11,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import tk.mybatis.mapper.entity.Example;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -40,7 +40,7 @@ public class WhitelistExpiresScheduler {
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("status", MessageEnum.WhitelistStatus.USELESS.getCode());
         criteria.andEqualTo("deleted", MessageEnum.DeletedEnum.NO.getCode());
-        criteria.andLessThanOrEqualTo("startDate", new Date());
+        criteria.andLessThanOrEqualTo("startDate", LocalDateTime.now());
         List<Whitelist> whitelists = whitelistService.selectByExample(example);
         updateWhitelistStatus(whitelists);
         log.info("扫描已经开始的白名单数据，共扫描到 " + whitelists.size() + " 条数据");
@@ -55,7 +55,7 @@ public class WhitelistExpiresScheduler {
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("status", MessageEnum.WhitelistStatus.ACTIVE.getCode());
         criteria.andEqualTo("deleted", MessageEnum.DeletedEnum.NO.getCode());
-        criteria.andGreaterThanOrEqualTo("endDate", new Date());
+        criteria.andLessThanOrEqualTo("endDate", LocalDateTime.now());
         List<Whitelist> whitelists = whitelistService.selectByExample(example);
         updateWhitelistStatus(whitelists);
         log.info("扫描已经结束的白名单数据，共扫描到 " + whitelists.size() + " 条数据");
