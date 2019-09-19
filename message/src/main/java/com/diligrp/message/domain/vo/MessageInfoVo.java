@@ -1,5 +1,8 @@
 package com.diligrp.message.domain.vo;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.validation.constraints.NotBlank;
 
 /**
@@ -10,6 +13,8 @@ import javax.validation.constraints.NotBlank;
  * @author yuehongbo
  * @date 2019/4/3 11:09
  */
+@Getter
+@Setter
 public class MessageInfoVo {
 
     /**
@@ -45,40 +50,8 @@ public class MessageInfoVo {
      */
     private String templateCode;
 
-    public String getMarketCode() {
-        return marketCode;
-    }
-    public void setMarketCode(String marketCode) {
-        this.marketCode = marketCode;
-    }
-    public String getSystemCode() {
-        return systemCode;
-    }
-    public void setSystemCode(String systemCode) {
-        this.systemCode = systemCode;
-    }
-    public String getSceneCode() {
-        return sceneCode;
-    }
-    public void setSceneCode(String sceneCode) {
-        this.sceneCode = sceneCode;
-    }
-    public String getCellphone() {
-        return cellphone;
-    }
-    public void setCellphone(String cellphone) {
-        this.cellphone = cellphone;
-    }
-    public String getParameters() {
-        return parameters;
-    }
-    public void setParameters(String parameters) {
-        this.parameters = parameters;
-    }
-    public String getTemplateCode() {
-        return templateCode;
-    }
-    public void setTemplateCode(String templateCode) {
-        this.templateCode = templateCode;
-    }
+    /**
+     * 请求IP地址
+     */
+    private String ip;
 }

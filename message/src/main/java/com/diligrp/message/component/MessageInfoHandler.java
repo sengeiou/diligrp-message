@@ -111,6 +111,7 @@ public class MessageInfoHandler {
         sendLog.setRemarks(msg.toString());
         sendLog.setTemplateCode(info.getTemplateCode());
         sendLog.setSendTime(DateTime.now());
+        sendLog.setRemoteIp(info.getIp());
         if (StrUtil.isNotBlank(info.getParameters())){
             sendLog.setParameters(info.getParameters());
         }

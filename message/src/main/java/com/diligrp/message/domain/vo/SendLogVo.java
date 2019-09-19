@@ -2,14 +2,21 @@ package com.diligrp.message.domain.vo;
 
 import com.dili.ss.domain.annotation.Operator;
 import com.diligrp.message.domain.SendLog;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.Column;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * @author yuehongbo
+ */
+@Getter
+@Setter
 public class SendLogVo extends SendLog {
+
     /**
-     *
      * 权限市场
      * */
     @Operator(Operator.IN)
@@ -26,35 +33,8 @@ public class SendLogVo extends SendLog {
     /**
      * 发送时间 -- 结束
      */
-
     @Column(name = "`send_time`")
     @Operator(Operator.LITTLE_EQUAL_THAN)
     private Date endSendTime;
-
-
-    public List<String> getAuthMarkets() {
-        return authMarkets;
-    }
-
-    public void setAuthMarkets(List<String> authMarkets) {
-        this.authMarkets = authMarkets;
-    }
-
-    public Date getStartSendTime() {
-        return startSendTime;
-    }
-
-    public void setStartSendTime(Date startSendTime) {
-        this.startSendTime = startSendTime;
-    }
-
-    public Date getEndSendTime() {
-        return endSendTime;
-    }
-
-    public void setEndSendTime(Date endSendTime) {
-        this.endSendTime = endSendTime;
-    }
-
 
 }

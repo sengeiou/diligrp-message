@@ -9,6 +9,7 @@ import com.diligrp.message.component.MessageInfoHandler;
 import com.diligrp.message.domain.Whitelist;
 import com.diligrp.message.domain.vo.MessageInfoVo;
 import com.diligrp.message.service.WhitelistService;
+import com.diligrp.message.utils.NetUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 
 /**
@@ -42,11 +44,12 @@ public class MessageApi {
      * @return
      */
     @RequestMapping(value = "/receiveMessage.api", method = {RequestMethod.GET, RequestMethod.POST})
-    public BaseOutput batchUpdateNewFlag(@RequestBody @Validated MessageInfoVo messageInfoVo, BindingResult br) {
+    public BaseOutput receiveMessage(@RequestBody @Validated MessageInfoVo messageInfoVo, HttpServletRequest request, BindingResult br) {
         if (br.hasErrors()) {
             return BaseOutput.failure().setMessage(br.getFieldError().getDefaultMessage());
         }
         try {
+            messageInfoVo.setIp(NetUtil.getIpAddress(request));
             return messageInfoHandler.handler(messageInfoVo);
         }catch (Exception e){
             e.printStackTrace();
