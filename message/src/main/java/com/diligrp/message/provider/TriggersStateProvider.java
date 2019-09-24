@@ -28,7 +28,7 @@ public class TriggersStateProvider implements ValueProvider {
 
     static {
         BUFFER.addAll(Stream.of(TriggersEnum.EnabledStateEnum.values())
-                .map(e -> new ValuePairImpl<>(e.getName(), e.getCode()))
+                .map(e -> new ValuePairImpl<>(e.getName(), String.valueOf(e.getCode())))
                 .collect(Collectors.toList()));
     }
 
