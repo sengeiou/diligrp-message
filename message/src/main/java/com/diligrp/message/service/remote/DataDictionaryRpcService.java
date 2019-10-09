@@ -3,9 +3,9 @@ package com.diligrp.message.service.remote;
 import cn.hutool.core.collection.CollectionUtil;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.dto.DTOUtils;
+import com.dili.ss.redis.service.RedisUtil;
 import com.dili.uap.sdk.domain.DataDictionaryValue;
 import com.diligrp.message.rpc.DataDictionaryRpc;
-import com.diligrp.message.utils.RedisUtil;
 import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +27,8 @@ import java.util.stream.Collectors;
 @Service
 public class DataDictionaryRpcService {
 
+    private static String redisKey = "message:dictionary:";
+
     @Autowired
     private DataDictionaryRpc dataDictionaryRpc;
 
@@ -38,7 +40,7 @@ public class DataDictionaryRpcService {
      * @return
      */
     public List<String> listToMail() {
-        String messageErrorEmail = "message_error_email";
+        String messageErrorEmail = redisKey + "message_error_email";
         Long redisSize = redisUtil.getRedisTemplate().opsForList().size(messageErrorEmail);
         List<String> mails = Lists.newArrayList();
         if (null == redisSize || redisSize == 0) {
