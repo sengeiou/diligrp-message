@@ -93,6 +93,8 @@ public class MessageInfoHandler {
                     } else {
                         info.setCellphone(StrUtil.join(",", whiteSet));
                     }
+                } else {
+                    msg.append("所属手机都未在白名单内");
                 }
             }
             if (StrUtil.isNotBlank(info.getTemplateCode()) && CollectionUtil.isNotEmpty(triggersVo.getTemplateList())){
