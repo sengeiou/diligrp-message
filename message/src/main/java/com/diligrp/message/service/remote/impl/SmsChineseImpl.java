@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class SmsChineseImpl implements IMessageService {
 
-    private String baseUrl= "http://utf8.api.smschinese.cn";
+    private String baseUrl= "http://utf8.api.smschinese1.cn";
 
     @Override
     public BaseOutput<String> sendSMS(JSONObject object) {

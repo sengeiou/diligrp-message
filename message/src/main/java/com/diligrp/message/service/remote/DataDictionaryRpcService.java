@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 @Service
 public class DataDictionaryRpcService {
 
-    private static String redisKey = "message:dictionary:";
+    private static String redisKeyPrefix = "message:dictionary:";
 
     @Autowired
     private DataDictionaryRpc dataDictionaryRpc;
@@ -40,8 +40,9 @@ public class DataDictionaryRpcService {
      * @return
      */
     public List<String> listToMail() {
-        String messageErrorEmail = redisKey + "message_error_email";
-        Long redisSize = redisUtil.getRedisTemplate().opsForList().size(messageErrorEmail);
+        String messageErrorEmail = "message_error_email";
+        String redisKey = redisKeyPrefix + messageErrorEmail;
+        Long redisSize = redisUtil.getRedisTemplate().opsForList().size(redisKey);
         List<String> mails = Lists.newArrayList();
         if (null == redisSize || redisSize == 0) {
             DataDictionaryValue example = DTOUtils.newDTO(DataDictionaryValue.class);
@@ -52,11 +53,11 @@ public class DataDictionaryRpcService {
             }
             mails = out.getData().stream().filter(Objects::nonNull).map(DataDictionaryValue::getCode).filter(Objects::nonNull).collect(Collectors.toList());
             if (CollectionUtil.isNotEmpty(mails)) {
-                redisUtil.getRedisTemplate().opsForList().leftPushAll(messageErrorEmail, mails);
-                redisUtil.expire(messageErrorEmail, 7, TimeUnit.DAYS);
+                redisUtil.getRedisTemplate().opsForList().leftPushAll(redisKey, mails);
+                redisUtil.expire(redisKey, 7, TimeUnit.DAYS);
             }
         } else {
-            mails = redisUtil.getRedisTemplate().opsForList().range(messageErrorEmail, 0, redisSize);
+            mails = redisUtil.getRedisTemplate().opsForList().range(redisKey, 0, redisSize);
         }
         return mails;
     }
