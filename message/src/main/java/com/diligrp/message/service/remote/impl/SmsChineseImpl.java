@@ -50,7 +50,7 @@ public class SmsChineseImpl implements IMessageService {
             }
         } catch (Exception e) {
             log.error("网建通道发送异常," + e.getMessage(), e);
-            return BaseOutput.failure(e.getLocalizedMessage()).setMetadata(e.toString());
+            return BaseOutput.failure(e.getLocalizedMessage()).setMetadata("网建短信通道异常 >>>> " + e);
         }
     }
 

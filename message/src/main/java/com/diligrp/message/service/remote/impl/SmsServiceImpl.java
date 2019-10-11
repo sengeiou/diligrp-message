@@ -18,6 +18,7 @@ import com.diligrp.message.service.remote.SmsService;
 import com.diligrp.message.utils.Base64Util;
 import com.diligrp.message.utils.MessageUtil;
 import com.google.common.collect.Lists;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,6 +37,7 @@ import java.util.Map;
  * @date 2019/4/3 17:47
  */
 @Service
+@Slf4j
 public class SmsServiceImpl implements SmsService {
 
     @Autowired
@@ -123,18 +125,19 @@ public class SmsServiceImpl implements SmsService {
                             flag = true;
                             break templates;
                         } else {
-                            SendLog log = new SendLog();
-                            BeanUtil.copyProperties(sendLog, log);
-                            log.setSendState(MessageEnum.SendStateEnum.FAILURE.getCode());
-                            log.setRemarks(String.format("账号：%s ,错误信息：%s", marketChannel.getAccessKey(), output.getMessage()));
-                            log.setId(null);
-                            log.setSendChannel(t.getChannel());
-                            sendLogs.add(log);
+                            SendLog tempLog = new SendLog();
+                            BeanUtil.copyProperties(sendLog, tempLog);
+                            tempLog.setSendState(MessageEnum.SendStateEnum.FAILURE.getCode());
+                            tempLog.setRemarks(String.format("账号：%s ,错误信息：%s", marketChannel.getAccessKey(), output.getMessage()));
+                            tempLog.setId(null);
+                            tempLog.setSendChannel(t.getChannel());
+                            sendLogs.add(tempLog);
                             if (null != output.getMetadata() && StrUtil.isNotBlank(String.valueOf(output.getMetadata()))) {
                                 //邮件可能发送失败，但是不影响主业务，此处忽略邮件是否发送成功
                                 try {
                                     MailUtil.send(dataDictionaryRpcService.listToMail(), "消息发送异常", output.getMetadata().toString(), false);
                                 } catch (Throwable throwable) {
+                                    log.error("邮件通知异常 " + throwable.getMessage(), throwable);
                                 }
                             }
                             continue;

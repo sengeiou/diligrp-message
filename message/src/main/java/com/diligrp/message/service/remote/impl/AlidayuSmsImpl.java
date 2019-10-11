@@ -64,7 +64,7 @@ public class AlidayuSmsImpl implements IMessageService {
         } catch (Exception e) {
             log.error("阿里大于通道发送异常," + e.getMessage(), e);
             result = "系统异常";
-            metadata = e.toString();
+            metadata = "阿里大于通道发送异常 >>>> " + e;
         }
         return BaseOutput.failure(result).setMetadata(metadata);
     }

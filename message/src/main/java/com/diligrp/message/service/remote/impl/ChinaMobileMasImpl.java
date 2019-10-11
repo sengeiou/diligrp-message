@@ -50,7 +50,7 @@ public class ChinaMobileMasImpl implements IMessageService {
             }
         } catch (Exception e) {
             log.error("移动云MAS通道发送异常," + e.getMessage(), e);
-            return BaseOutput.failure(e.getLocalizedMessage()).setMetadata(e.toString());
+            return BaseOutput.failure(e.getLocalizedMessage()).setMetadata("移动云MAS通道发送异常 >>>> " + e.toString());
         }
     }
 
