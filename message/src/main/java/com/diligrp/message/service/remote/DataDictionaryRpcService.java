@@ -2,10 +2,9 @@ package com.diligrp.message.service.remote;
 
 import cn.hutool.core.collection.CollectionUtil;
 import com.dili.ss.domain.BaseOutput;
-import com.dili.ss.dto.DTOUtils;
 import com.dili.ss.redis.service.RedisUtil;
 import com.dili.uap.sdk.domain.DataDictionaryValue;
-import com.diligrp.message.rpc.DataDictionaryRpc;
+import com.dili.uap.sdk.rpc.DataDictionaryRpc;
 import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,10 +43,9 @@ public class DataDictionaryRpcService {
         String redisKey = redisKeyPrefix + messageErrorEmail;
         Long redisSize = redisUtil.getRedisTemplate().opsForList().size(redisKey);
         List<String> mails = Lists.newArrayList();
+        //检查当前key在redis中是否存在
         if (null == redisSize || redisSize == 0) {
-            DataDictionaryValue example = DTOUtils.newDTO(DataDictionaryValue.class);
-            example.setDdCode(messageErrorEmail);
-            BaseOutput<List<DataDictionaryValue>> out = dataDictionaryRpc.list(example);
+            BaseOutput<List<DataDictionaryValue>> out = dataDictionaryRpc.listDataDictionaryValueByDdCode(messageErrorEmail);
             if (out == null || !out.isSuccess()) {
                 return Collections.emptyList();
             }

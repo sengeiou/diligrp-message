@@ -10,14 +10,17 @@ import com.dili.ss.metadata.ValuePair;
 import com.dili.ss.metadata.ValuePairImpl;
 import com.dili.ss.metadata.provider.BatchDisplayTextProviderSupport;
 import com.dili.uap.sdk.domain.DataDictionaryValue;
-import com.diligrp.message.rpc.DataDictionaryRpc;
+import com.dili.uap.sdk.rpc.DataDictionaryRpc;
 import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * <B>数据字典Provider</B>
@@ -41,22 +44,16 @@ public class DataDictionaryWithOriginalProvider extends BatchDisplayTextProvider
     @Override
     public List<ValuePair<?>> getLookupList(Object val, Map metaMap, FieldMeta fieldMeta) {
         Object queryParams = metaMap.get(QUERY_PARAMS_KEY);
-        if (queryParams == null) {
+        if(queryParams == null) {
             return Lists.newArrayList();
         }
-
-        String ddCode = JSONObject.parseObject(queryParams.toString()).getString(DD_CODE_KEY);
-        DataDictionaryValue dataDictionaryValue = DTOUtils.newDTO(DataDictionaryValue.class);
-        dataDictionaryValue.setDdCode(ddCode);
-        BaseOutput<List<DataDictionaryValue>> output = dataDictionaryRpc.list(dataDictionaryValue);
-        if (!output.isSuccess()) {
-            return null;
-        }
         List<ValuePair<?>> valuePairs = Lists.newArrayList();
-        List<DataDictionaryValue> dataDictionaryValues = output.getData();
-        for (int i = 0; i < dataDictionaryValues.size(); i++) {
-            DataDictionaryValue dataDictionaryValue1 = dataDictionaryValues.get(i);
-            valuePairs.add(i, new ValuePairImpl(dataDictionaryValue1.getName(), dataDictionaryValue1.getCode()));
+        BaseOutput<List<DataDictionaryValue>> output = dataDictionaryRpc.listDataDictionaryValueByDdCode(getDdCode(queryParams.toString()));
+        if(output.isSuccess() && CollectionUtil.isNotEmpty(output.getData())){
+            valuePairs = output.getData().stream().filter(Objects::nonNull).sorted(Comparator.comparing(DataDictionaryValue::getId)).map(t -> {
+                ValuePairImpl<?> vp = new ValuePairImpl<>(t.getName(), t.getCode());
+                return vp;
+            }).collect(Collectors.toList());
         }
         return valuePairs;
     }
@@ -72,7 +69,7 @@ public class DataDictionaryWithOriginalProvider extends BatchDisplayTextProvider
         //batchProviderMeta.setFkField("ddCode");
         //关联(数据库)表的主键的字段名
         batchProviderMeta.setRelationTablePkField("code");
-        batchProviderMeta.setMismatchHandler((t) -> "");
+        batchProviderMeta.setMismatchHandler((t) -> "-");
         return batchProviderMeta;
     }
 
@@ -82,10 +79,7 @@ public class DataDictionaryWithOriginalProvider extends BatchDisplayTextProvider
         if (queryParams == null) {
             return Lists.newArrayList();
         }
-        String ddCode = JSONObject.parseObject(queryParams.toString()).getString(DD_CODE_KEY);
-        DataDictionaryValue dataDictionaryValue = DTOUtils.newDTO(DataDictionaryValue.class);
-        dataDictionaryValue.setDdCode(ddCode);
-        BaseOutput<List<DataDictionaryValue>> output = dataDictionaryRpc.list(dataDictionaryValue);
+        BaseOutput<List<DataDictionaryValue>> output = dataDictionaryRpc.listDataDictionaryValueByDdCode(getDdCode(queryParams.toString()));
         if (null != output && output.isSuccess()) {
             List<DataDictionaryValue> data = output.getData();
             if (CollectionUtil.isNotEmpty(data)) {
@@ -96,5 +90,19 @@ public class DataDictionaryWithOriginalProvider extends BatchDisplayTextProvider
             return data;
         }
         return null;
+    }
+
+
+    /**
+     * 获取数据字典编码
+     * @return
+     */
+    private String getDdCode(String queryParams){
+        //清空缓存
+        String ddCode = JSONObject.parseObject(queryParams).getString(DD_CODE_KEY);
+        if(ddCode == null){
+            throw new RuntimeException("dd_code属性为空");
+        }
+        return ddCode;
     }
 }

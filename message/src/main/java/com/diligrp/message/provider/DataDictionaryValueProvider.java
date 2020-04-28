@@ -1,21 +1,26 @@
 package com.diligrp.message.provider;
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.dto.DTOUtils;
+import com.dili.ss.metadata.BatchProviderMeta;
 import com.dili.ss.metadata.FieldMeta;
 import com.dili.ss.metadata.ValuePair;
 import com.dili.ss.metadata.ValuePairImpl;
-import com.dili.ss.metadata.provider.BatchDisplayTextProviderAdaptor;
+import com.dili.ss.metadata.provider.BatchDisplayTextProviderSupport;
 import com.dili.uap.sdk.domain.DataDictionaryValue;
-import com.diligrp.message.rpc.DataDictionaryRpc;
+import com.dili.uap.sdk.rpc.DataDictionaryRpc;
 import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * <B>Description</B>
@@ -26,7 +31,8 @@ import java.util.Map;
  * @date 2019/4/2 15:56
  */
 @Component
-public class DataDictionaryValueProvider extends BatchDisplayTextProviderAdaptor {
+@Scope("prototype")
+public class DataDictionaryValueProvider extends BatchDisplayTextProviderSupport {
 
     //前台需要传入的参数
     protected static final String DD_CODE_KEY = "dd_code";
@@ -36,22 +42,16 @@ public class DataDictionaryValueProvider extends BatchDisplayTextProviderAdaptor
     @Override
     public List<ValuePair<?>> getLookupList(Object val, Map metaMap, FieldMeta fieldMeta) {
         Object queryParams = metaMap.get(QUERY_PARAMS_KEY);
-        if (queryParams == null) {
+        if(queryParams == null) {
             return Lists.newArrayList();
         }
-
-        String ddCode = getDdCode(queryParams.toString());
-        DataDictionaryValue dataDictionaryValue = DTOUtils.newDTO(DataDictionaryValue.class);
-        dataDictionaryValue.setDdCode(ddCode);
-        BaseOutput<List<DataDictionaryValue>> output = dataDictionaryRpc.list(dataDictionaryValue);
-        if (!output.isSuccess()) {
-            return null;
-        }
         List<ValuePair<?>> valuePairs = Lists.newArrayList();
-        List<DataDictionaryValue> dataDictionaryValues = output.getData();
-        for (int i = 0; i < dataDictionaryValues.size(); i++) {
-            DataDictionaryValue dataDictionaryValue1 = dataDictionaryValues.get(i);
-            valuePairs.add(i, new ValuePairImpl(dataDictionaryValue1.getName(), dataDictionaryValue1.getCode()));
+        BaseOutput<List<DataDictionaryValue>> output = dataDictionaryRpc.listDataDictionaryValueByDdCode(getDdCode(queryParams.toString()));
+        if(output.isSuccess() && CollectionUtil.isNotEmpty(output.getData())){
+            valuePairs = output.getData().stream().filter(Objects::nonNull).sorted(Comparator.comparing(DataDictionaryValue::getId)).map(t -> {
+                ValuePairImpl<?> vp = new ValuePairImpl<>(t.getName(), t.getCode());
+                return vp;
+            }).collect(Collectors.toList());
         }
         return valuePairs;
     }
@@ -59,54 +59,40 @@ public class DataDictionaryValueProvider extends BatchDisplayTextProviderAdaptor
     @Override
     protected List getFkList(List<String> ddvIds, Map metaMap) {
         Object queryParams = metaMap.get(QUERY_PARAMS_KEY);
-        if (queryParams == null) {
+        if(queryParams == null) {
             return Lists.newArrayList();
         }
-        String ddCode = getDdCode(queryParams.toString());
-        DataDictionaryValue dataDictionaryValue = DTOUtils.newDTO(DataDictionaryValue.class);
-        dataDictionaryValue.setDdCode(ddCode);
-        BaseOutput<List<DataDictionaryValue>> output = dataDictionaryRpc.list(dataDictionaryValue);
-        return output.isSuccess() ? output.getData() : null;
-    }
-
-    @Override
-    protected Map<String, String> getEscapeFileds(Map metaMap) {
-        if (metaMap.get(ESCAPE_FILEDS_KEY) instanceof Map) {
-            return (Map) metaMap.get(ESCAPE_FILEDS_KEY);
-        } else {
-            Map<String, String> map = new HashMap<>();
-            map.put(metaMap.get(FIELD_KEY).toString(), "name");
-            return map;
+        BaseOutput<List<DataDictionaryValue>> output = dataDictionaryRpc.listDataDictionaryValueByDdCode(getDdCode(queryParams.toString()));
+        if (output.isSuccess() && CollectionUtil.isNotEmpty(output.getData())) {
+            return output.getData();
         }
+        return Lists.newArrayList();
     }
 
-    /**
-     * 关联(数据库)表的主键的字段名
-     * 默认取id，子类可自行实现
-     *
-     * @return
-     */
     @Override
-    protected String getRelationTablePkField(Map metaMap) {
-        return "code";
+    protected BatchProviderMeta getBatchProviderMeta(Map metaMap) {
+        BatchProviderMeta batchProviderMeta = DTOUtils.newInstance(BatchProviderMeta.class);
+        //设置主DTO和关联DTO需要转义的字段名
+        batchProviderMeta.setEscapeFiled("name");
+        //忽略大小写关联
+        batchProviderMeta.setIgnoreCaseToRef(true);
+        //关联(数据库)表的主键的字段名，默认取id
+        batchProviderMeta.setRelationTablePkField("code");
+        //当未匹配到数据时，返回的值
+        batchProviderMeta.setMismatchHandler(t -> "-");
+        return batchProviderMeta;
     }
 
     /**
      * 获取数据字典编码
-     *
      * @return
      */
-    public String getDdCode(String queryParams) {
+    private String getDdCode(String queryParams){
         //清空缓存
         String ddCode = JSONObject.parseObject(queryParams).getString(DD_CODE_KEY);
-        if (ddCode == null) {
+        if(ddCode == null){
             throw new RuntimeException("dd_code属性为空");
         }
         return ddCode;
-    }
-
-    @Override
-    protected boolean ignoreCaseToRef(Map metaMap) {
-        return true;
     }
 }

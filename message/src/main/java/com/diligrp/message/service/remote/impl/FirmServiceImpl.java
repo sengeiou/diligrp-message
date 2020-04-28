@@ -1,6 +1,6 @@
 package com.diligrp.message.service.remote.impl;
 
-import com.alibaba.fastjson.JSONObject;
+import cn.hutool.core.collection.CollectionUtil;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.dto.DTOUtils;
 import com.dili.uap.sdk.domain.Firm;
@@ -8,9 +8,9 @@ import com.dili.uap.sdk.domain.UserDataAuth;
 import com.dili.uap.sdk.domain.UserTicket;
 import com.dili.uap.sdk.domain.dto.FirmDto;
 import com.dili.uap.sdk.glossary.DataAuthType;
+import com.dili.uap.sdk.rpc.DataAuthRpc;
+import com.dili.uap.sdk.rpc.FirmRpc;
 import com.dili.uap.sdk.session.SessionContext;
-import com.diligrp.message.rpc.DataAuthRpc;
-import com.diligrp.message.rpc.FirmRpc;
 import com.diligrp.message.service.remote.FirmService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,7 +19,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * <B>Description</B>
@@ -43,12 +42,10 @@ public class FirmServiceImpl implements FirmService {
         return output.isSuccess() ? output.getData() : null;
     }
 
-
     @Override
     public List<String> getCurrentUserFirmCodes() {
         return getCurrentUserFirmCodes(null);
     }
-
 
     @Override
     public List<String> getCurrentUserFirmCodes(Long userId) {
@@ -75,10 +72,10 @@ public class FirmServiceImpl implements FirmService {
      */
     @Override
     public List<Firm> getCurrentUserFirms(Long userId) {
-        UserDataAuth userDataAuth = DTOUtils.newDTO(UserDataAuth.class);
+        UserDataAuth userDataAuth = DTOUtils.newInstance(UserDataAuth.class);
         if (null == userId) {
             UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
-            if (null == userTicket){
+            if (null == userTicket) {
                 return Collections.emptyList();
             }
             userDataAuth.setUserId(SessionContext.getSessionContext().getUserTicket().getId());
@@ -87,17 +84,16 @@ public class FirmServiceImpl implements FirmService {
         }
         userDataAuth.setRefCode(DataAuthType.MARKET.getCode());
         BaseOutput<List<Map>> out = dataAuthRpc.listUserDataAuthDetail(userDataAuth);
-        if (out.isSuccess()) {
-            Stream<Firm> stream = out.getData().stream().flatMap(m -> m.values().stream())
-                    .map(json -> {
-                                JSONObject obj = (JSONObject) json;
-                                Firm firm = DTOUtils.newDTO(Firm.class);
-                                firm.setCode(String.valueOf(obj.get("code")));
-                                firm.setName(String.valueOf(obj.get("name")));
-                                return firm;
-                            }
-                    );
-            return stream.collect(Collectors.toList());
+        if (out.isSuccess() && CollectionUtil.isNotEmpty(out.getData())) {
+            List<String> firmCodeList = (List<String>) out.getData().stream().flatMap(m -> m.keySet().stream()).collect(Collectors.toList());
+            FirmDto firmDto = DTOUtils.newInstance(FirmDto.class);
+            firmDto.setCodes(firmCodeList);
+            BaseOutput<List<Firm>> listBaseOutput = firmRpc.listByExample(firmDto);
+            if (listBaseOutput.isSuccess() && CollectionUtil.isNotEmpty(listBaseOutput.getData())) {
+                return listBaseOutput.getData();
+            } else {
+                return Collections.emptyList();
+            }
         } else {
             return Collections.emptyList();
         }
