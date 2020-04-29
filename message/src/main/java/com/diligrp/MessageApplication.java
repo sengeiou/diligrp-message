@@ -18,7 +18,7 @@ import tk.mybatis.spring.annotation.MapperScan;
 @EnableTransactionManagement
 @EnableRetry
 @EnableScheduling
-@ComponentScan(basePackages={"com.dili.ss","com.diligrp.message","com.dili.uap.sdk"})
+@ComponentScan(basePackages = {"com.dili.ss", "com.diligrp.message", "com.dili.uap.sdk"})
 @RestfulScan({"com.diligrp.message.rpc", "com.dili.uap.sdk.rpc"})
 @MapperScan({"com.dili.ss.dao"})
 /**
