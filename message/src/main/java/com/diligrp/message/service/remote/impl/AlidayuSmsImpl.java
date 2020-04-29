@@ -79,11 +79,11 @@ public class AlidayuSmsImpl implements IMessageService {
      */
     private CommonRequest buildData(String signName, String phone, String templateCode, String params) {
         CommonRequest request = new CommonRequest();
-        request.setMethod(MethodType.POST);
-        request.setProduct("Dysmsapi");
-        request.setDomain("dysmsapi.aliyuncs.com");
-        request.setVersion("2017-05-25");
-        request.setAction("SendSms");
+        request.setSysMethod(MethodType.POST);
+        request.setSysProduct("Dysmsapi");
+        request.setSysDomain("dysmsapi.aliyuncs.com");
+        request.setSysVersion("2017-05-25");
+        request.setSysAction("SendSms");
         request.putQueryParameter("RegionId", "cn-hangzhou");
         request.putQueryParameter("PhoneNumbers", phone);
         request.putQueryParameter("SignName", signName);
