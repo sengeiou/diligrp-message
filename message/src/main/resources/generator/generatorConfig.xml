@@ -84,7 +84,7 @@
         <javaClientGenerator targetPackage="${targetMapperPackage}" targetProject="${targetJavaProject}" type="XMLMAPPER" />
 
         <!-- 生成所有表模型 -->
-        <table tableName="message_send_log" domainObjectName="SendLog">
+        <table tableName="message_push_log" domainObjectName="PushLog">
             <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
         </table>
         <!-- 生成指定表模型 -->

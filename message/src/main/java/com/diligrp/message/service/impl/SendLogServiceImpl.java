@@ -8,18 +8,18 @@ import com.diligrp.message.domain.vo.SendLogVo;
 import com.diligrp.message.mapper.SendLogMapper;
 import com.diligrp.message.service.SendLogService;
 import com.diligrp.message.service.remote.FirmService;
-import org.springframework.beans.factory.annotation.Autowired;
-import com.diligrp.message.service.SequenceNumberService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.diligrp.message.service.remote.UidRpcService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
+import java.util.Optional;
 
 /**
  * 由MyBatis Generator工具自动生成
  * This file was generated on 2019-04-03 15:57:14.
  * @author yuehongbo
  */
+@RequiredArgsConstructor
 @Service
 public class SendLogServiceImpl extends BaseServiceImpl<SendLog, Long> implements SendLogService {
 
@@ -27,11 +27,8 @@ public class SendLogServiceImpl extends BaseServiceImpl<SendLog, Long> implement
         return (SendLogMapper)getDao();
     }
 
-    @Autowired
-    FirmService firmService;
-
-    @Autowired
-    private SequenceNumberService sequenceNumberService;
+    private final FirmService firmService;
+    private final UidRpcService uidRpcService;
 
     /**
      * 保存发送信息
@@ -40,8 +37,8 @@ public class SendLogServiceImpl extends BaseServiceImpl<SendLog, Long> implement
      */
     @Override
     public void save(SendLog sendLog) {
-        String number = sequenceNumberService.getBizNumberByType(BizNumberTypeEnum.REQUEST);
-        sendLog.setRequestCode(number);
+        Optional<String> bizNumber = uidRpcService.getBizNumber(BizNumberTypeEnum.SEND_REQUEST);
+        sendLog.setRequestCode(bizNumber.orElse(""));
         this.insertSelective(sendLog);
     }
 

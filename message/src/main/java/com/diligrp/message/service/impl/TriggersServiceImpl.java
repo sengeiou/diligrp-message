@@ -15,16 +15,18 @@ import com.diligrp.message.domain.Triggers;
 import com.diligrp.message.domain.TriggersTemplate;
 import com.diligrp.message.domain.vo.TriggersVo;
 import com.diligrp.message.mapper.TriggersMapper;
-import com.diligrp.message.service.SequenceNumberService;
 import com.diligrp.message.service.TriggersService;
 import com.diligrp.message.service.TriggersTemplateService;
 import com.diligrp.message.service.remote.FirmService;
+import com.diligrp.message.service.remote.UidRpcService;
+import com.diligrp.message.utils.MessageUtil;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -36,6 +38,7 @@ import java.util.stream.Collectors;
  * This file was generated on 2019-03-31 10:52:31.
  * @author yuehongbo
  */
+@RequiredArgsConstructor
 @Service
 public class TriggersServiceImpl extends BaseServiceImpl<Triggers, Long> implements TriggersService {
 
@@ -43,12 +46,10 @@ public class TriggersServiceImpl extends BaseServiceImpl<Triggers, Long> impleme
         return (TriggersMapper)getDao();
     }
 
-    @Autowired
-    private FirmService firmService;
-    @Autowired
-    private TriggersTemplateService triggersTemplateService;
-    @Autowired
-    private SequenceNumberService sequenceNumberService;
+    private final FirmService firmService;
+    private final TriggersTemplateService triggersTemplateService;
+    private final UidRpcService uidRpcService;
+
 
     /**
      * 根据实体查询easyui分页结果， 支持用metadata信息中字段对应的provider构建数据
@@ -142,10 +143,10 @@ public class TriggersServiceImpl extends BaseServiceImpl<Triggers, Long> impleme
          * ID为空，则为新增操作，ID不为空，则为修改操作
          */
         if (null == triggersVo.getId()){
-            triggerCode = sequenceNumberService.getBizNumberByType(BizNumberTypeEnum.TRIGGERS);
+            triggerCode = uidRpcService.getBizNumber(BizNumberTypeEnum.TRIGGERS).orElse("");
             triggersVo.setTriggerCode(triggerCode);
             Triggers triggers = new Triggers();
-            BeanUtil.copyProperties(triggersVo,triggers);
+            BeanUtil.copyProperties(triggersVo, triggers);
             triggers.setEnabled(TriggersEnum.EnabledStateEnum.DISABLED.getCode());
             this.insertSelective(triggers);
         }else {
@@ -163,8 +164,8 @@ public class TriggersServiceImpl extends BaseServiceImpl<Triggers, Long> impleme
         if (CollectionUtil.isNotEmpty(templateList)){
             templateList.stream().forEach(t->{
                 t.setTriggerCode(code);
-                t.setCreated(new Date());
-                t.setModified(new Date());
+                t.setCreated(MessageUtil.now());
+                t.setModified(MessageUtil.now());
                 t.setMarketChannelIds(produceChannelIds(t.getMarketChannelIds()));
             });
             triggersTemplateService.batchInsert(templateList);

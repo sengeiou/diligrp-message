@@ -2,7 +2,6 @@ package com.diligrp.message.component;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.date.DateTime;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.dili.ss.domain.BaseOutput;
@@ -10,18 +9,19 @@ import com.diligrp.message.common.enums.MessageEnum;
 import com.diligrp.message.common.enums.TriggersEnum;
 import com.diligrp.message.domain.SendLog;
 import com.diligrp.message.domain.Whitelist;
-import com.diligrp.message.domain.vo.MessageInfoVo;
 import com.diligrp.message.domain.vo.TriggersVo;
+import com.diligrp.message.sdk.domain.input.MessageInfoInput;
 import com.diligrp.message.service.SendLogService;
 import com.diligrp.message.service.TriggersService;
 import com.diligrp.message.service.WhitelistService;
 import com.diligrp.message.utils.MessageUtil;
 import com.google.common.collect.Sets;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -34,6 +34,7 @@ import java.util.Set;
  * @author yuehongbo
  * @date 2019/4/3 11:18
  */
+@RequiredArgsConstructor
 @Slf4j
 @Component
 public class MessageInfoHandler {
@@ -41,20 +42,16 @@ public class MessageInfoHandler {
     @Value("${message.enable}")
     private Boolean messageSend;
 
-    @Autowired
-    private TriggersService triggersService;
-    @Autowired
-    private MessageSendTask messageSendTask;
-    @Autowired
-    private SendLogService sendLogService;
-    @Autowired
-    private WhitelistService whitelistService;
+    private final TriggersService triggersService;
+    private final MessageSendTask messageSendTask;
+    private final SendLogService sendLogService;
+    private final WhitelistService whitelistService;
 
     /**
      * 处理接收到的信息
      * @param info
      */
-    public BaseOutput handler(MessageInfoVo info){
+    public BaseOutput handler(MessageInfoInput info){
         TriggersVo triggers = new TriggersVo();
         triggers.setMarketCode(info.getMarketCode());
         triggers.setSystemCode(info.getSystemCode());
@@ -109,10 +106,10 @@ public class MessageInfoHandler {
         sendLog.setSystemCode(info.getSystemCode());
         sendLog.setSceneCode(info.getSceneCode());
         sendLog.setCellphone(info.getCellphone());
-        sendLog.setReceiptTime(new Date());
+        sendLog.setReceiptTime(MessageUtil.now());
         sendLog.setRemarks(msg.toString());
         sendLog.setTemplateCode(info.getTemplateCode());
-        sendLog.setSendTime(DateTime.now());
+        sendLog.setSendTime(MessageUtil.now());
         sendLog.setRemoteIp(info.getIp());
         if (StrUtil.isNotBlank(info.getParameters())){
             sendLog.setParameters(info.getParameters());

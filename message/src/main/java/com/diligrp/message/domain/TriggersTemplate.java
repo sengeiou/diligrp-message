@@ -1,12 +1,14 @@
 package com.diligrp.message.domain;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.dili.ss.domain.BaseDomain;
-import com.dili.ss.metadata.FieldEditor;
-import com.dili.ss.metadata.annotation.EditMode;
-import com.dili.ss.metadata.annotation.FieldDef;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * 由MyBatis Generator工具自动生成
@@ -14,6 +16,8 @@ import java.util.Date;
  * This file was generated on 2019-04-02 10:22:23.
  * @author yuehongbo
  */
+@Getter
+@Setter
 @Table(name = "`message_triggers_template`")
 public class TriggersTemplate extends BaseDomain {
     /**
@@ -63,183 +67,19 @@ public class TriggersTemplate extends BaseDomain {
     /**
      * 创建时间
      */
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "`created`")
-    private Date created;
+    private LocalDateTime created;
 
     /**
      * 修改时间
      */
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "`modified`")
-    private Date modified;
+    private LocalDateTime modified;
 
-    /**
-     * 获取ID
-     *
-     * @return id - ID
-     */
-    @FieldDef(label="ID")
-    @EditMode(editor = FieldEditor.Number, required = true)
-    @Override
-    public Long getId() {
-        return id;
-    }
-
-    /**
-     * 设置ID
-     *
-     * @param id ID
-     */
-    @Override
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    /**
-     * 获取消息触发点
-     *
-     * @return trigger_code - 消息触发点
-     */
-    @FieldDef(label="消息触发点", maxLength = 50)
-    @EditMode(editor = FieldEditor.Text, required = true)
-    public String getTriggerCode() {
-        return triggerCode;
-    }
-
-    /**
-     * 设置消息触发点
-     *
-     * @param triggerCode 消息触发点
-     */
-    public void setTriggerCode(String triggerCode) {
-        this.triggerCode = triggerCode;
-    }
-
-
-    public String getMarketChannelIds() {
-        return marketChannelIds;
-    }
-
-    public void setMarketChannelIds(String marketChannelIds) {
-        this.marketChannelIds = marketChannelIds;
-    }
-
-    /**
-     * 获取模板通道
-     *
-     * @return channel - 模板通道
-     */
-    @FieldDef(label="模板通道", maxLength = 20)
-    @EditMode(editor = FieldEditor.Text, required = false)
-    public String getChannel() {
-        return channel;
-    }
-
-    /**
-     * 设置模板通道
-     *
-     * @param channel 模板通道
-     */
-    public void setChannel(String channel) {
-        this.channel = channel;
-    }
-
-    /**
-     * 获取模板名称
-     *
-     * @return template_name - 模板名称
-     */
-    @FieldDef(label="模板名称", maxLength = 50)
-    @EditMode(editor = FieldEditor.Text, required = false)
-    public String getTemplateName() {
-        return templateName;
-    }
-
-    /**
-     * 设置模板名称
-     *
-     * @param templateName 模板名称
-     */
-    public void setTemplateName(String templateName) {
-        this.templateName = templateName;
-    }
-
-    /**
-     * 获取模板编码
-     *
-     * @return template_code - 模板编码
-     */
-    @FieldDef(label="模板编码", maxLength = 20)
-    @EditMode(editor = FieldEditor.Text, required = false)
-    public String getTemplateCode() {
-        return templateCode;
-    }
-
-    /**
-     * 设置模板编码
-     *
-     * @param templateCode 模板编码
-     */
-    public void setTemplateCode(String templateCode) {
-        this.templateCode = templateCode;
-    }
-
-    /**
-     * 获取模板内容
-     *
-     * @return template_content - 模板内容
-     */
-    @FieldDef(label="模板内容", maxLength = 255)
-    @EditMode(editor = FieldEditor.Text, required = false)
-    public String getTemplateContent() {
-        return templateContent;
-    }
-
-    /**
-     * 设置模板内容
-     *
-     * @param templateContent 模板内容
-     */
-    public void setTemplateContent(String templateContent) {
-        this.templateContent = templateContent;
-    }
-
-    /**
-     * 获取创建时间
-     *
-     * @return created - 创建时间
-     */
-    @FieldDef(label="创建时间")
-    @EditMode(editor = FieldEditor.Datetime, required = true)
-    public Date getCreated() {
-        return created;
-    }
-
-    /**
-     * 设置创建时间
-     *
-     * @param created 创建时间
-     */
-    public void setCreated(Date created) {
-        this.created = created;
-    }
-
-    /**
-     * 获取修改时间
-     *
-     * @return modified - 修改时间
-     */
-    @FieldDef(label="修改时间")
-    @EditMode(editor = FieldEditor.Datetime, required = true)
-    public Date getModified() {
-        return modified;
-    }
-
-    /**
-     * 设置修改时间
-     *
-     * @param modified 修改时间
-     */
-    public void setModified(Date modified) {
-        this.modified = modified;
-    }
 }

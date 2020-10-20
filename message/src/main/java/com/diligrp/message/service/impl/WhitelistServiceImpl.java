@@ -9,11 +9,12 @@ import com.diligrp.message.domain.vo.WhitelistVo;
 import com.diligrp.message.mapper.WhitelistMapper;
 import com.diligrp.message.service.WhitelistService;
 import com.diligrp.message.service.remote.FirmService;
+import com.diligrp.message.utils.MessageUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -51,7 +52,7 @@ public class WhitelistServiceImpl extends BaseServiceImpl<Whitelist, Long> imple
     public boolean checkDate(Whitelist whitelist) {
         WhitelistVo vo = new WhitelistVo();
         vo.setDeleted(MessageEnum.DeletedEnum.NO.getCode());
-        vo.setAuthMarkets(firmService.getCurrentUserFirmCodes());
+        vo.setMarketCode(whitelist.getMarketCode());
         vo.setCellphone(whitelist.getCellphone());
         vo.setMarketCode(whitelist.getMarketCode());
         List<Whitelist> list = this.listByExample(vo);
@@ -60,13 +61,18 @@ public class WhitelistServiceImpl extends BaseServiceImpl<Whitelist, Long> imple
         }
 
         for (int i = 0; i < list.size(); i++){
-            if (whitelist.getEndDate().before(list.get(i).getStartDate()) || whitelist.getStartDate().after(list.get(i).getEndDate())){
+            if (whitelist.getEndDate().isBefore(list.get(i).getStartDate()) || whitelist.getStartDate().isAfter(list.get(i).getEndDate())){
                 continue;
             }else {
                 return true;
             }
         }
-
+        /**
+         * 验证时间是否包含在已有时间区间
+         * 传入的结束时间
+         */
+//        long count = list.stream().filter(t -> whitelist.getEndDate().isAfter(t.getStartDate())).count();
+//        return count > 0;
         return false;
     }
 
@@ -84,7 +90,7 @@ public class WhitelistServiceImpl extends BaseServiceImpl<Whitelist, Long> imple
         Whitelist update = new Whitelist();
         update.setId(whitelist.getId());
         update.setStatus(whitelist.getStatus());
-        update.setModified(new Date());
+        update.setModified(MessageUtil.now());
         return updateSelective(update);
     }
 
@@ -102,10 +108,10 @@ public class WhitelistServiceImpl extends BaseServiceImpl<Whitelist, Long> imple
      * @param whitelist
      */
     private void produceStatus(Whitelist whitelist) {
-        Date now = new Date();
-        if (whitelist.getStartDate().after(now)) {
+        LocalDateTime now = LocalDateTime.now();
+        if (whitelist.getStartDate().isAfter(now)) {
             whitelist.setStatus(MessageEnum.WhitelistStatus.USELESS.getCode());
-        } else if (whitelist.getEndDate().before(now)) {
+        } else if (whitelist.getEndDate().isBefore(now)) {
             whitelist.setStatus(MessageEnum.WhitelistStatus.EXPIRED.getCode());
         } else {
             whitelist.setStatus(MessageEnum.WhitelistStatus.ACTIVE.getCode());

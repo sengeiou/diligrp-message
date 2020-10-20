@@ -5,8 +5,8 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.diligrp</groupId>
 	<artifactId>diligrp-message</artifactId>
-	<name>diligrp-message</name>
-	<version>1.1.0-SNAPSHOT</version>
+	<name>消息中心父工程</name>
+	<version>1.2.0-SNAPSHOT</version>
 	<description>消息中心</description>
 	<packaging>pom</packaging>
 
@@ -14,29 +14,16 @@
 	<parent>
 		<artifactId>dili-parent</artifactId>
 		<groupId>com.dili</groupId>
-		<version>3.6.6-SNAPSHOT</version>
+		<version>3.6.8-SNAPSHOT</version>
 	</parent>
-
 	<modules>
 		<module>message</module>
-	</modules>
+        <module>message-sdk</module>
+    </modules>
 
 	<properties>
-		<java.version>1.8</java.version>
-		<!-- MyBatis Generator -->
-		<!-- Java接口和实体类 -->
-		<targetJavaProject>${basedir}/src/main/java</targetJavaProject>
-		<targetMapperPackage>com.diligrp.message.mapper</targetMapperPackage>
-		<targetModelPackage>com.diligrp.message.domain</targetModelPackage>
-		<targetServicePackage>com.diligrp.message.service</targetServicePackage>
-		<targetProviderPackage>com.diligrp.message.provider</targetProviderPackage>
-		<targetControllerPackage>com.diligrp.message.controller</targetControllerPackage>
-		<templateRootDir>${basedir}/mbg-templates</templateRootDir>
-		<projectdir>${basedir}</projectdir>
-		<!-- XML生成路径 -->
-		<targetResourcesProject>${basedir}/src/main/resources</targetResourcesProject>
-		<targetXMLPackage>mapper</targetXMLPackage>
-
+		<java.version>13</java.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
 	<build>
@@ -55,8 +42,8 @@
 				<version>3.8.1</version>
 				<!-- 编译JDK版本 -->
 				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
 					<encoding>UTF-8</encoding>
 					<parameters>true</parameters>
 				</configuration>
@@ -64,8 +51,5 @@
 
 		</plugins>
 	</build>
-
-
-
 
 </project>

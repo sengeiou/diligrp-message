@@ -1,11 +1,14 @@
 package com.diligrp.message.domain;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.dili.ss.domain.BaseDomain;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * 由MyBatis Generator工具自动生成
@@ -45,14 +48,20 @@ public class Whitelist extends BaseDomain {
     /**
      * 开始日期
      */
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "`start_date`")
-    private Date startDate;
+    private LocalDateTime startDate;
 
     /**
      * 结束日期
      */
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "`end_date`")
-    private Date endDate;
+    private LocalDateTime endDate;
 
     /**
      * 信息来源(系统、手动添加?具体参考枚举定义)
@@ -81,13 +90,19 @@ public class Whitelist extends BaseDomain {
     /**
      * 创建时间
      */
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "`created`")
-    private Date created;
+    private LocalDateTime created;
 
     /**
      * 修改时间
      */
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "`modified`")
-    private Date modified;
+    private LocalDateTime modified;
 
 }

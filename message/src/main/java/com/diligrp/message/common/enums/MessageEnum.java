@@ -198,4 +198,30 @@ public class MessageEnum {
     }
 
 
+    /**
+     * APP 消息推送通道
+     */
+    public enum PushChannel {
+
+        极光(1, "极光"),
+        ;
+
+        @Getter
+        private String name;
+        @Getter
+        private Integer code;
+
+        PushChannel(Integer code, String name){
+            this.code = code;
+            this.name = name;
+        }
+        public static PushChannel getInstance(Integer code) {
+            for (MessageEnum.PushChannel pc : MessageEnum.PushChannel.values()) {
+                if (pc.getCode().equals(code)) {
+                    return pc;
+                }
+            }
+            return null;
+        }
+    }
 }

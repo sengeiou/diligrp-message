@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
 
@@ -23,7 +24,9 @@ public class MessageSendTask {
     @Autowired
     private TaskScheduler taskScheduler;
     @Autowired
+    @Resource
     private SmsService smsService;
+
 
     /**
      * 消息信息注册到任务中

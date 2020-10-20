@@ -1,12 +1,15 @@
 package com.diligrp.message.domain;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.dili.ss.domain.BaseDomain;
 import com.dili.ss.domain.annotation.FindInSet;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * 由MyBatis Generator工具自动生成
@@ -66,8 +69,11 @@ public class SendLog extends BaseDomain {
     /**
      * 接收时间
      */
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "`receipt_time`")
-    private Date receiptTime;
+    private LocalDateTime receiptTime;
 
     /**
      * 请求参数
@@ -96,8 +102,11 @@ public class SendLog extends BaseDomain {
     /**
      * 发送时间
      */
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "`send_time`")
-    private Date sendTime;
+    private LocalDateTime sendTime;
 
     /**
      * 发送通道

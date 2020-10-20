@@ -114,7 +114,7 @@ public class SmsServiceImpl implements SmsService {
                         output = smsChinese.sendSMS(object);
                     }
                     if (null != output) {
-                        sendLog.setSendTime(new Date());
+                        sendLog.setSendTime(MessageUtil.now());
                         sendLog.setRequestId(output.getData());
                         sendLog.setContent(content);
                         if (output.isSuccess()) {

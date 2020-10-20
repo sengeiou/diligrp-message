@@ -4,6 +4,7 @@ import cn.hutool.extra.template.Template;
 import cn.hutool.extra.template.TemplateEngine;
 import cn.hutool.extra.template.TemplateUtil;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 
 /**
@@ -27,5 +28,13 @@ public class MessageUtil {
         TemplateEngine engine = TemplateUtil.createEngine();
         Template template = engine.getTemplate(resource);
         return template.render(data);
+    }
+
+    /**
+     * 获取当前时间
+     * @return 获取当前时间
+     */
+    public static LocalDateTime now() {
+        return LocalDateTime.now();
     }
 }
