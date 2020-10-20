@@ -6,7 +6,7 @@
     <property name="LOG_HOME" value="logs"/>
 
     <!-- 日志文件存放的历史天数 -->
-    <springProperty scope="context" name="maxHistory" source="maxHistory"/>
+    <springProperty scope="context" name="maxHistory" source="log.maxHistory"/>
 
     <!-- 日志控制台输出 -->
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
