@@ -1,0 +1,156 @@
+<#bs4Body>
+<#vueElm />
+<div class="container-fluid">
+    <#bs4nav>
+    <div id="app">
+        <ele-form
+                :form-attrs="{
+                    size: 'medium'
+                }"
+                :inline="true"
+                :is-show-reset-btn="true"
+                form-btn-size="medium"
+                :form-desc="formDesc"
+                v-model="formData"
+                :request-fn="handleRequest">
+        </ele-form>
+    </div>
+    </#bs4nav>
+    <hr>
+    <div class="row">
+        <div class="col-12">
+            <div id="toolbar" class="btn-group" role="group" aria-label="工具栏">
+                <button id="btn_view" type="button" class="btn btn-primary" onclick="openDetailHandler()"><i class="fa fa-eye"></i>
+                    查看
+                </button>
+            </div>
+            <table id="dataTable" class="table" data-page-size="6" data-icons="bui.variable.icons">
+            </table>
+        </div>
+    </div>
+</div>
+
+</#bs4Body>
+<script type="text/javascript">
+    window.rootPath = '${contextPath}';
+</script>
+
+<script type="text/javascript">
+    /**  请求URL配置   **/
+    var dataUrl = window.rootPath + "/pushLog/listPage.action";
+    var viewUrl = window.rootPath + "/pushLog/view?id={id}";
+    var options = {
+        dataUrl: dataUrl,
+        viewUrl: viewUrl,
+        // exportUrl: exportUrl,
+        sortName: "id",
+        id:"id",
+        modalName: "推送记录",
+        search: false,
+        dataColumns: [
+            {
+                radio: true
+            },
+            {
+                field: 'platform',
+                title: '推送平台',
+                sortable: true,
+                align: "center",
+            },
+            {
+                field: 'alert',
+                title: '通知内容',
+                sortable:true,
+                align: "center",
+                sortName: "convert(alert using gbk)"
+            },
+            {
+                field: 'pushState',
+                title: '推送状态',
+                align: "center",
+                sortable:true,
+                sortName:"push_state",
+                provider:'sendStateProvider',
+                formatter: function (value, row, index) {
+                    // var actions = [];
+                    if(row.$_pushState==2){
+                        let msg = '失败编码:' + row.failureCode + ',失败消息:' + row.failureCode;
+                        return "<span title='" + msg + "'>" + value + "</span>";
+                    }
+                    return value;
+                }
+            },
+            {
+                field: 'pushTime',
+                title: '推送时间',
+                align: "center",
+                sortable:true,
+                provider:'datetimeProvider'
+            },
+        ]
+    };
+    $(function () {
+        var oTab = $.table.oTableInit(options);
+        oTab.Init();
+    });
+
+</script>
+
+<script>
+    var app = new Vue({
+        el: '#app',
+        data() {
+            return {
+                formData: {},
+                formDesc: {
+                    platform: {
+                        type: 'select',
+                        label: '推送平台',
+                        options: loadProvider({
+                            provider: 'platformProvider'
+                        }),
+                    },
+                    pushState: {
+                        options: loadProvider({
+                            provider: 'sendStateProvider'
+                        }),
+                        label: "推送状态",
+                        type: "select",
+                    },
+                    pushTimeStart: {
+                        type: "datetime",
+                        label: "推送时间",
+                    },
+                    pushTimeEnd: {
+                        labelWidth: "20px",
+                        type: "datetime",
+                        label: "-",
+                    },
+                    alert: {
+                        type: "input",
+                        label: "通知内容",
+                    }
+                }
+            };
+        },
+        methods: {
+            handleRequest(data) {
+                $.table.search(data);
+            }
+        }
+    })
+
+    function loadProvider(data) {
+        return new Promise((resolve, reject) => {
+            axios.post('/convert/list.action', data)
+                .then((res) => {
+                    resolve(res.data);
+                    // console.log(res);
+                })
+                .catch(function (error) {
+                    reject(error);
+                    // console.log(error);
+                });
+        });
+    }
+</script>
