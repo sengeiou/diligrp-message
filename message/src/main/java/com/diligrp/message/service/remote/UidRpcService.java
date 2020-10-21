@@ -1,5 +1,6 @@
 package com.diligrp.message.service.remote;
 
+import cn.hutool.core.util.StrUtil;
 import com.dili.ss.domain.BaseOutput;
 import com.diligrp.message.common.enums.BizNumberTypeEnum;
 import com.diligrp.message.rpc.UidRpc;
@@ -27,12 +28,28 @@ public class UidRpcService {
      * @return 业务编号
      */
     public Optional<String> getBizNumber(BizNumberTypeEnum bizNumberType) {
+        return getBizNumber(bizNumberType,false);
+    }
+
+    /**
+     * 获取业务编号
+     * @param bizNumberType 业务类型
+     * @param isNow 如果uid获取失败，是否默认返回当前时间戳
+     * @return 业务编号
+     */
+    public Optional<String> getBizNumber(BizNumberTypeEnum bizNumberType, Boolean isNow) {
         try {
             BaseOutput<String> bizNumberOutput = uidRpc.bizNumber(bizNumberType.getType());
-            return Optional.ofNullable(bizNumberOutput.getData());
+            if (StrUtil.isNotBlank(bizNumberOutput.getData())) {
+                return Optional.of(bizNumberOutput.getData());
+            }
+
         } catch (Exception e) {
             log.error(String.format("根据业务类型[%s]获取编号异常:%s", bizNumberType.getName(), e.getMessage()), e);
-            return Optional.empty();
         }
+        if (isNow) {
+            return Optional.of(String.valueOf(System.currentTimeMillis()));
+        }
+        return Optional.empty();
     }
 }

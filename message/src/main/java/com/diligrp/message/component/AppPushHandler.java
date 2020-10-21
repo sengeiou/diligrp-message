@@ -4,8 +4,8 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
+import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.BaseOutput;
-import com.dili.uap.sdk.domain.User;
 import com.dili.uap.sdk.domain.UserPushInfo;
 import com.diligrp.message.common.enums.BizNumberTypeEnum;
 import com.diligrp.message.common.enums.MessageEnum;
@@ -23,7 +23,9 @@ import one.util.streamex.StreamEx;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -49,46 +51,76 @@ public class AppPushHandler {
      */
     public BaseOutput<Boolean> handler(AppPushInput appPushInput) {
         LocalDateTime receiptTime = LocalDateTime.now();
-        //获取本次的推送请求码
-        Optional<String> bizNumber = uidRpcService.getBizNumber(BizNumberTypeEnum.PUSH_REQUEST);
-        String requestCode = bizNumber.orElse(String.valueOf(System.currentTimeMillis()));
-        List<PushLog> pushLogList = Lists.newArrayList();
         String extras = null;
         if (CollectionUtil.isNotEmpty(appPushInput.getExtraMap())) {
             extras = JSONUtil.toJsonStr(appPushInput.getExtraMap());
         }
         PushLog pushLog = new PushLog();
         BeanUtil.copyProperties(appPushInput, pushLog);
-        pushLog.setReceiptTime(receiptTime).setRequestCode(requestCode)
-                .setPushChannel(MessageEnum.PushChannel.极光.getCode())
-                .setExtras(extras)
-                .setPushState(MessageEnum.SendStateEnum.WAITING.getCode());
-
-        Map<String, Long> userPushIdMap = Maps.newHashMap();
+        pushLog.setReceiptTime(receiptTime).setPushChannel(MessageEnum.PushChannel.极光.getCode())
+                .setExtras(extras).setPushState(MessageEnum.SendStateEnum.WAITING.getCode());
         List<UserPushInfo> userPushInfoList = uapUserRpcService.listPushInfoByExample(appPushInput.getUserIds());
         //推送平台-注册ID 关联关系
-        Map<String, List<String>> platformRegistrationIdMaps = Maps.newHashMap();
+        Map<String, List<UserPushInfo>> platformRegistrationIdMaps = Maps.newHashMap();
         if (CollectionUtil.isNotEmpty(userPushInfoList)) {
             platformRegistrationIdMaps = StreamEx.of(userPushInfoList).nonNull()
-                    .mapToEntry(UserPushInfo::getPlatform, UserPushInfo::getPushId).nonNullKeys().nonNullValues()
+                    .mapToEntry(UserPushInfo::getPlatform, Function.identity()).nonNullKeys().nonNullValues()
                     .distinctValues().grouping();
-
-            userPushInfoList.forEach(t->{
+            Boolean result = Boolean.TRUE;
+            String code = null;
+            String message = null;
+            for (Map.Entry<String, List<UserPushInfo>> entry : platformRegistrationIdMaps.entrySet()) {
+                System.out.println(entry.getKey() + "：" + entry.getValue());
+                //获取本次的推送请求码
+                Optional<String> bizNumber = uidRpcService.getBizNumber(BizNumberTypeEnum.PUSH_REQUEST, true);
+                List<String> pushIdList = entry.getValue().stream().map(UserPushInfo::getPushId).collect(Collectors.toList());
+                //生成保存数据
+                generateSaveData(pushLog, bizNumber.get(), entry.getValue());
+                BaseOutput<Boolean> output = jPushService.pushHandler(appPushInput, bizNumber.get(), entry.getKey(), pushIdList);
+                if (!output.getData()) {
+                    code = output.getCode();
+                    message = output.getMessage();
+                    result = output.getData();
+                }
+            }
+            if (result) {
+                return BaseOutput.successData(result);
+            }
+            return BaseOutput.failure(message).setCode(code).setData(false);
+        } else {
+            Optional<String> bizNumber = uidRpcService.getBizNumber(BizNumberTypeEnum.PUSH_REQUEST, true);
+            List<PushLog> pushLogList = Lists.newArrayList();
+            pushLog.setRequestCode(bizNumber.get());
+            userPushInfoList.forEach(t -> {
                 PushLog temp = new PushLog();
                 BeanUtil.copyProperties(pushLog, temp);
-                temp.setRegistrationId(t.getPushId());
-                temp.setUserId(userPushIdMap.get(t.getUserId()));
-                temp.setPlatform(t.getPlatform());
-                if (StrUtil.isBlank(t.getPlatform()) || StrUtil.isBlank(t.getPushId())) {
-                    temp.setPushState(MessageEnum.SendStateEnum.FAILURE.getCode());
-                    temp.setFailureMessage("推送平台或注册ID为空");
-                }
+                temp.setUserId(t.getUserId()).setPushState(MessageEnum.SendStateEnum.FAILURE.getCode()).setFailureMessage("未找到对应的推送对象");
                 pushLogList.add(temp);
             });
-        } else {
-            pushLogList.add(pushLog);
+            pushLogService.batchInsert(pushLogList);
+            log.warn(String.format("根据参数[%s]未从用户推送信息中找到对应的对象", JSONUtil.toJsonStr(appPushInput)));
+            return BaseOutput.failure("未找到推送对象").setCode(ResultCode.UNAUTHORIZED);
         }
+    }
+
+    /**
+     * 生成保存数据
+     * @param pushLog
+     * @param requestCode 请求码
+     * @param userPushInfoList
+     */
+    private void generateSaveData(PushLog pushLog,String requestCode,List<UserPushInfo> userPushInfoList){
+        List<PushLog> pushLogList = Lists.newArrayList();
+        userPushInfoList.forEach(t -> {
+            PushLog temp = new PushLog();
+            BeanUtil.copyProperties(pushLog, temp);
+            temp.setRegistrationId(t.getPushId()).setUserId(t.getUserId()).setPlatform(t.getPlatform()).setRequestCode(requestCode);
+            if (StrUtil.isBlank(t.getPlatform()) || StrUtil.isBlank(t.getPushId())) {
+                temp.setPushState(MessageEnum.SendStateEnum.FAILURE.getCode());
+                temp.setFailureMessage("推送平台或注册ID为空");
+            }
+            pushLogList.add(temp);
+        });
         pushLogService.batchInsert(pushLogList);
-        return jPushService.pushHandler(appPushInput, requestCode,platformRegistrationIdMaps);
     }
 }

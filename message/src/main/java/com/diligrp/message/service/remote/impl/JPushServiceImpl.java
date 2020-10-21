@@ -1,8 +1,7 @@
 package com.diligrp.message.service.remote.impl;
 
-import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.json.JSONUtil;
-import cn.jpush.api.push.model.BatchPushResult;
+import cn.jpush.api.push.PushResult;
 import cn.jpush.api.push.model.Options;
 import cn.jpush.api.push.model.Platform;
 import cn.jpush.api.push.model.PushPayload;
@@ -17,15 +16,14 @@ import com.diligrp.message.sdk.domain.input.AppPushInput;
 import com.diligrp.message.sdk.enums.PushPlatformEnum;
 import com.diligrp.message.service.PushLogService;
 import com.diligrp.message.service.remote.IPushService;
-import com.google.common.collect.Lists;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 import static com.diligrp.message.sdk.enums.PushPlatformEnum.getInstance;
 
@@ -46,20 +44,19 @@ public class JPushServiceImpl implements IPushService {
     private final PushLogService pushLogService;
 
     @Override
-    public BaseOutput<Boolean> pushHandler(AppPushInput appPushInput, String requestCode, Map<String, List<String>> platformRegistrationIdMaps) {
-        BatchPushResult batchPushResult = null;
+    public BaseOutput<Boolean> pushHandler(AppPushInput appPushInput, String requestCode, String platformKey, List<String> registrationIds) {
+        PushResult pushResult = null;
         String failureCode = null;
         String failureMessage = null;
         try {
-            List<PushPayload> pushPayloadList = buildPushInfoByRegId(appPushInput, platformRegistrationIdMaps);
-            if (CollectionUtil.isNotEmpty(pushPayloadList)) {
-                batchPushResult = jiGuangConfig.getJPushClient().batchSendPushByRegId(pushPayloadList);
-                if (batchPushResult.isResultOK()) {
+            Optional<PushPayload> pushPayloadOptional = buildPushInfo(appPushInput, platformKey, registrationIds);
+            if (pushPayloadOptional.isPresent()) {
+                pushResult = jiGuangConfig.getJPushClient().sendPush(pushPayloadOptional.get());
+                if (pushResult.isResultOK()) {
                     return BaseOutput.successData(Boolean.TRUE);
                 }
-                log.warn(String.format("请求码为[%s]的APP消息[%s]推送失败[%s]", requestCode, JSONUtil.toJsonStr(appPushInput), batchPushResult));
-//                return BaseOutput.failure("推送失败").setCode(String.valueOf(batchPushResult.error.getCode())).setData(Boolean.FALSE);
-                return BaseOutput.failure("推送失败").setCode(ResultCode.DATA_ERROR).setData(Boolean.FALSE);
+                log.warn(String.format("请求码为[%s]的APP消息[%s]推送失败[%s]", requestCode, JSONUtil.toJsonStr(appPushInput), pushResult));
+                return BaseOutput.failure("推送失败").setCode(String.valueOf(pushResult.error.getCode())).setData(Boolean.FALSE);
             } else {
                 failureCode = ResultCode.INVALID_REQUEST;
                 failureMessage = "推送平台不明确";
@@ -76,14 +73,14 @@ public class JPushServiceImpl implements IPushService {
             Integer pushState = MessageEnum.SendStateEnum.FAILURE.getCode();
             String messageId = null;
             String sendNo = null;
-            if (Objects.nonNull(batchPushResult)) {
-//                messageId = String.valueOf(batchPushResult.getBatchPushResult().msg_id);
-//                sendNo = String.valueOf(pushResult.sendno);
-                if (batchPushResult.isResultOK()) {
+            if (Objects.nonNull(pushResult)) {
+                messageId = String.valueOf(pushResult.msg_id);
+                sendNo = String.valueOf(pushResult.sendno);
+                if (pushResult.isResultOK()) {
                     pushState = MessageEnum.SendStateEnum.SUCCEED.getCode();
                 } else {
-//                    failureCode = String.valueOf(pushResult.error.getCode());
-//                    failureMessage = String.valueOf(pushResult.error.getMessage());
+                    failureCode = String.valueOf(pushResult.error.getCode());
+                    failureMessage = String.valueOf(pushResult.error.getMessage());
                 }
             }
             PushLog domain = new PushLog().setFailureMessage(failureMessage).setFailureCode(failureCode)
@@ -99,32 +96,31 @@ public class JPushServiceImpl implements IPushService {
      * 构建通知消息
      * @return
      */
-    private List<PushPayload> buildPushInfoByRegId(AppPushInput appPushInput, Map<String, List<String>> platformRegistrationIdMaps) {
-        List<PushPayload> pushPayloadList = Lists.newArrayList();
-        platformRegistrationIdMaps.forEach((key, value) -> {
-            PushPayload.Builder builder = PushPayload.newBuilder();
-            PushPlatformEnum platform = getInstance(key);
-            builder.setAudience(Audience.registrationId(value));
-            switch (platform) {
-                case Android:
-                    builder.setPlatform(Platform.android())
-                            .setNotification(Notification.android(appPushInput.getAlert(), appPushInput.getTitle(), appPushInput.getExtraMap()));
-                    break;
-                case IOS:
-                    builder.setPlatform(Platform.ios())
-                            .setNotification(Notification.ios(appPushInput.getAlert(), appPushInput.getExtraMap()))
-                            .setOptions(Options.newBuilder()
-                                    .setApnsProduction(jiGuangConfig.getApnsProduction())
-                                    .build());
-                    break;
-                case WinPhone:
-                    builder.setPlatform(Platform.winphone())
-                            .setNotification(Notification.winphone(appPushInput.getAlert(), appPushInput.getExtraMap()));
-                    break;
-                default:
-            }
-            pushPayloadList.add(builder.build());
-        });
-        return pushPayloadList;
+    private Optional<PushPayload> buildPushInfo(AppPushInput appPushInput, String platformKey, List<String> registrationIds) {
+        PushPlatformEnum platform = getInstance(platformKey);
+        if (Objects.isNull(platform)) {
+            return Optional.empty();
+        }
+        PushPayload.Builder builder = PushPayload.newBuilder();
+        builder.setAudience(Audience.registrationId(registrationIds));
+        switch (platform) {
+            case Android:
+                builder.setPlatform(Platform.android())
+                        .setNotification(Notification.android(appPushInput.getAlert(), appPushInput.getTitle(), appPushInput.getExtraMap()));
+                break;
+            case IOS:
+                builder.setPlatform(Platform.ios())
+                        .setNotification(Notification.ios(appPushInput.getAlert(), appPushInput.getExtraMap()))
+                        .setOptions(Options.newBuilder()
+                                .setApnsProduction(jiGuangConfig.getApnsProduction())
+                                .build());
+                break;
+            case WinPhone:
+                builder.setPlatform(Platform.winphone())
+                        .setNotification(Notification.winphone(appPushInput.getAlert(), appPushInput.getExtraMap()));
+                break;
+            default:
+        }
+        return Optional.of(builder.build());
     }
 }
