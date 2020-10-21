@@ -3,6 +3,9 @@ package com.diligrp.message.service.remote;
 import com.dili.ss.domain.BaseOutput;
 import com.diligrp.message.sdk.domain.input.AppPushInput;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * APP 消息推送
  * @author yuehongbo
@@ -15,7 +18,8 @@ public interface IPushService {
      * app 平台内容推送
      * @param appPushInput 推送内容参数
      * @param requestCode 此次推送请求码
+     * @param platformRegistrationIdMaps 推送平台-注册ID集合
      * @return
      */
-    BaseOutput<Boolean> pushHandler(AppPushInput appPushInput, String requestCode);
+    BaseOutput<Boolean> pushHandler(AppPushInput appPushInput, String requestCode, Map<String, List<String>> platformRegistrationIdMaps);
 }

@@ -3,6 +3,7 @@ package com.diligrp.message.sdk.domain.input;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Map;
 import java.util.Set;
@@ -19,28 +20,15 @@ public class AppPushInput {
     /**
      * 所属市场
      */
-    @NotBlank(message = "所属市场不能为空")
+    @NotNull(message = "所属市场不能为空")
     private Long marketId;
 
     /**
      * 设备注册ID集合，支持多设备推送同一记录,如果为空，则推送所有用户
      */
-    @Size(message = "单次推送最多1000个注册设备", max = 1000)
-    private Set<String> registrationIds;
-
-    /**
-     * 设备注册ID集合，支持多设备推送同一记录,如果为空，则推送所有用户
-     */
-    @Size(message = "单次推送最多1000个注册客户", max = 1000)
+    @NotNull(message = "推送人群不能为空")
+    @Size(message = "单次推送客户数量在1-1000之间", max = 1000, min = 1)
     private Set<Long> userIds;
-
-    /**
-     * 推送平台
-     * {@link com.diligrp.message.sdk.enums.PushPlatformEnum}
-     * 可选值为：android,ios,winphone
-     */
-    @NotBlank(message = "推送平台不能为空")
-    private String platform;
 
     /**
      * 通知内容

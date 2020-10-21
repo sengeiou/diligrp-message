@@ -2,9 +2,11 @@ package com.diligrp.message.component;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.uap.sdk.domain.User;
+import com.dili.uap.sdk.domain.UserPushInfo;
 import com.diligrp.message.common.enums.BizNumberTypeEnum;
 import com.diligrp.message.common.enums.MessageEnum;
 import com.diligrp.message.domain.PushLog;
@@ -17,13 +19,12 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import one.util.streamex.StreamEx;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -64,29 +65,30 @@ public class AppPushHandler {
                 .setPushState(MessageEnum.SendStateEnum.WAITING.getCode());
 
         Map<String, Long> userPushIdMap = Maps.newHashMap();
-        if (CollectionUtil.isNotEmpty(appPushInput.getUserIds())) {
-            List<User> userList = uapUserRpcService.listUserByIds(appPushInput.getUserIds());
-            if (CollectionUtil.isNotEmpty(userList)) {
-                userPushIdMap = userList.stream().collect(Collectors.toMap(User::getPushId, User::getId));
-                if (Objects.isNull(appPushInput.getRegistrationIds())) {
-                    appPushInput.setRegistrationIds(userPushIdMap.keySet());
-                } else {
-                    appPushInput.getRegistrationIds().addAll(userPushIdMap.keySet());
-                }
-            }
-        }
-        if (CollectionUtil.isNotEmpty(appPushInput.getRegistrationIds())) {
-            for (String registrationId : appPushInput.getRegistrationIds()) {
+        List<UserPushInfo> userPushInfoList = uapUserRpcService.listPushInfoByExample(appPushInput.getUserIds());
+        //推送平台-注册ID 关联关系
+        Map<String, List<String>> platformRegistrationIdMaps = Maps.newHashMap();
+        if (CollectionUtil.isNotEmpty(userPushInfoList)) {
+            platformRegistrationIdMaps = StreamEx.of(userPushInfoList).nonNull()
+                    .mapToEntry(UserPushInfo::getPlatform, UserPushInfo::getPushId).nonNullKeys().nonNullValues()
+                    .distinctValues().grouping();
+
+            userPushInfoList.forEach(t->{
                 PushLog temp = new PushLog();
                 BeanUtil.copyProperties(pushLog, temp);
-                temp.setRegistrationId(registrationId);
-                temp.setUserId(userPushIdMap.get(registrationId));
+                temp.setRegistrationId(t.getPushId());
+                temp.setUserId(userPushIdMap.get(t.getUserId()));
+                temp.setPlatform(t.getPlatform());
+                if (StrUtil.isBlank(t.getPlatform()) || StrUtil.isBlank(t.getPushId())) {
+                    temp.setPushState(MessageEnum.SendStateEnum.FAILURE.getCode());
+                    temp.setFailureMessage("推送平台或注册ID为空");
+                }
                 pushLogList.add(temp);
-            }
+            });
         } else {
             pushLogList.add(pushLog);
         }
         pushLogService.batchInsert(pushLogList);
-        return jPushService.pushHandler(appPushInput, requestCode);
+        return jPushService.pushHandler(appPushInput, requestCode,platformRegistrationIdMaps);
     }
 }

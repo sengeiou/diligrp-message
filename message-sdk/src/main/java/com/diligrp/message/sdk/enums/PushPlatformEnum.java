@@ -29,7 +29,7 @@ public enum PushPlatformEnum {
      */
     public static PushPlatformEnum getInstance(String value){
         for (PushPlatformEnum platform : PushPlatformEnum.values()) {
-            if (platform.getValue().equals(value)){
+            if (platform.getValue().equalsIgnoreCase(value)){
                 return platform;
             }
         }
