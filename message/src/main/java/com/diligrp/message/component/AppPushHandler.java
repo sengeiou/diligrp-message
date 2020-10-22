@@ -84,17 +84,17 @@ public class AppPushHandler {
                 }
             }
             if (result) {
-                return BaseOutput.successData(result);
+                return BaseOutput.successData(true);
             }
             return BaseOutput.failure(message).setCode(code).setData(false);
         } else {
             Optional<String> bizNumber = uidRpcService.getBizNumber(BizNumberTypeEnum.PUSH_REQUEST, true);
             List<PushLog> pushLogList = Lists.newArrayList();
             pushLog.setRequestCode(bizNumber.get());
-            userPushInfoList.forEach(t -> {
+            appPushInput.getUserIds().forEach(t -> {
                 PushLog temp = new PushLog();
                 BeanUtil.copyProperties(pushLog, temp);
-                temp.setUserId(t.getUserId()).setPushState(MessageEnum.SendStateEnum.FAILURE.getCode()).setFailureMessage("未找到对应的推送对象");
+                temp.setUserId(t).setPushState(MessageEnum.SendStateEnum.FAILURE.getCode()).setFailureMessage("未找到对应的推送对象").setFailureCode(ResultCode.UNAUTHORIZED);
                 pushLogList.add(temp);
             });
             pushLogService.batchInsert(pushLogList);
