@@ -71,14 +71,14 @@ public class TriggersServiceImpl extends BaseServiceImpl<Triggers, Long> impleme
         if (StrUtil.isBlank(query.getMarketCode())) {
             List<String> currentUserFirms = firmService.getCurrentUserFirmCodes();
             if(CollectionUtil.isEmpty(currentUserFirms)){
-                return new EasyuiPageOutput(0, Collections.emptyList());
+                return new EasyuiPageOutput(0L, Collections.emptyList());
             }
             query.setMarketCodeList(currentUserFirms);
         }
         List<TriggersVo> triggerList = getActualMapper().selectForPage(query);
         long total = triggerList instanceof Page ? ((Page) triggerList).getTotal() : (long) triggerList.size();
         List results = useProvider ? ValueProviderUtils.buildDataByProvider(triggers, triggerList) : triggerList;
-        return new EasyuiPageOutput((int) total, results);
+        return new EasyuiPageOutput(total, results);
     }
 
     /**
