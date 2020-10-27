@@ -24,9 +24,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * <B>Description</B>
@@ -70,8 +70,6 @@ public class SmsServiceImpl implements SmsService {
             sendLogService.update(sendLog);
             return;
         }
-        Boolean flag = false;
-        List<SendLog> sendLogs = Lists.newArrayList();
         /**
          * 如果模板编码不为空，即此次发送为指定模板发送
          * 所以templateList中需要移除非指定模板的数据
@@ -85,6 +83,8 @@ public class SmsServiceImpl implements SmsService {
             sendLogService.update(sendLog);
             return;
         }
+        Boolean flag = false;
+        List<SendLog> sendLogs = Lists.newArrayList();
         //定义标签，用于跳出循环
         templates:
         for (TriggersTemplate t : templateList) {
@@ -113,7 +113,7 @@ public class SmsServiceImpl implements SmsService {
                     } else if (t.getChannel().equals(MessageEnum.ChannelEnum.WEBCHINESE_SMS.getCode())) {
                         output = smsChinese.sendSMS(object);
                     }
-                    if (null != output) {
+                    if (Objects.nonNull(output)) {
                         sendLog.setSendTime(MessageUtil.now());
                         sendLog.setRequestId(output.getData());
                         sendLog.setContent(content);
@@ -152,7 +152,7 @@ public class SmsServiceImpl implements SmsService {
         if (flag) {
             sendLogService.update(sendLog);
         } else {
-            //如果都没没有发送成功
+            //如果都没有发送成功
             sendLogService.delete(sendLogId);
         }
         if (CollectionUtil.isNotEmpty(sendLogs)){

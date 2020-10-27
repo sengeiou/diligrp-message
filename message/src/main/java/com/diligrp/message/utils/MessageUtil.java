@@ -1,8 +1,7 @@
 package com.diligrp.message.utils;
 
-import cn.hutool.extra.template.Template;
-import cn.hutool.extra.template.TemplateEngine;
-import cn.hutool.extra.template.TemplateUtil;
+import com.dili.ss.util.SpringUtil;
+import org.beetl.core.GroupTemplate;
 
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -25,9 +24,10 @@ public class MessageUtil {
      * @return 渲染后的数据
      */
     public static String produceMsgContent(String resource, Map<String, Object> data) {
-        TemplateEngine engine = TemplateUtil.createEngine();
-        Template template = engine.getTemplate(resource);
-        return template.render(data);
+        GroupTemplate stringGroupTemplate = SpringUtil.getBean("StringGroupTemplate", GroupTemplate.class);
+        org.beetl.core.Template template = stringGroupTemplate.getTemplate(resource);
+        template.binding(data);
+        return template.render();
     }
 
     /**
