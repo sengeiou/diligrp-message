@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -97,5 +98,17 @@ public class FirmServiceImpl implements FirmService {
         } else {
             return Collections.emptyList();
         }
+    }
+
+    @Override
+    public Optional<Firm> getByCode(String code) {
+        BaseOutput<Firm> byCode = firmRpc.getByCode(code);
+        return Optional.ofNullable(byCode.getData());
+    }
+
+    @Override
+    public Optional<Firm> getById(Long id) {
+        BaseOutput<Firm> byId = firmRpc.getById(id);
+        return Optional.ofNullable(byId.getData());
     }
 }

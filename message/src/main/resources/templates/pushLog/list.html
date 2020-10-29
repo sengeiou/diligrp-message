@@ -20,7 +20,7 @@
     <div class="row">
         <div class="col-12">
             <div id="toolbar" class="btn-group" role="group" aria-label="工具栏">
-                <button id="btn_view" type="button" class="btn btn-primary" onclick="openDetailHandler()"><i class="fa fa-eye"></i>
+                <button id="btn_view" type="button" class="btn btn-primary" onclick="$.operate.view()"><i class="fa fa-eye"></i>
                     查看
                 </button>
             </div>
@@ -38,7 +38,7 @@
 <script type="text/javascript">
     /**  请求URL配置   **/
     var dataUrl = window.rootPath + "/pushLog/listPage.action";
-    var viewUrl = window.rootPath + "/pushLog/view?id={id}";
+    var viewUrl = window.rootPath + "/pushLog/view.action?id={id}";
     var options = {
         dataUrl: dataUrl,
         viewUrl: viewUrl,
@@ -50,6 +50,20 @@
         dataColumns: [
             {
                 radio: true
+            },
+            {
+                field: 'requestCode',
+                title: '推送批次码',
+                sortable: true,
+                align: "center"
+            },
+            {
+                field: 'userId',
+                title: '推送用户',
+                sortable: true,
+                align: "center",
+                sortName: "user_id",
+                provider:'uapUserProvider'
             },
             {
                 field: 'platform',
@@ -74,7 +88,7 @@
                 formatter: function (value, row, index) {
                     // var actions = [];
                     if(row.$_pushState==2){
-                        let msg = '失败编码:' + row.failureCode + ',失败消息:' + row.failureCode;
+                        let msg = '失败编码:' + row.failureCode + ',失败消息:' + row.failureMessage;
                         return "<span title='" + msg + "'>" + value + "</span>";
                     }
                     return value;

@@ -1,5 +1,6 @@
 package com.diligrp.message.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.dili.commons.bstable.TableResult;
 import com.dili.ss.metadata.ValueProviderUtils;
 import com.dili.uap.sdk.session.SessionContext;
@@ -61,5 +62,17 @@ public class PushLogController {
             log.error(String.format("分页查询用户账号信息异常[]", e.getMessage()), e);
         }
         return new TableResult<>();
+    }
+
+    /**
+     * 查看推送记录详情
+     * @param id 记录id
+     * @throws Exception
+     */
+    @RequestMapping(value = "/view.action", method = {RequestMethod.GET, RequestMethod.POST})
+    public String view(Long id, ModelMap modelMap) {
+        PushLog pushLog = pushLogService.get(id);
+        modelMap.put("pushLogData", JSONObject.toJSONString(pushLog));
+        return prefix + "/view";
     }
 }

@@ -4,6 +4,7 @@ import com.dili.uap.sdk.domain.Firm;
 import com.dili.uap.sdk.domain.dto.FirmDto;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * <B>远程调用获取市场信息</B>
@@ -48,4 +49,18 @@ public interface FirmService {
      * @return
      */
     List<Firm> getCurrentUserFirms(Long userId);
+
+    /**
+     * 根据 code 查询
+     * @param code
+     * @return
+     */
+    Optional<Firm> getByCode(String code);
+
+    /**
+     * 根据id 查询
+     * @param id
+     * @return
+     */
+    Optional<Firm> getById(Long id);
 }

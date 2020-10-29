@@ -15,10 +15,7 @@ import com.diligrp.message.service.remote.FirmService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -90,5 +87,18 @@ public class FirmProvider extends BatchDisplayTextProviderSupport {
         //当未匹配到数据时，返回的值
         batchProviderMeta.setMismatchHandler(t -> "-");
         return batchProviderMeta;
+    }
+
+    public String getDisplayText(Object obj, Map metaMap, FieldMeta fieldMeta) {
+        if (Objects.nonNull(obj)) {
+            Optional<Firm> optionalFirm = Optional.empty();
+            if (metaMap.containsKey("by") && Objects.equals(metaMap.get("by"),"id")){
+                optionalFirm = firmService.getById(Long.valueOf(obj.toString()));
+            }else{
+                optionalFirm = firmService.getByCode(obj.toString());
+            }
+            return optionalFirm.isPresent() ? optionalFirm.get().getName() : "";
+        }
+        return "";
     }
 }
