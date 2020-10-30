@@ -1,5 +1,6 @@
 package com.diligrp.message.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.dili.commons.bstable.TableResult;
 import com.dili.ss.metadata.ValueProviderUtils;
@@ -72,7 +73,9 @@ public class PushLogController {
     @RequestMapping(value = "/view.action", method = {RequestMethod.GET, RequestMethod.POST})
     public String view(Long id, ModelMap modelMap) {
         PushLog pushLog = pushLogService.get(id);
-        modelMap.put("pushLogData", JSONObject.toJSONString(pushLog));
+        JSONObject jsonObject = JSON.parseObject(JSONObject.toJSONString(pushLog));
+        jsonObject.put("extras",JSONObject.parse(jsonObject.getString("extras")));
+        modelMap.put("pushLogData", JSONObject.toJSONString(jsonObject));
         return prefix + "/view";
     }
 }
