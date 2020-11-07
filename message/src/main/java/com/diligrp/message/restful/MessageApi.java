@@ -20,7 +20,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
 import java.util.Objects;
 
 /**
@@ -77,9 +76,12 @@ public class MessageApi {
             Whitelist whitelist = new Whitelist();
             BeanUtil.copyProperties(input, whitelist);
             whitelist.setSourceId(input.getId());
+            whitelist.setStartDateTime(input.getStartDate().atTime(0,0,0));
+            whitelist.setEndDateTime(input.getEndDate().atTime(23,59,59));
             whitelist.setSource(String.valueOf(MessageEnum.MessageSourceEnum.SYSTEM.getCode()));
             whitelist.setDeleted(MessageEnum.DeletedEnum.NO.getCode());
             whitelistService.saveWhitelist(whitelist);
+            log.info(String.format("白名单数据【%s】保存成功", JSONUtil.toJsonStr(input)));
             return BaseOutput.success();
         } catch (Exception e) {
             log.error(String.format("白名单数据[%s]处理异常:%s", JSONUtil.toJsonStr(input), e.getMessage()), e);
@@ -107,6 +109,7 @@ public class MessageApi {
             Whitelist domain = new Whitelist();
             domain.setDeleted(MessageEnum.DeletedEnum.YES.getCode());
             whitelistService.updateSelectiveByExample(domain, condition);
+            log.info(String.format("白名单数据【%s】逻辑删除成功", JSONUtil.toJsonStr(object)));
             return BaseOutput.success();
         } catch (Exception e) {
             log.error(String.format("白名单数据[%s]删除异常:%s",object.toJSONString() , e.getMessage()), e);
@@ -129,6 +132,7 @@ public class MessageApi {
             Whitelist domain = new Whitelist();
             domain.setDeleted(MessageEnum.DeletedEnum.YES.getCode());
             whitelistService.updateSelectiveByExample(domain, condition);
+            log.info(String.format("白名单数据【%s】逻辑删除成功", JSONUtil.toJsonStr(condition)));
             return BaseOutput.success();
         } catch (Exception e) {
             log.error(String.format("白名单数据[%s,%d]删除异常:%s", marketCode, id, e.getMessage()), e);

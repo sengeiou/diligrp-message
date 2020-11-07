@@ -5,7 +5,7 @@ import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 /**
  * @author yuehongbo
@@ -41,12 +41,12 @@ public class WhitelistCustomerInput {
      * 开始时间
      */
     @NotNull(message = "白名单开始时间不能为空")
-    private LocalDateTime startDate;
+    private LocalDate startDate;
 
     /**
      * 结束时间
      */
     @NotNull(message = "白名单结束时间不能为空")
-    private LocalDateTime endDate;
+    private LocalDate endDate;
 
 }

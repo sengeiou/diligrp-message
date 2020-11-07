@@ -59,10 +59,10 @@
                 <th width="10%" data-options="field:'source',  _provider:'messageSourceProvider', sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                     来源
                 </th>
-                <th data-options="field:'startDate', hidden:'true' ,  _provider:'dateProvider', sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                <th data-options="field:'startDateTime', hidden:'true' ,  _provider:'dateProvider', sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                     开始时间
                 </th>
-                <th data-options="field:'endDate', hidden:'true',  _provider:'dateProvider', sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                <th data-options="field:'endDateTime', hidden:'true',  _provider:'dateProvider', sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                     结束日期
                 </th>
                 <th width="40%" data-options="field:'validDate', _provider:'dateProvider',formatter: concatTime, sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
@@ -130,7 +130,7 @@
 <script type="text/javascript">
     //组合时间
     function concatTime(value,row) {
-        return row.startDate + " ~ " + row.endDate;
+        return row.startDateTime + " ~ " + row.endDateTime;
     }
     
     //打开新增窗口

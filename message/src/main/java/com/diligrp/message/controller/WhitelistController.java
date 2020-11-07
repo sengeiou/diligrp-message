@@ -1,6 +1,5 @@
 package com.diligrp.message.controller;
 
-import cn.hutool.core.date.LocalDateTimeUtil;
 import com.dili.ss.domain.BaseOutput;
 import com.diligrp.message.common.enums.MessageEnum;
 import com.diligrp.message.domain.Whitelist;
@@ -15,9 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.time.LocalDateTime;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -49,10 +45,10 @@ public class WhitelistController {
     public @ResponseBody BaseOutput insert(@ModelAttribute Whitelist whitelist) {
         whitelist.setSource(String.valueOf(MessageEnum.MessageSourceEnum.MANUAL.getCode()));
         whitelist.setDeleted(MessageEnum.DeletedEnum.NO.getCode());
-        if (whitelist.getEndDate() != null) {
-            //结束时间 的 23:59:59
-            whitelist.setEndDate(LocalDateTimeUtil.endOfDay(whitelist.getEndDate()));
-        }
+        //结束时间 设置为 23:59:59
+        whitelist.setEndDateTime(whitelist.getEndDate().atTime(23, 59, 59));
+        //开始时间 设置为 00:00:00
+        whitelist.setStartDateTime(whitelist.getStartDate().atTime(0,0,0));
         if (whitelistService.checkDate(whitelist)) {
             return BaseOutput.failure("新增失败！该时间段与已有时间段存在重复。");
         }

@@ -109,9 +109,9 @@ public class WhitelistServiceImpl extends BaseServiceImpl<Whitelist, Long> imple
      */
     private void produceStatus(Whitelist whitelist) {
         LocalDateTime now = LocalDateTime.now();
-        if (whitelist.getStartDate().isAfter(now)) {
+        if (whitelist.getStartDateTime().isAfter(now)) {
             whitelist.setStatus(MessageEnum.WhitelistStatus.USELESS.getCode());
-        } else if (whitelist.getEndDate().isBefore(now)) {
+        } else if (whitelist.getEndDateTime().isBefore(now)) {
             whitelist.setStatus(MessageEnum.WhitelistStatus.EXPIRED.getCode());
         } else {
             whitelist.setStatus(MessageEnum.WhitelistStatus.ACTIVE.getCode());

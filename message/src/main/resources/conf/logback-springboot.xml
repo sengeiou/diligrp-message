@@ -4,9 +4,10 @@
     <property name="LOG_NAME" value="dili-message"/>
     <!--定义日志文件的存储地址 勿在 LogBack 的配置中使用相对路径-->
     <property name="LOG_HOME" value="logs"/>
-
     <!-- 日志文件存放的历史天数 -->
     <springProperty scope="context" name="maxHistory" source="log.maxHistory"/>
+    <!-- 日志环境 -->
+    <springProperty scope="context" name="build.profile.id" source="spring.profiles.active" />
 
     <!-- 日志控制台输出 -->
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">

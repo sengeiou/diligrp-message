@@ -8,6 +8,7 @@ import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -46,22 +47,22 @@ public class Whitelist extends BaseDomain {
     private String cellphone;
 
     /**
-     * 开始日期
+     * 开始时间
      */
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "`start_date`")
-    private LocalDateTime startDate;
+    private LocalDateTime startDateTime;
 
     /**
-     * 结束日期
+     * 结束时间
      */
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "`end_date`")
-    private LocalDateTime endDate;
+    private LocalDateTime endDateTime;
 
     /**
      * 信息来源(系统、手动添加?具体参考枚举定义)
@@ -104,5 +105,20 @@ public class Whitelist extends BaseDomain {
     @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "`modified`")
     private LocalDateTime modified;
+
+
+    /**
+     * 开始时间
+     * 用于接收页面传入的对象
+     */
+    @Transient
+    private LocalDate startDate;
+
+    /**
+     * 结束时间
+     * 用于接收页面传入对象
+     */
+    @Transient
+    private LocalDate endDate;
 
 }
