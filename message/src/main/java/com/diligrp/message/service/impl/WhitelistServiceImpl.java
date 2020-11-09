@@ -35,8 +35,8 @@ public class WhitelistServiceImpl extends BaseServiceImpl<Whitelist, Long> imple
     @Override
     public EasyuiPageOutput findByWhitelistVo(WhitelistVo whitelistVo, boolean useProvider) throws Exception{
         whitelistVo.setDeleted(MessageEnum.DeletedEnum.NO.getCode());
-        if (whitelistVo.getKeywords() != null){
-            whitelistVo.setMetadata(IDTO.AND_CONDITION_EXPR, "(customer_name="+whitelistVo.getKeywords()+" or cellphone ="+whitelistVo.getKeywords()+")");
+        if (whitelistVo.getKeywords() != null) {
+            whitelistVo.setMetadata(IDTO.AND_CONDITION_EXPR, "(customer_name='" + whitelistVo.getKeywords() + "' or cellphone ='" + whitelistVo.getKeywords() + "')");
         }
 //        if (whitelistVo.getEndTime() != null){
 //            Calendar c= Calendar.getInstance();
