@@ -54,26 +54,26 @@ public class WhitelistServiceImpl extends BaseServiceImpl<Whitelist, Long> imple
         vo.setDeleted(MessageEnum.DeletedEnum.NO.getCode());
         vo.setMarketCode(whitelist.getMarketCode());
         vo.setCellphone(whitelist.getCellphone());
-        vo.setMarketCode(whitelist.getMarketCode());
         List<Whitelist> list = this.listByExample(vo);
         if (CollectionUtils.isEmpty(list)){
             return false;
         }
 
         for (int i = 0; i < list.size(); i++){
-            if (whitelist.getEndDate().isBefore(list.get(i).getStartDate()) || whitelist.getStartDate().isAfter(list.get(i).getEndDate())){
+            if (whitelist.getEndDateTime().isBefore(list.get(i).getStartDateTime()) || whitelist.getStartDateTime().isAfter(list.get(i).getEndDateTime())){
                 continue;
             }else {
                 return true;
             }
         }
+        return false;
         /**
          * 验证时间是否包含在已有时间区间
          * 传入的结束时间
          */
-//        long count = list.stream().filter(t -> whitelist.getEndDate().isAfter(t.getStartDate())).count();
+//        long count = list.stream().filter(t -> whitelist.getEndDateTime().isAfter(t.getStartDateTime())).count();
 //        return count > 0;
-        return false;
+
     }
 
     @Override

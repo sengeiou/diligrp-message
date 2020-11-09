@@ -8,7 +8,6 @@ import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -105,20 +104,5 @@ public class Whitelist extends BaseDomain {
     @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "`modified`")
     private LocalDateTime modified;
-
-
-    /**
-     * 开始时间
-     * 用于接收页面传入的对象
-     */
-    @Transient
-    private LocalDate startDate;
-
-    /**
-     * 结束时间
-     * 用于接收页面传入对象
-     */
-    @Transient
-    private LocalDate endDate;
 
 }
