@@ -6,6 +6,8 @@ import lombok.Setter;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Objects;
 
 /**
  * @author yuehongbo
@@ -38,15 +40,42 @@ public class WhitelistCustomerInput {
     private String cellphone;
 
     /**
+     * 开始日期 -- 废弃，需要用 startDateTime
+     */
+    @NotNull(message = "白名单开始时间不能为空")
+    @Deprecated
+    private LocalDate startDate;
+
+    /**
+     * 结束 时间 -- 字段废弃 需要用  endDateTime
+     */
+    @NotNull(message = "白名单结束时间不能为空")
+    @Deprecated
+    private LocalDate endDate;
+
+    /**
      * 开始时间
      */
     @NotNull(message = "白名单开始时间不能为空")
-    private LocalDate startDate;
+    private LocalDateTime startDateTime;
 
     /**
      * 结束时间
      */
     @NotNull(message = "白名单结束时间不能为空")
-    private LocalDate endDate;
+    private LocalDateTime endDateTime;
 
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+        if (Objects.isNull(startDateTime)) {
+            this.setStartDateTime(startDate.atTime(0, 0, 0));
+        }
+    }
+
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
+        if (Objects.isNull(endDateTime)) {
+            this.setEndDateTime(endDate.atTime(23, 59, 59));
+        }
+    }
 }

@@ -76,8 +76,6 @@ public class MessageApi {
             Whitelist whitelist = new Whitelist();
             BeanUtil.copyProperties(input, whitelist);
             whitelist.setSourceId(input.getId());
-            whitelist.setStartDateTime(input.getStartDate().atTime(0,0,0));
-            whitelist.setEndDateTime(input.getEndDate().atTime(23,59,59));
             whitelist.setSource(String.valueOf(MessageEnum.MessageSourceEnum.SYSTEM.getCode()));
             whitelist.setDeleted(MessageEnum.DeletedEnum.NO.getCode());
             whitelistService.saveWhitelist(whitelist);
