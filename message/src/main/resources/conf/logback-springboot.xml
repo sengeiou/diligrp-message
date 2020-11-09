@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
     <!-- 日志名称 -->
-    <property name="LOG_NAME" value="dili-message"/>
+    <property name="LOG_NAME" value="message-service"/>
     <!--定义日志文件的存储地址 勿在 LogBack 的配置中使用相对路径-->
     <property name="LOG_HOME" value="logs"/>
     <!-- 日志文件存放的历史天数 -->
