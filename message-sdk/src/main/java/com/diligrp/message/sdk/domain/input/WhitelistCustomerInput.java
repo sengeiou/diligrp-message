@@ -24,10 +24,18 @@ public class WhitelistCustomerInput {
     @NotBlank(message = "客户所属市场不能为空")
     private String marketCode;
     /**
-     * 客户ID
+     * 源系统ID
      */
-    @NotNull(message = "客户ID不能为空")
+    @NotNull(message = "源ID不能为空")
+    @Deprecated
     private Long id;
+
+    /**
+     * 源系统ID
+     */
+    @NotNull(message = "源ID不能为空")
+    private Long sourceId;
+
     /**
      * 客户名称
      */
@@ -76,6 +84,13 @@ public class WhitelistCustomerInput {
         this.endDate = endDate;
         if (Objects.isNull(endDateTime)) {
             this.setEndDateTime(endDate.atTime(23, 59, 59));
+        }
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+        if (Objects.isNull(sourceId)) {
+            this.setSourceId(id);
         }
     }
 }
