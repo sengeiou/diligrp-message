@@ -13,7 +13,7 @@
                     <div class="search-wrap">
                         <div class="search-item">
                             <input name="marketCode" id="marketCode" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false" data-options="label:'市场:'" />
-                            <#comboProvider _id="marketCode" _provider='firmProvider' _queryParams='{emptyText:"-- 全部 --"}'/>
+                            <#comboProvider _id="marketCode" _provider='marketProvider' _queryParams='{emptyText:"-- 全部 --"}'/>
                         </div>
                         <div class="search-item">
                             <input name="systemCode" id="systemCode" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false" data-options="label:'所属系统:'" />
@@ -65,13 +65,13 @@
                         <th width="13%" data-options="field:'requestCode',  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                             操作码
                         </th>
-                        <th width="7%" data-options="field:'marketCode', _provider:'firmProvider',  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        <th width="7%" data-options="field:'marketCode', _provider:'marketProvider',  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                             市场
                         </th>
-                        <th width="10%" data-options="field:'systemCode', _provider:'dataDictionaryValueProvider', _queryParams:{'dd_code':'system_code'},   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        <th width="10%" data-options="field:'systemCode', _provider:'dataDictionaryValueProvider', _queryParams:{'dd_code':'system_code','dd_with_market':'false'},   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                             所属系统
                         </th>
-                        <th width="10%" data-options="field:'sceneCode', _provider:'dataDictionaryValueProvider', _queryParams:{'dd_code':'message_scene'},  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        <th width="10%" data-options="field:'sceneCode', _provider:'dataDictionaryValueProvider', _queryParams:{'dd_code':'message_scene','dd_with_market':'false'},  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                             业务场景
                         </th>
                         <th width="10%" data-options="field:'cellphone',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false',formatter:formatForTip">

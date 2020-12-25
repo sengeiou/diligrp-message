@@ -7,7 +7,7 @@ import com.diligrp.message.domain.SendLog;
 import com.diligrp.message.domain.vo.SendLogVo;
 import com.diligrp.message.mapper.SendLogMapper;
 import com.diligrp.message.service.SendLogService;
-import com.diligrp.message.service.remote.FirmService;
+import com.diligrp.message.service.remote.MarketRpcService;
 import com.diligrp.message.service.remote.UidRpcService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -27,7 +27,7 @@ public class SendLogServiceImpl extends BaseServiceImpl<SendLog, Long> implement
         return (SendLogMapper)getDao();
     }
 
-    private final FirmService firmService;
+    private final MarketRpcService marketRpcService;
     private final UidRpcService uidRpcService;
 
     /**
@@ -44,7 +44,7 @@ public class SendLogServiceImpl extends BaseServiceImpl<SendLog, Long> implement
 
     @Override
     public EasyuiPageOutput findBySendLogVo(SendLogVo sendLogVo, boolean useProvider) throws Exception{
-        sendLogVo.setAuthMarkets(firmService.getCurrentUserFirmCodes());
+        sendLogVo.setAuthMarkets(marketRpcService.getCurrentUserFirmCodes());
         return listEasyuiPageByExample(sendLogVo, useProvider);
     }
 }

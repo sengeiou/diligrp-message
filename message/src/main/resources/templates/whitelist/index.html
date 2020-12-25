@@ -13,7 +13,7 @@
                 <div class="search-wrap">
                     <div class="search-item">
                         <input name="marketCode" id="marketCode" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" data-options="label:'市场:', editable:false" />
-                        <#comboProvider _id="marketCode" _provider='firmProvider' _queryParams='{emptyText:"-- 全部 --"}'/>
+                        <#comboProvider _id="marketCode" _provider='marketProvider' _queryParams='{emptyText:"-- 全部 --"}'/>
                     </div>
                     <div class="search-item">
                         <input name="source" id="source" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" data-options="label:'来源:',editable:false" />
@@ -47,7 +47,7 @@
                align="center" fit="true" striped="true" idField="id" data-options="onLoadSuccess:clearGridSelectedAndChecked">
             <thead>
             <tr>
-                <th width="10%" data-options="field:'marketCode', _provider:'firmProvider',  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                <th width="10%" data-options="field:'marketCode', _provider:'marketProvider',  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                     所属市场
                 </th>
                 <th width="15%" data-options="field:'customerName',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
@@ -93,7 +93,7 @@
                 <td style="padding:5px;">
                     <input name="_marketCode" id="_marketCode" style="width:100%" panelWidth="auto" panelHeight="auto" editable="false" data-options="label:'所属市场:'"
                            required="true" />
-                    <#comboProvider _id="_marketCode" _provider='firmProvider' _queryParams='{required:true}'/>
+                    <#comboProvider _id="_marketCode" _provider='marketProvider' _queryParams='{required:true}'/>
                 </td>
             </tr>
             <tr>

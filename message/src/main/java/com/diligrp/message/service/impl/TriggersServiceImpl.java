@@ -17,7 +17,7 @@ import com.diligrp.message.domain.vo.TriggersVo;
 import com.diligrp.message.mapper.TriggersMapper;
 import com.diligrp.message.service.TriggersService;
 import com.diligrp.message.service.TriggersTemplateService;
-import com.diligrp.message.service.remote.FirmService;
+import com.diligrp.message.service.remote.MarketRpcService;
 import com.diligrp.message.service.remote.UidRpcService;
 import com.diligrp.message.utils.MessageUtil;
 import com.github.pagehelper.Page;
@@ -26,9 +26,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -46,7 +44,7 @@ public class TriggersServiceImpl extends BaseServiceImpl<Triggers, Long> impleme
         return (TriggersMapper)getDao();
     }
 
-    private final FirmService firmService;
+    private final MarketRpcService marketRpcService;
     private final TriggersTemplateService triggersTemplateService;
     private final UidRpcService uidRpcService;
 
@@ -69,7 +67,7 @@ public class TriggersServiceImpl extends BaseServiceImpl<Triggers, Long> impleme
         TriggersVo query = new TriggersVo();
         BeanUtil.copyProperties(triggers,query);
         if (StrUtil.isBlank(query.getMarketCode())) {
-            List<String> currentUserFirms = firmService.getCurrentUserFirmCodes();
+            List<String> currentUserFirms = marketRpcService.getCurrentUserFirmCodes();
             if(CollectionUtil.isEmpty(currentUserFirms)){
                 return new EasyuiPageOutput(0L, Collections.emptyList());
             }

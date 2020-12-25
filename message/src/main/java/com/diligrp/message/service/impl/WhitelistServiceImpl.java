@@ -8,10 +8,10 @@ import com.diligrp.message.domain.Whitelist;
 import com.diligrp.message.domain.vo.WhitelistVo;
 import com.diligrp.message.mapper.WhitelistMapper;
 import com.diligrp.message.service.WhitelistService;
-import com.diligrp.message.service.remote.FirmService;
+import com.diligrp.message.service.remote.MarketRpcService;
 import com.diligrp.message.utils.MessageUtil;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -23,14 +23,15 @@ import java.util.Set;
  * This file was generated on 2019-03-31 10:54:30.
  * @author yuehongbo
  */
+@RequiredArgsConstructor
 @Service
 public class WhitelistServiceImpl extends BaseServiceImpl<Whitelist, Long> implements WhitelistService {
-    @Autowired
-    FirmService firmService;
 
     public WhitelistMapper getActualMapper() {
         return (WhitelistMapper)getDao();
     }
+
+    private final MarketRpcService marketRpcService;
 
     @Override
     public EasyuiPageOutput findByWhitelistVo(WhitelistVo whitelistVo, boolean useProvider) throws Exception{
@@ -44,7 +45,7 @@ public class WhitelistServiceImpl extends BaseServiceImpl<Whitelist, Long> imple
 //            c.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH), 23, 59, 59);
 //            whitelistVo.setEndTime(c.getTime());//结束时间 的 23:59:59
 //        }
-        whitelistVo.setAuthMarkets(firmService.getCurrentUserFirmCodes());
+        whitelistVo.setAuthMarkets(marketRpcService.getCurrentUserFirmCodes());
         return listEasyuiPageByExample(whitelistVo, useProvider);
     }
 

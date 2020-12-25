@@ -116,15 +116,15 @@
                         <input name="_id" id="modifyId" value="${triggers.id!}" type="hidden">
                         <div class="template-item">
                             <input  name="marketCode" id="marketCode" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false"  data-options="label:'市场:',onChange:marketOriginChange,cls:'noborder', readonly:true, hasDownArrow:false" />
-                            <#comboProvider _id="marketCode" _provider='firmProvider' _queryParams='{required:true}' _value="${triggers.marketCode!}" />
+                            <#comboProvider _id="marketCode" _provider='marketProvider' _queryParams='{required:true}' _value="${triggers.marketCode!}" />
                         </div>
                         <div class="template-item">
                             <input name="systemCode" id="systemCode" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false"  data-options="label:'所属系统:',cls:'noborder', readonly:true, hasDownArrow:false" />
-                            <#comboProvider _id="systemCode" _provider='dataDictionaryValueProvider' _queryParams='{dd_code:"system_code",required:true}' _value="${triggers.systemCode!}"/>
+                            <#comboProvider _id="systemCode" _provider='dataDictionaryValueProvider' _queryParams='{dd_code:"system_code",required:true,dd_with_market:"false"}' _value="${triggers.systemCode!}"/>
                         </div>
                         <div class="template-item">
                             <input name="sceneCode" id="sceneCode" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false"  data-options="label:'应用场景:',cls:'noborder', readonly:true, hasDownArrow:false" />
-                            <#comboProvider _id="sceneCode" _provider='dataDictionaryValueProvider' _queryParams='{dd_code:"message_scene",required:true}' _value="${triggers.sceneCode!}"/>
+                            <#comboProvider _id="sceneCode" _provider='dataDictionaryValueProvider' _queryParams='{dd_code:"message_scene",required:true,dd_with_market:"false"}' _value="${triggers.sceneCode!}"/>
                         </div>
                         <div class="template-item">
                             <input name="whitelist" id="whitelist" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false"  data-options="label:'应用白名单:',cls:'noborder', readonly:true, hasDownArrow:false" />

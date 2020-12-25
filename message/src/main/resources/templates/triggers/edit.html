@@ -163,15 +163,15 @@
                         <input name="id" id="modifyId" value="${triggers.id!}" type="hidden">
                         <div class="template-item">
                             <input class="easyui-combobox" name="marketCode" id="marketCode" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false" required="true" data-options="label:'&lowast;市场:',onLoadSuccess:onComboLoadSuccessSelectOne,onChange:marketOriginChange" />
-                            <#comboProvider _id="marketCode" _provider='firmProvider' _queryParams='{required:true}' _value="${triggers.marketCode!}" />
+                            <#comboProvider _id="marketCode" _provider='marketProvider' _queryParams='{required:true}' _value="${triggers.marketCode!}" />
                         </div>
                         <div class="template-item">
                             <input class="easyui-combobox" name="systemCode" id="systemCode" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false" required="true" data-options="label:'&lowast;所属系统:',onLoadSuccess:onComboLoadSuccessSelectOne,onChange:checkNotExist" />
-                            <#comboProvider _id="systemCode" _provider='dataDictionaryValueProvider' _queryParams='{dd_code:"system_code",required:true}' _value="${triggers.systemCode!}"/>
+                            <#comboProvider _id="systemCode" _provider='dataDictionaryValueProvider' _queryParams='{dd_code:"system_code",required:true,dd_with_market:"false"}' _value="${triggers.systemCode!}"/>
                         </div>
                         <div class="template-item">
                             <input class="easyui-combobox" name="sceneCode" id="sceneCode" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false" required="true" data-options="label:'&lowast;应用场景:',onLoadSuccess:onComboLoadSuccessSelectOne,onChange:checkNotExist" />
-                            <#comboProvider _id="sceneCode" _provider='dataDictionaryValueProvider' _queryParams='{dd_code:"message_scene",required:true}' _value="${triggers.sceneCode!}"/>
+                            <#comboProvider _id="sceneCode" _provider='dataDictionaryValueProvider' _queryParams='{dd_code:"message_scene",required:true,dd_with_market:"false"}' _value="${triggers.sceneCode!}"/>
                         </div>
                         <div class="template-item">
                             <input class="easyui-combobox" name="whitelist" id="whitelist" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false" required="true" data-options="label:'&lowast;应用白名单:',onLoadSuccess:onComboLoadSuccessSelectOne" />

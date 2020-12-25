@@ -14,17 +14,17 @@
                     <div class="search-item">
                         <input name="marketCode" id="marketCode" style="width:100%" labelAlign="right" editable="false"
                                labelAlign="right" panelWidth="auto" panelHeight="auto" label="所属市场:" />
-                        <#comboProvider _id="marketCode" _provider='firmProvider' _queryParams='{emptyText:"-- 全部 --"}'/>
+                        <#comboProvider _id="marketCode" _provider='marketProvider' _queryParams='{emptyText:"-- 全部 --"}'/>
                     </div>
                     <div class="search-item">
                         <input name="systemCode" id="systemCode" style="width:100%" labelAlign="right" editable="false"
                                labelAlign="right" panelWidth="auto" panelHeight="auto" label="所属系统:" />
-                        <#comboProvider _id="systemCode" _provider='dataDictionaryValueProvider' _queryParams='{dd_code:"system_code",emptyText:"-- 全部 --"}'/>
+                        <#comboProvider _id="systemCode" _provider='dataDictionaryValueProvider' _queryParams='{dd_code:"system_code",emptyText:"-- 全部 --",dd_with_market:"false"}'/>
                     </div>
                     <div class="search-item">
                         <input name="sceneCode" id="sceneCode" style="width:100%" labelAlign="right" editable="false"
                                labelAlign="right" panelWidth="auto" panelHeight="auto" label="应用场景:" />
-                        <#comboProvider _id="sceneCode" _provider='dataDictionaryValueProvider' _queryParams='{dd_code:"message_scene",emptyText:"-- 全部 --"}'/>
+                        <#comboProvider _id="sceneCode" _provider='dataDictionaryValueProvider' _queryParams='{dd_code:"message_scene",emptyText:"-- 全部 --",dd_with_market:"false"}'/>
                     </div>
                     <div class="search-item">
                         <input class="easyui-combobox" name="whitelist" id="whitelist" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false"  data-options="label:'应用白名单:'" />
@@ -55,13 +55,13 @@
                align="center" fit="true" striped="true" idField="id" data-options="onDblClickRow:openUpdate, onClickRow:onClickRow,onHeaderContextMenu:headerContextMenu,onLoadSuccess:clearGridSelectedAndChecked">
             <thead>
                 <tr>
-                    <th width="10%" data-options="field:'marketCode', _provider:'firmProvider', sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                    <th width="10%" data-options="field:'marketCode', _provider:'marketProvider', sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                         所属市场
                     </th>
-                    <th width="15%" data-options="field:'systemCode',  _provider:'dataDictionaryValueProvider',_queryParams:{'dd_code':'system_code'},  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                    <th width="15%" data-options="field:'systemCode',  _provider:'dataDictionaryValueProvider',_queryParams:{'dd_code':'system_code','dd_with_market':'false'},  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                         所属系统
                     </th>
-                    <th width="15%" data-options="field:'sceneCode',  _provider:'dataDictionaryWithOriginalProvider',_queryParams:{'dd_code':'message_scene'},   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                    <th width="15%" data-options="field:'sceneCode',  _provider:'dataDictionaryWithOriginalProvider',_queryParams:{'dd_code':'message_scene','dd_with_market':'false'},   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                         应用场景
                     </th>
                     <th width="10%" data-options="field:'enabled', _provider:'triggersStateProvider',  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">

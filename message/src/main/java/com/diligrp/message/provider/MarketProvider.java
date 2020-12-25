@@ -11,11 +11,14 @@ import com.dili.ss.metadata.ValuePairImpl;
 import com.dili.ss.metadata.provider.BatchDisplayTextProviderSupport;
 import com.dili.uap.sdk.domain.Firm;
 import com.dili.uap.sdk.domain.dto.FirmDto;
-import com.diligrp.message.service.remote.FirmService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.diligrp.message.service.remote.MarketRpcService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -26,11 +29,11 @@ import java.util.stream.Collectors;
  * @author yuehongbo
  * @date 2019/4/1 16:23
  */
+@RequiredArgsConstructor
 @Component
-public class FirmProvider extends BatchDisplayTextProviderSupport {
+public class MarketProvider extends BatchDisplayTextProviderSupport {
 
-    @Autowired
-    private FirmService firmService;
+    private final MarketRpcService marketRpcService;
 
     @Override
     public List<ValuePair<?>> getLookupList(Object obj, Map metaMap, FieldMeta fieldMeta) {
@@ -38,7 +41,7 @@ public class FirmProvider extends BatchDisplayTextProviderSupport {
         Object withGroupOptValue = JSONPath.read(String.valueOf(metaMap.get("queryParams")), "/withGroupOpt");
         //是否显示所有
         Object showAll = JSONPath.read(String.valueOf(metaMap.get("queryParams")), "/showAll");
-        List<Firm> list = "true".equalsIgnoreCase(String.valueOf(showAll)) ? firmService.listByExample(DTOUtils.newDTO(FirmDto.class)) : firmService.getCurrentUserFirms();
+        List<Firm> list = "true".equalsIgnoreCase(String.valueOf(showAll)) ? marketRpcService.listByExample(DTOUtils.newDTO(FirmDto.class)) : marketRpcService.getCurrentUserFirms();
         List<ValuePair<?>> resultList = list.stream().filter((f) -> {
             if (Boolean.FALSE.equals(withGroupOptValue) && f.getCode().equalsIgnoreCase("group")) {
                 return false;
@@ -59,7 +62,7 @@ public class FirmProvider extends BatchDisplayTextProviderSupport {
             if (!firmCodes.isEmpty()) {
                 FirmDto firmDto = DTOUtils.newDTO(FirmDto.class);
                 firmDto.setCodes(firmCodes);
-                List<Firm> firms = firmService.listByExample(firmDto);
+                List<Firm> firms = marketRpcService.listByExample(firmDto);
                 if (CollectionUtil.isNotEmpty(firms)) {
                     //是否需要带上原始值 true 需要
                     Object withOriginal = JSONPath.read(String.valueOf(metaMap.get(QUERY_PARAMS_KEY)), "/withOriginal");
@@ -89,16 +92,16 @@ public class FirmProvider extends BatchDisplayTextProviderSupport {
         return batchProviderMeta;
     }
 
-    public String getDisplayText(Object obj, Map metaMap, FieldMeta fieldMeta) {
-        if (Objects.nonNull(obj)) {
-            Optional<Firm> optionalFirm = Optional.empty();
-            if (metaMap.containsKey("by") && Objects.equals(metaMap.get("by"),"id")){
-                optionalFirm = firmService.getById(Long.valueOf(obj.toString()));
-            }else{
-                optionalFirm = firmService.getByCode(obj.toString());
-            }
-            return optionalFirm.isPresent() ? optionalFirm.get().getName() : "";
-        }
-        return "";
-    }
+//    public String getDisplayText(Object obj, Map metaMap, FieldMeta fieldMeta) {
+//        if (Objects.nonNull(obj)) {
+//            Optional<Firm> optionalFirm = Optional.empty();
+//            if (metaMap.containsKey("by") && Objects.equals(metaMap.get("by"),"id")){
+//                optionalFirm = firmService.getById(Long.valueOf(obj.toString()));
+//            }else{
+//                optionalFirm = firmService.getByCode(obj.toString());
+//            }
+//            return optionalFirm.isPresent() ? optionalFirm.get().getName() : "";
+//        }
+//        return "";
+//    }
 }

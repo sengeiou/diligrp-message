@@ -1,0 +1,135 @@
+<#bs4Body>
+<#vueElm />
+<div id=app>
+    <div class="container-fluid pb-5">
+        <ele-form
+           :form-attrs="{
+                size: 'large'
+            }"
+            ref="myForm"
+            :span="18"
+            label-position="left"
+            :is-show-cancel-btn="false"
+            :is-show-error-notify="false"
+            form-btn-size="medium"
+            :form-btns="formBtns"
+            :is-dialog="true"
+            v-bind="formConfig"
+            v-model="formData">
+            <template v-slot:secret="{ desc, data, field, formData }">
+                <el-input show-password v-model="formData.secret" readonly>
+                </el-input>
+            </template>
+        </ele-form>
+    </div>
+</div>
+</#bs4Body>
+
+<script>
+    function init(vm){
+        vm.formData = ${marketChannel!};
+    }
+</script>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data() {
+            return {
+                formBtns: [
+                    {
+                        text: ' 关闭 ',
+                        click: () => {
+                            $.modal.close();
+                        }
+                    }
+                ],
+                formData: {},
+                formConfig: {
+                    readonly: true,
+                    isShowSubmitBtn: false,
+                    formDesc: {
+                        marketCode: {
+                            options: loadProvider({
+                                provider: 'marketProvider',
+                                queryParams: {required: true}
+                            }, true, "marketCode"),
+                            label: "归属市场",
+                            type: "select",
+                            disabled(data) {
+                                return true;
+                            }
+                        },
+                        channel: {
+                            options: function (data) {
+                                return loadProvider({
+                                    provider: 'marketChannelProvider', stringValue: true,
+                                    queryParams: {required: true}
+                                }, true, "channel")
+                            },
+                            label: "通道",
+                            type: "select",
+                            disabled(data) {
+                                return true;
+                            }
+                        },
+                        signature: {
+                            label: "签名",
+                            type: "input",
+                            disabled(data) {
+                                return true;
+                            }
+                        },
+                        companyName: {
+                            vif: function (data) {
+                                if (data.channel && data.channel === "china_mobile") {
+                                    return true;
+                                } else {
+                                    data.companyName = null;
+                                    return false;
+                                }
+                            },
+                            optionsLinkageFields: ['channel'],
+                            label: "企业名称",
+                            type: "input",
+                            disabled(data) {
+                                return true;
+                            }
+                        },
+                        accessKey: {
+                            label: "账号",
+                            type: "input",
+                            disabled(data) {
+                                return true;
+                            }
+                        },
+                        secret: {
+                            label: "密钥",
+                            type: "password"
+                        }
+                    }
+                }
+            };
+        },
+        created: function () {
+            // `this` 指向 vm 实例
+            init(this)
+        }
+    })
+
+    function loadProvider(data, first, name) {
+        return new Promise((resolve, reject) => {
+            axios.post('/convert/list.action', data)
+                .then((res) => {
+                    if (first) {
+                        if (!app.formData[name]){
+                            app.formData[name] = res.data[0].value;
+                        }
+                    }
+                    resolve(res.data);
+                })
+                .catch(function (error) {
+                    reject(error);
+                });
+        });
+    }
+</script>

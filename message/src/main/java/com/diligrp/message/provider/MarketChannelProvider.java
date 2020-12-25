@@ -7,9 +7,9 @@ import com.dili.ss.metadata.ValueProvider;
 import com.diligrp.message.common.enums.MessageEnum;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -18,27 +18,23 @@ import java.util.stream.Stream;
  */
 @Component
 public class MarketChannelProvider implements ValueProvider {
-    private static final List<ValuePair<?>> BUFFER = new ArrayList<>();
 
-    static {
-        BUFFER.addAll(Stream.of(MessageEnum.ChannelEnum.values())
-                .map(e -> new ValuePairImpl<>(e.getName(), e.getCode()))
-                .collect(Collectors.toList()));
-    }
 
     @Override
     public List<ValuePair<?>> getLookupList(Object o, Map map, FieldMeta fieldMeta) {
-        return BUFFER;
+        return Stream.of(MessageEnum.ChannelEnum.values())
+                .map(e -> new ValuePairImpl<>(e.getName(), e.getCode()))
+                .collect(Collectors.toList());
     }
 
     @Override
     public String getDisplayText(Object o, Map map, FieldMeta fieldMeta){
-        if (null == o) {
+        if (Objects.isNull(o)) {
             return null;
         }
-        ValuePair<?> valuePair = BUFFER.stream().filter(val -> o.equals(val.getValue())).findFirst().orElseGet(null);
-        if (null != valuePair) {
-            return valuePair.getText();
+        MessageEnum.ChannelEnum channelEnum = MessageEnum.ChannelEnum.getChannelEnum(o.toString());
+        if (Objects.nonNull(channelEnum)) {
+            return channelEnum.getName();
         }
         return null;
     }

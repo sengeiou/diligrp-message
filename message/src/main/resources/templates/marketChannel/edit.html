@@ -1,0 +1,198 @@
+<#bs4Body>
+<#vueElm />
+<div id=app>
+    <div class="container-fluid pb-5">
+        <ele-form
+            :form-attrs="{
+                size: 'large'
+            }"
+            ref="myForm"
+            :span="18"
+            label-position="left"
+            :is-show-cancel-btn="false"
+            submit-btn-text="提交"
+            :is-show-error-notify="false"
+            form-btn-size="medium"
+            :form-btns="formBtns"
+            :is-dialog="true"
+            :form-desc="formDesc"
+            v-model="formData"
+            :request-fn="handleRequest">
+            <template v-slot:accesskey="{ desc, data, field, formData }">
+                <el-input v-model="formData.accessKey" class="aa" required>
+                   <i slot="suffix" class="el-input__icon el-icon-info" style="font-size: large;" @click="accessKeyTips"></i>
+                </el-input>
+            </template>
+            <template v-slot:secret="{ desc, data, field, formData }">
+                <el-input show-password v-model="formData.secret" class="aa">
+                    <i slot="suffix" class="el-input__icon el-icon-info" style="font-size: large;" @click="secretTips"></i>
+                </el-input>
+            </template>
+        </ele-form>
+    </div>
+</div>
+<style>
+    .aa i:hover {
+        color: #5cb6ff;
+    }
+</style>
+</#bs4Body>
+
+<script>
+    window.rootPath = '${contextPath}';
+    function init(vm){
+        vm.formData = ${marketChannel!};
+    }
+</script>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data() {
+            return {
+                formBtns: [
+                    {
+                        text: ' 关闭 ',
+                        click: () => {
+                            $.modal.close();
+                        }
+                    }
+                ],
+                formData: {},
+                formDesc: {
+                    marketCode: {
+                        options: loadProvider({
+                            provider: 'marketProvider',
+                            queryParams: {required: true}
+                        }, true, "marketCode"),
+                        label: "归属市场",
+                        type: "select",
+                        required: true
+                    },
+                    channel: {
+                        options: function (data) {
+                            return loadProvider({
+                                provider: 'marketChannelProvider',stringValue:true,
+                                queryParams: {required: true}
+                            }, true, "channel")
+                        },
+                        label: "通道",
+                        type: "select",
+                        required: true
+                    },
+                    signature: {
+                        label: "签名",
+                        type: "input",
+                        required: true,
+                        attrs: {
+                            maxlength: 20,
+                            showWordLimit: true,
+                        }
+                    },
+                    companyName: {
+                        vif: function (data) {
+                            if (data.channel && data.channel === "china_mobile") {
+                                return true;
+                            } else {
+                                data.companyName = null;
+                                return false;
+                            }
+                        },
+                        optionsLinkageFields: ['channel'],
+                        label: "企业名称",
+                        type: "input",
+                        required: true,
+                        attrs: {
+                            maxlength: 50,
+                            showWordLimit: true,
+                        }
+                    },
+                    accesskey: {
+                        label: "账号",
+                        type: "input",
+                        // required: true,
+                        attrs: {
+                            maxlength: 50,
+                            showWordLimit: true,
+                        }
+                    },
+                    secret: {
+                        label: "密钥",
+                        type: "password",
+                        required: true,
+                        attrs: {
+                            maxlength: 255,
+                            showWordLimit: true,
+                        }
+                    }
+
+                }
+            };
+        },
+        methods: {
+            accessKeyTips(){
+                const ak = app.$createElement;
+                this.$msgbox({
+                    title: '提示',
+                    message: ak('p', {style:'text-align: left'}, [
+                        ak('p', null, '此处填写的内容，根据不同通道运营商所对应的信息不同，分别为： '),
+                        ak('p', null, '阿里大于：填写AccessKey ID;'),
+                        ak('p', null, '中国移动云MAS：填写apid;'),
+                        ak('p', null, '网建短信通：填写UID，即登录名;'),
+                    ]),
+                    confirmButtonText: '确定'
+                });
+            },
+            secretTips(){
+                const st = app.$createElement;
+                this.$msgbox({
+                    title: '提示',
+                    message: st('p', {style:'text-align: left'}, [
+                        st('p', null, '此处填写的内容，根据不同通道运营商所对应的信息不同，分别为： '),
+                        st('p', null, '阿里大于：填写AccessKey Secret;'),
+                        st('p', null, '中国移动云MAS：填写secretKey;'),
+                        st('p', null, '网建短信通：填写Key;'),
+                    ]),
+                    confirmButtonText: '确定'
+                });
+            },
+            handleRequest(data) {
+                axios.post(rootPath + "/marketChannel/save.action", data)
+                    .then(function (response) {
+                        if (response.data.success){
+                            $.modal.close();
+                            parent.queryDataHandler();
+                        }else{
+                            $.modal.alertError(response.data.message);
+                        }
+                    })
+                    .catch(function (error) {
+                        $.modal.alertError("系统错误");
+                    });
+            },
+            handleRequestSuccess() {
+                this.$message.success('保存成功')
+            }
+        },
+        created: function () {
+            // `this` 指向 vm 实例
+            init(this)
+        }
+    })
+
+    function loadProvider(data, first, name) {
+        return new Promise((resolve, reject) => {
+            axios.post('/convert/list.action', data)
+                .then((res) => {
+                    if (first) {
+                        if (!app.formData[name]){
+                            app.formData[name] = res.data[0].value;
+                        }
+                    }
+                    resolve(res.data);
+                })
+                .catch(function (error) {
+                    reject(error);
+                });
+        });
+    }
+</script>
