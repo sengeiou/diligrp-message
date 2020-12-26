@@ -38,7 +38,7 @@ public class MarketChannelController {
 
     @RequestMapping(value="/index.html", method = RequestMethod.GET)
     public String index(ModelMap modelMap) {
-        return "marketChannel/index";
+        return "marketChannel/list";
     }
 
     /**

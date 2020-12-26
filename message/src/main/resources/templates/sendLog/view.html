@@ -1,0 +1,197 @@
+<#bs4Body>
+<#vueElm />
+<div class="container-fluid">
+    <div id="app">
+        <ele-form
+            :form-attrs="{
+                size: 'medium'
+            }"
+            form-btn-size="medium"
+            v-model="formData"
+            v-bind="formConfig"
+            :request-fn="handleRequest">
+        </ele-form>
+    </div>
+</div>
+</#bs4Body>
+<script type="text/javascript">
+    window.rootPath = '${contextPath}';
+</script>
+<script>
+    var app = new Vue({
+        el: '#app',
+        created() {
+            this.formData = JSON.parse('${sendLogData!}');
+        },
+        data() {
+            return {
+                formData: {},
+                formConfig:{
+                    isShowSubmitBtn: false,
+                    isShowBackBtn: false,
+                    formBtns: [
+                        {
+                            text: '关闭',
+                            type: 'primary',
+                            click: () => {
+                                $.modal.close();
+                            }
+                        }
+                    ],
+                    formDesc: {
+                        requestCode: {
+                            layout: 12,
+                            type: 'text',
+                            label: '发送批次码:',
+                            disabled:true,
+                        },
+                        marketCode: {
+                            layout: 12,
+                            type: 'text',
+                            label: '所属市场:',
+                            displayFormatter (labels) {
+                                return loadProviderDisplayText({
+                                    provider: 'marketProvider',
+                                    value:labels,
+                                    by:"code"
+                                });
+                            }
+                        },
+                        systemCode: {
+                            layout: 12,
+                            type: 'text',
+                            label: '所属系统:',
+                            displayFormatter (labels) {
+                                return loadProviderDisplayText({
+                                    provider: 'dataDictionaryValueProvider',
+                                    value:labels,
+                                    queryParams: {dd_code:"system_code",dd_with_market:"false"}
+                                });
+                            }
+                        },
+                        sceneCode: {
+                            layout: 12,
+                            type: 'text',
+                            label: '业务场景:',
+                            displayFormatter (labels) {
+                                return loadProviderDisplayText({
+                                    provider: 'dataDictionaryValueProvider',
+                                    value:labels,
+                                    queryParams: {dd_code:"message_scene",dd_with_market:"false"}
+                                });
+                            }
+                        },
+                        cellphone: {
+                            layout: 12,
+                            type: 'text',
+                            label: '发送号码:',
+                        },
+                        receiptTime: {
+                            layout: 12,
+                            type: "text",
+                            label: "接收时间:",
+                        },
+                        templateCode: {
+                            layout: 12,
+                            type: "text",
+                            label: "模板编码:",
+                        },
+                        // parameters: {
+                        //     type: "text",
+                        //     label: "短信参数:",
+                        // },
+                        sendTime: {
+                            layout: 12,
+                            type: "text",
+                            label: "发送时间:",
+                        },
+                        sendState: {
+                            layout: 12,
+                            label: "推送状态:",
+                            type: "text",
+                            displayFormatter(labels) {
+                                return loadProviderDisplayText({
+                                    provider: 'marketChannelProvider',
+                                    value: labels
+                                });
+                            }
+                        },
+                        content: {
+                            type: "text",
+                            label: "消息内容:",
+                        },
+                        sendChannel:{
+                            layout: 12,
+                            label: "发送渠道:",
+                            type: "text",
+                            displayFormatter(labels) {
+                                return loadProviderDisplayText({
+                                    provider: 'sendStateProvider',
+                                    value: labels
+                                });
+                            }
+                        },
+                        requestId: {
+                            layout: 12,
+                            type: "text",
+                            label: "三方请求码:",
+                        },
+                        bizId: {
+                            layout: 12,
+                            type: "text",
+                            label: "三方Id:",
+                        },
+                        remarks: {
+                            type: "text",
+                            label: "备注:",
+                        },
+                    }
+                }
+            };
+        },
+        methods: {
+            handleRequest(data) {
+                $.table.search(data);
+            }
+        }
+    })
+
+    function loadProvider(data) {
+        return new Promise((resolve, reject) => {
+            axios.post('/convert/list.action', data)
+                .then((res) => {
+                    resolve(res.data);
+                    // console.log(res);
+                })
+                .catch(function (error) {
+                    reject(error);
+                    // console.log(error);
+                });
+        });
+    }
+
+    /**
+     * 根据Provider 获取回显值
+     * @param data Provider 查询条件
+     * @returns {*}
+     */
+    function loadProviderDisplayText(data) {
+        let result = "";
+        $.ajax({
+            type: "POST",
+            url: '/valueProvider/getDisplayText.action',
+            data: JSON.stringify(data),
+            processData:true,
+            contentType: 'application/json',
+            dataType: "json",
+            async : false,
+            success: function (ret) {
+                result = ret.data;
+            },
+            error: function(a,status,e){
+                console.error("出错了");
+            }
+        });
+        return result;
+    }
+</script>

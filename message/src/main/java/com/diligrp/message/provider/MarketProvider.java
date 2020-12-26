@@ -15,10 +15,7 @@ import com.diligrp.message.service.remote.MarketRpcService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -92,16 +89,17 @@ public class MarketProvider extends BatchDisplayTextProviderSupport {
         return batchProviderMeta;
     }
 
-//    public String getDisplayText(Object obj, Map metaMap, FieldMeta fieldMeta) {
-//        if (Objects.nonNull(obj)) {
-//            Optional<Firm> optionalFirm = Optional.empty();
-//            if (metaMap.containsKey("by") && Objects.equals(metaMap.get("by"),"id")){
-//                optionalFirm = firmService.getById(Long.valueOf(obj.toString()));
-//            }else{
-//                optionalFirm = firmService.getByCode(obj.toString());
-//            }
-//            return optionalFirm.isPresent() ? optionalFirm.get().getName() : "";
-//        }
-//        return "";
-//    }
+    @Override
+    public String getDisplayText(Object obj, Map metaMap, FieldMeta fieldMeta) {
+        if (Objects.nonNull(obj)) {
+            Optional<Firm> optionalFirm = Optional.empty();
+            if (metaMap.containsKey("by") && Objects.equals(metaMap.get("by"),"id")){
+                optionalFirm = marketRpcService.getById(Long.valueOf(obj.toString()));
+            }else{
+                optionalFirm = marketRpcService.getByCode(obj.toString());
+            }
+            return optionalFirm.isPresent() ? optionalFirm.get().getName() : "";
+        }
+        return "";
+    }
 }

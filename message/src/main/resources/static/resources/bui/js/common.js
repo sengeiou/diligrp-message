@@ -15,12 +15,7 @@ $(function(){
 });
 
 /******************************驱动执行区 begin***************************/
-/*$(function () {
-    $(window).resize(function () {
-        _grid.bootstrapTable('resetView')
-    });
-    queryDataHandler();
-});*/
+
 
 /******************************驱动执行区 end****************************/
 
@@ -141,4 +136,24 @@ function dateFtt(fmt,date) {
         if(new RegExp("("+ k +")").test(fmt))
             fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));
     return fmt;
+}
+
+/**
+ * 通用查询列表页查询条件form清空
+ */
+function commonClearQueryForm(formId) {
+    $('#' + formId + ' .form-control').val('');
+}
+
+/**
+ * 通用格式化显示tip
+ * @param value
+ * @param row
+ * @param index
+ */
+function formatForTip(value,row,index) {
+    if (value){
+        return "<span data-toggle='tooltip' data-placement='left' title='" + value + "'>" + value + "</span>";
+    }
+    return "";
 }

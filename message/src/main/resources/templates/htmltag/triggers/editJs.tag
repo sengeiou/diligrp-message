@@ -89,7 +89,7 @@
                 async : true,
                 success: function (ret) {
                     if(ret.success){
-                        window.location.href = "${contextPath}/triggers/index.html";
+                        window.location.href = "${contextPath}/triggers/list.html";
                     }else{
                         saveData = {};
                         swal('错误',ret.result, 'error');

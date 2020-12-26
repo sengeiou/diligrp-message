@@ -1,6 +1,7 @@
 package com.diligrp.message.provider;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.dili.commons.glossary.EnabledStateEnum;
 import com.dili.ss.dto.DTOUtils;
@@ -18,10 +19,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -86,6 +84,22 @@ public class DataDictionaryValueProvider extends BatchDisplayTextProviderSupport
         //当未匹配到数据时，返回的值
         batchProviderMeta.setMismatchHandler(t -> "-");
         return batchProviderMeta;
+    }
+
+
+    @Override
+    public String getDisplayText(Object obj, Map metaMap, FieldMeta fieldMeta) {
+        if (Objects.isNull(obj)){
+            return "";
+        }
+        List<DataDictionaryValue> fkList = this.getFkList(null, metaMap);
+        if (CollectionUtil.isNotEmpty(fkList)){
+            Optional<DataDictionaryValue> first = fkList.stream().filter(t -> StrUtil.equalsIgnoreCase(t.getCode(), obj.toString())).findFirst();
+            if (first.isPresent()){
+                return first.get().getName();
+            }
+        }
+        return "";
     }
 
     /**

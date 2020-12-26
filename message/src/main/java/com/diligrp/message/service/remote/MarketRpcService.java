@@ -2,7 +2,7 @@ package com.diligrp.message.service.remote;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.json.JSONUtil;
+import com.alibaba.fastjson.JSONObject;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.dto.DTOUtils;
 import com.dili.uap.sdk.domain.Firm;
@@ -123,12 +123,12 @@ public class MarketRpcService {
         String str = caffeineTimedCache.get(cacheKey, t -> {
             BaseOutput<Firm> byCode = firmRpc.getByCode(code);
             if (byCode.isSuccess() && Objects.nonNull(byCode.getData())) {
-                return JSONUtil.toJsonStr(byCode.getData());
+                return JSONObject.toJSONString(byCode.getData());
             }
             return null;
         });
         if (StrUtil.isNotBlank(str)) {
-            Firm dto = JSONUtil.toBean(str, Firm.class);
+            Firm dto = JSONObject.parseObject(str, Firm.class);
             return Optional.ofNullable(dto);
         }
         return Optional.empty();
@@ -144,12 +144,12 @@ public class MarketRpcService {
         String str = caffeineTimedCache.get(cacheKey, t -> {
             BaseOutput<Firm> byId = firmRpc.getById(id);
             if (byId.isSuccess() && Objects.nonNull(byId.getData())) {
-                return JSONUtil.toJsonStr(byId.getData());
+                return JSONObject.toJSONString(byId.getData());
             }
             return null;
         });
         if (StrUtil.isNotBlank(str)) {
-            Firm dto = JSONUtil.toBean(str, Firm.class);
+            Firm dto = JSONObject.parseObject(str, Firm.class);
             return Optional.ofNullable(dto);
         }
         return Optional.empty();
