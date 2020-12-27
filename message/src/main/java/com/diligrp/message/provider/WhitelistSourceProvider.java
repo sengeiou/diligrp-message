@@ -7,21 +7,17 @@ import com.dili.ss.metadata.ValueProvider;
 import com.diligrp.message.common.enums.MessageEnum;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * 白名单数据来源 的provider
+ */
 @Component
-public class MessageSourceProvider implements ValueProvider {
-    private static final List<ValuePair<?>> BUFFER = new ArrayList<>();
-
-    static {
-        BUFFER.addAll(Stream.of(MessageEnum.MessageSourceEnum.values())
-                .map(e -> new ValuePairImpl<>(e.getName(), e.getCode()))
-                .collect(Collectors.toList()));
-    }
+public class WhitelistSourceProvider implements ValueProvider {
 
     /**
      * 取下拉列表的选项
@@ -33,7 +29,9 @@ public class MessageSourceProvider implements ValueProvider {
      */
     @Override
     public List<ValuePair<?>> getLookupList(Object val, Map metaMap, FieldMeta fieldMeta) {
-        return BUFFER;
+        return Stream.of(MessageEnum.WhitelistSourceEnum.values())
+                .map(e -> new ValuePairImpl<>(e.getName(), e.getCode()))
+                .collect(Collectors.toList());
     }
 
     /**
@@ -46,12 +44,12 @@ public class MessageSourceProvider implements ValueProvider {
      */
     @Override
     public String getDisplayText(Object object, Map metaMap, FieldMeta fieldMeta) {
-        if (null == object) {
+        if (Objects.isNull(object)) {
             return null;
         }
-        ValuePair<?> valuePair = BUFFER.stream().filter(val -> object.toString().equals(val.getValue().toString())).findFirst().orElseGet(null);
-        if (null != valuePair) {
-            return valuePair.getText();
+        MessageEnum.WhitelistSourceEnum instance = MessageEnum.WhitelistSourceEnum.getInstance(Integer.valueOf(object.toString()));
+        if (Objects.nonNull(instance)) {
+            return instance.getName();
         }
         return null;
     }

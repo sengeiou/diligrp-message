@@ -6,7 +6,7 @@ public class MessageEnum {
 
     public enum ChannelEnum {
 
-        ALIDAYU("alidayu", "阿里大于"),
+        ALI_YUN("alidayu", "阿里云"),
         CHINA_MOBILE("china_mobile", "中国移动云MAS"),
         WEBCHINESE_SMS("webchinese_sms", "网建短信通"),
         ;
@@ -37,12 +37,17 @@ public class MessageEnum {
         }
     }
 
+    /**
+     * 消息发送状态
+     */
     public enum SendStateEnum {
         WAITING(0,"等待中"),
         SUCCEED(1, "成功"),
         FAILURE(2, "失败"),
         ;
+        @Getter
         private String name;
+        @Getter
         private Integer code;
 
         SendStateEnum(Integer code, String name){
@@ -50,7 +55,13 @@ public class MessageEnum {
             this.name = name;
         }
 
-        public static SendStateEnum getSendStateEnum(Integer code) {
+        /**
+         * 获取某个枚举值实例信息
+         *
+         * @param code
+         * @return
+         */
+        public static SendStateEnum getInstance(Integer code) {
             for (MessageEnum.SendStateEnum mce : MessageEnum.SendStateEnum.values()) {
                 if (mce.getCode().equals(code)) {
                     return mce;
@@ -59,31 +70,43 @@ public class MessageEnum {
             return null;
         }
 
-        public Integer getCode() {
-            return code;
-        }
-
-        public String getName() {
-            return name;
+        /**
+         * 对比枚举值是否相等
+         * @param code
+         * @return
+         */
+        public Boolean equalsToCode(Integer code) {
+            return this.getCode().equals(code);
         }
     }
 
-    public enum MessageSourceEnum {
+    /**
+     * 白名单数据来源
+     */
+    public enum WhitelistSourceEnum {
 
         SYSTEM(10, "系统加入"),
         MANUAL(20, "手动添加"),
         ;
 
+        @Getter
         private String name;
+        @Getter
         private Integer code;
 
-        MessageSourceEnum(Integer code, String name){
+        WhitelistSourceEnum(Integer code, String name){
             this.code = code;
             this.name = name;
         }
 
-        public static MessageSourceEnum getMessageSourceEnum(Integer code) {
-            for (MessageEnum.MessageSourceEnum mce : MessageEnum.MessageSourceEnum.values()) {
+        /**
+         * 获取某个枚举值实例信息
+         *
+         * @param code
+         * @return
+         */
+        public static WhitelistSourceEnum getInstance(Integer code) {
+            for (MessageEnum.WhitelistSourceEnum mce : MessageEnum.WhitelistSourceEnum.values()) {
                 if (mce.getCode().equals(code)) {
                     return mce;
                 }
@@ -91,12 +114,13 @@ public class MessageEnum {
             return null;
         }
 
-        public Integer getCode() {
-            return code;
-        }
-
-        public String getName() {
-            return name;
+        /**
+         * 对比枚举值是否相等
+         * @param code
+         * @return
+         */
+        public Boolean equalsToCode(Integer code) {
+            return this.getCode().equals(code);
         }
     }
 

@@ -3,13 +3,13 @@
     <div class="container-fluid">
         <div id="app">
             <ele-form
-                    :form-attrs="{
-                        size: 'medium'
-                    }"
-                    form-btn-size="medium"
-                    v-model="formData"
-                    v-bind="formConfig"
-                    :request-fn="handleRequest">
+                :form-attrs="{
+                    size: 'medium'
+                }"
+                form-btn-size="medium"
+                v-model="formData"
+                v-bind="formConfig"
+                :request-fn="handleRequest">
             </ele-form>
         </div>
     </div>
@@ -182,4 +182,5 @@
         });
         return result;
     }
+
 </script>

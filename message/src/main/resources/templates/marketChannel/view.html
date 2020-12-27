@@ -6,20 +6,9 @@
            :form-attrs="{
                 size: 'large'
             }"
-            ref="myForm"
-            :span="18"
-            label-position="left"
-            :is-show-cancel-btn="false"
-            :is-show-error-notify="false"
             form-btn-size="medium"
-            :form-btns="formBtns"
-            :is-dialog="true"
             v-bind="formConfig"
             v-model="formData">
-            <template v-slot:secret="{ desc, data, field, formData }">
-                <el-input show-password v-model="formData.secret" readonly>
-                </el-input>
-            </template>
         </ele-form>
     </div>
 </div>
@@ -35,49 +24,44 @@
         el: '#app',
         data() {
             return {
-                formBtns: [
-                    {
-                        text: ' 关闭 ',
-                        click: () => {
-                            $.modal.close();
-                        }
-                    }
-                ],
                 formData: {},
                 formConfig: {
-                    readonly: true,
                     isShowSubmitBtn: false,
+                    isShowBackBtn: false,
+                    formBtns: [
+                        {
+                            text: '关闭',
+                            type: 'primary',
+                            click: () => {
+                                $.modal.close();
+                            }
+                        }
+                    ],
                     formDesc: {
                         marketCode: {
-                            options: loadProvider({
-                                provider: 'marketProvider',
-                                queryParams: {required: true}
-                            }, true, "marketCode"),
                             label: "归属市场",
-                            type: "select",
-                            disabled(data) {
-                                return true;
+                            type: "text",
+                            displayFormatter (labels) {
+                                return loadProviderDisplayText({
+                                    provider: 'marketProvider',
+                                    value:labels,
+                                    by:"code"
+                                });
                             }
                         },
                         channel: {
-                            options: function (data) {
-                                return loadProvider({
-                                    provider: 'marketChannelProvider', stringValue: true,
-                                    queryParams: {required: true}
-                                }, true, "channel")
-                            },
                             label: "通道",
-                            type: "select",
-                            disabled(data) {
-                                return true;
+                            type: "text",
+                            displayFormatter (labels) {
+                                return loadProviderDisplayText({
+                                    provider: 'marketChannelProvider',
+                                    value:labels
+                                });
                             }
                         },
                         signature: {
                             label: "签名",
-                            type: "input",
-                            disabled(data) {
-                                return true;
-                            }
+                            type: "text"
                         },
                         companyName: {
                             vif: function (data) {
@@ -90,21 +74,15 @@
                             },
                             optionsLinkageFields: ['channel'],
                             label: "企业名称",
-                            type: "input",
-                            disabled(data) {
-                                return true;
-                            }
+                            type: "text"
                         },
                         accessKey: {
                             label: "账号",
-                            type: "input",
-                            disabled(data) {
-                                return true;
-                            }
+                            type: "text"
                         },
                         secret: {
                             label: "密钥",
-                            type: "password"
+                            type: "text"
                         }
                     }
                 }
@@ -132,4 +110,30 @@
                 });
         });
     }
+
+    /**
+     * 根据Provider 获取回显值
+     * @param data Provider 查询条件
+     * @returns {*}
+     */
+    function loadProviderDisplayText(data) {
+        let result = "";
+        $.ajax({
+            type: "POST",
+            url: '/valueProvider/getDisplayText.action',
+            data: JSON.stringify(data),
+            processData:true,
+            contentType: 'application/json',
+            dataType: "json",
+            async : false,
+            success: function (ret) {
+                result = ret.data;
+            },
+            error: function(a,status,e){
+                console.error("出错了");
+            }
+        });
+        return result;
+    }
+
 </script>

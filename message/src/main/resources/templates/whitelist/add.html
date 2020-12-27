@@ -1,0 +1,143 @@
+<#bs4Body>
+<#vueElm />
+<div id=app>
+    <div class="container-fluid pb-5">
+        <ele-form
+            :form-attrs="{
+                size: 'large'
+            }"
+            ref="myForm"
+            :span="18"
+            label-position="left"
+            :is-show-cancel-btn="false"
+            submit-btn-text="提交"
+            :is-show-error-notify="false"
+            form-btn-size="medium"
+            :form-btns="formBtns"
+            :is-dialog="true"
+            v-bind="formConfig"
+            v-model="formData"
+            :request-fn="handleRequest">
+        </ele-form>
+    </div>
+</div>
+<style>
+    .aa i:hover {
+        color: #5cb6ff;
+    }
+</style>
+</#bs4Body>
+
+<script>
+    window.rootPath = '${contextPath}';
+</script>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data() {
+            return {
+                formBtns: [
+                    {
+                        text: ' 关闭 ',
+                        click: () => {
+                            $.modal.close();
+                        }
+                    }
+                ],
+                formData: {},
+                formConfig: {
+                    formDesc: {
+                        marketCode: {
+                            options: loadProvider({
+                                provider: 'marketProvider',
+                                queryParams: {required: true}
+                            }, true, "marketCode"),
+                            label: "归属市场",
+                            type: "select",
+                            required: true
+                        },
+                        customerName: {
+                            label: "客户姓名",
+                            type: "input",
+                            required: true,
+                            attrs: {
+                                maxlength: 20,
+                                showWordLimit: true,
+                            }
+                        },
+                        cellphone: {
+                            label: "手机号",
+                            type: "input",
+                            required: true,
+                            attrs: {
+                                maxlength: 11,
+                                showWordLimit: true,
+                            },
+                            rules: [
+                                {
+                                    pattern: new RegExp("^(1[3-9]\\d{9})$", ""),
+                                    type: "string",
+                                    message: "请输入正确的手机号码"
+                                }
+                            ],
+                        },
+                        startDate: {
+                            label: "开始日期",
+                            type: "date",
+                            required: true,
+                            valueFormat:"yyyy-MM-dd",
+                            attrs: {
+                                editable: false
+                            }
+                        },
+                        endDate: {
+                            label: "结束日期",
+                            type: "date",
+                            required: true,
+                            valueFormat:"yyyy-MM-dd",
+                            attrs: {
+                                editable: false
+                            }
+                        },
+                    }
+                }
+            };
+        },
+        methods: {
+            handleRequest(data) {
+                axios.post(rootPath + "/whitelist/insert.action", data)
+                    .then(function (response) {
+                        if (response.data.success){
+                            $.modal.close();
+                            parent.queryDataHandler();
+                        }else{
+                            $.modal.alertError(response.data.message);
+                        }
+                    })
+                    .catch(function (error) {
+                        $.modal.alertError("系统错误");
+                    });
+            },
+            handleRequestSuccess() {
+                this.$message.success('保存成功')
+            }
+        }
+    })
+
+    function loadProvider(data, first, name) {
+        return new Promise((resolve, reject) => {
+            axios.post('/convert/list.action', data)
+                .then((res) => {
+                    if (first) {
+                        if (!app.formData[name]){
+                            app.formData[name] = res.data[0].value;
+                        }
+                    }
+                    resolve(res.data);
+                })
+                .catch(function (error) {
+                    reject(error);
+                });
+        });
+    }
+</script>

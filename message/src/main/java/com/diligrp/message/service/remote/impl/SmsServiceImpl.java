@@ -105,7 +105,7 @@ public class SmsServiceImpl implements SmsService {
                     object.put(MessagePushConstant.PARAMETERS, sendLog.getParameters());
                     object.put(MessagePushConstant.CONTENT, content);
                     BaseOutput<String> output = null;
-                    if (t.getChannel().equals(MessageEnum.ChannelEnum.ALIDAYU.getCode())) {
+                    if (t.getChannel().equals(MessageEnum.ChannelEnum.ALI_YUN.getCode())) {
                         output = alidayuSmsImpl.sendSMS(object);
                     } else if (t.getChannel().equals(MessageEnum.ChannelEnum.CHINA_MOBILE.getCode())) {
                         object.put(MessagePushConstant.COMPANY_NAME, marketChannel.getCompanyName());

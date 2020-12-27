@@ -1,8 +1,11 @@
 package com.diligrp.message.domain.input;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.diligrp.message.domain.Whitelist;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 
@@ -19,11 +22,17 @@ public class WhitelistSaveInfo extends Whitelist {
      * 开始时间
      * 用于接收页面传入的对象
      */
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JSONField(format = "yyyy-MM-dd")
     private LocalDate startDate;
 
     /**
      * 结束时间
      * 用于接收页面传入对象
      */
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JSONField(format = "yyyy-MM-dd")
     private LocalDate endDate;
 }

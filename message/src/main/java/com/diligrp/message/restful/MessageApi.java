@@ -76,7 +76,7 @@ public class MessageApi {
             Whitelist whitelist = new Whitelist();
             BeanUtil.copyProperties(input, whitelist,"id");
             whitelist.setSourceId(input.getSourceId());
-            whitelist.setSource(String.valueOf(MessageEnum.MessageSourceEnum.SYSTEM.getCode()));
+            whitelist.setSource(String.valueOf(MessageEnum.WhitelistSourceEnum.SYSTEM.getCode()));
             whitelist.setDeleted(MessageEnum.DeletedEnum.NO.getCode());
             whitelistService.saveWhitelist(whitelist);
             log.info(String.format("白名单数据【%s】保存成功", JSONUtil.toJsonStr(input)));

@@ -39,12 +39,6 @@ public class WhitelistServiceImpl extends BaseServiceImpl<Whitelist, Long> imple
         if (whitelistVo.getKeywords() != null) {
             whitelistVo.setMetadata(IDTO.AND_CONDITION_EXPR, "(customer_name='" + whitelistVo.getKeywords() + "' or cellphone ='" + whitelistVo.getKeywords() + "')");
         }
-//        if (whitelistVo.getEndTime() != null){
-//            Calendar c= Calendar.getInstance();
-//            c.setTime(whitelistVo.getEndTime());
-//            c.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH), 23, 59, 59);
-//            whitelistVo.setEndTime(c.getTime());//结束时间 的 23:59:59
-//        }
         whitelistVo.setAuthMarkets(marketRpcService.getCurrentUserFirmCodes());
         return listEasyuiPageByExample(whitelistVo, useProvider);
     }
