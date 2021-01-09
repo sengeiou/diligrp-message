@@ -121,14 +121,14 @@ public class SmsServiceImpl implements SmsService {
                             sendLog.setBizId(output.getMessage());
                             sendLog.setSendState(MessageEnum.SendStateEnum.SUCCEED.getCode());
                             sendLog.setSendChannel(t.getChannel());
-                            sendLog.setRemarks(String.format("账号：%s ,模板code：%s", marketChannel.getAccessKey(), t.getTemplateCode()));
+                            sendLog.setRemarks(String.format("账号：%s ，模板code：%s", marketChannel.getAccessKey(), Objects.toString(t.getTemplateCode(), "无")));
                             flag = true;
                             break templates;
                         } else {
                             SendLog tempLog = new SendLog();
                             BeanUtil.copyProperties(sendLog, tempLog);
                             tempLog.setSendState(MessageEnum.SendStateEnum.FAILURE.getCode());
-                            tempLog.setRemarks(String.format("账号：%s ,错误信息：%s", marketChannel.getAccessKey(), output.getMessage()));
+                            tempLog.setRemarks(String.format("账号：%s ，错误信息：%s", marketChannel.getAccessKey(), output.getMessage()));
                             tempLog.setId(null);
                             tempLog.setSendChannel(t.getChannel());
                             sendLogs.add(tempLog);

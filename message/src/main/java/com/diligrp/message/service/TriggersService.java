@@ -4,6 +4,7 @@ import com.dili.ss.base.BaseService;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.EasyuiPageOutput;
 import com.diligrp.message.domain.Triggers;
+import com.diligrp.message.domain.input.TriggersSaveInput;
 import com.diligrp.message.domain.vo.TriggersVo;
 
 import java.util.List;
@@ -51,8 +52,8 @@ public interface TriggersService extends BaseService<Triggers, Long> {
 
     /**
      * 保存触发点信息
-     * @param triggersVo
+     * @param triggersSaveInput
      * @return
      */
-    BaseOutput saveInfo(TriggersVo triggersVo);
+    BaseOutput saveInfo(TriggersSaveInput triggersSaveInput);
 }

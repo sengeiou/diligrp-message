@@ -1,59 +1,89 @@
 package com.diligrp.message.controller;
 
 import cn.hutool.core.collection.CollectionUtil;
-import com.alibaba.fastjson.JSONObject;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.uap.sdk.domain.UserTicket;
 import com.dili.uap.sdk.session.SessionContext;
 import com.diligrp.message.domain.MarketChannel;
 import com.diligrp.message.domain.Triggers;
 import com.diligrp.message.domain.TriggersTemplate;
-import com.diligrp.message.domain.vo.TriggersVo;
+import com.diligrp.message.domain.input.TriggersSaveInput;
 import com.diligrp.message.service.MarketChannelService;
 import com.diligrp.message.service.TriggersService;
 import com.diligrp.message.service.TriggersTemplateService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 由MyBatis Generator工具自动生成
  * This file was generated on 2019-03-31 10:52:31.
  * @author yuehongbo
  */
+@RequiredArgsConstructor
 @Controller
 @RequestMapping("/triggers")
 public class TriggersController {
 
-    @Autowired
-    private TriggersService triggersService;
-    @Autowired
-    private MarketChannelService marketChannelService;
-    @Autowired
-    private TriggersTemplateService triggersTemplateService;
+    private final TriggersService triggersService;
+    private final MarketChannelService marketChannelService;
+    private final TriggersTemplateService triggersTemplateService;
 
-    @RequestMapping(value="/index.html", method = RequestMethod.GET)
+    /**
+     * 场景模板首页
+     * @param modelMap
+     * @return
+     */
+    @RequestMapping(value = "/index.html", method = RequestMethod.GET)
     public String index(ModelMap modelMap) {
-        return "triggers/index";
+        return "triggers/list";
     }
 
-    @RequestMapping(value="/list.action", method = {RequestMethod.GET, RequestMethod.POST})
-    public @ResponseBody List<Triggers> list(@ModelAttribute Triggers triggers) {
-        return triggersService.list(triggers);
-    }
 
-    @RequestMapping(value="/listPage.action", method = {RequestMethod.GET, RequestMethod.POST})
-    public @ResponseBody String listPage(@ModelAttribute Triggers triggers) throws Exception {
+    /**
+     * 分页查询场景模板信息
+     * @param triggers
+     * @return
+     * @throws Exception
+     */
+    @PostMapping(value = "/listPage.action")
+    @ResponseBody
+    public String listPage(@RequestBody Triggers triggers) throws Exception {
         return triggersService.listPageForEasyui(triggers, true).toString();
     }
 
-    @RequestMapping(value="/save.action", method = {RequestMethod.GET, RequestMethod.POST})
-    public @ResponseBody BaseOutput save(String jsonParams) {
-        TriggersVo triggersVo = JSONObject.parseObject(jsonParams, TriggersVo.class);
-        return triggersService.saveInfo(triggersVo);
+
+    /**
+     * 进入消息触发预编辑页面
+     * @param id 数据ID
+     * @param modelMap
+     * @return
+     */
+    @GetMapping(value = "/preSave.action")
+    public String preSave(Long id, ModelMap modelMap) {
+        modelMap.put("isFirst","true");
+        if (Objects.nonNull(id)){
+            Triggers triggers = triggersService.get(id);
+            if (null != triggers){
+                modelMap.put("triggers",triggers);
+                List<TriggersTemplate> triggersTemplates = triggersTemplateService.selectByTriggerCode(triggers.getTriggerCode());
+                if (CollectionUtil.isNotEmpty(triggersTemplates)){
+                    modelMap.put("triggersTemplateList",triggersTemplates);
+                }
+            }
+        }
+        return "triggers/add";
+    }
+
+
+    @PostMapping(value = "/save.action")
+    @ResponseBody
+    public BaseOutput save(@RequestBody TriggersSaveInput saveInput) {
+        return triggersService.saveInfo(saveInput);
     }
 
     @RequestMapping(value="/delete.action", method = {RequestMethod.GET, RequestMethod.POST})

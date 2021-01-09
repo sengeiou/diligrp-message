@@ -1,0 +1,336 @@
+<#bs4Body>
+<#vueElm />
+<div id=app>
+    <el-form
+        ref="dataFormLXR"
+        size="medium"
+        :model="triggers"
+        :inline="true"
+    >
+        <el-form-item
+                label="所属市场"
+                prop="marketCode"
+                :rules="rules.marketCode">
+            <el-select v-model="triggers.marketCode" @change="marketChange">
+                <el-option
+                        v-for="item in marketOptions"
+                        :key="item.value"
+                        :label="item.text"
+                        :value="item.value">
+                </el-option>
+            </el-select>
+        </el-form-item>
+        <el-form-item
+                label="所属系统"
+                prop="systemCode"
+                :rules="rules.systemCode">
+            <el-select v-model="triggers.systemCode">
+                <el-option
+                        v-for="item in systemCodeOptions"
+                        :key="item.value"
+                        :label="item.text"
+                        :value="item.value">
+                </el-option>
+            </el-select>
+        </el-form-item>
+        <el-form-item
+                label="应用场景"
+                prop="sceneCode"
+                :rules="rules.sceneCode">
+            <el-select v-model="triggers.sceneCode">
+                <el-option
+                        v-for="item in sceneCodeOptions"
+                        :key="item.value"
+                        :label="item.text"
+                        :value="item.value">
+                </el-option>
+            </el-select>
+        </el-form-item>
+        <el-form-item
+                label="应用白名单"
+                prop="whitelist"
+                :rules="rules.whitelist">
+            <el-select v-model="triggers.whitelist">
+                <el-option
+                        v-for="item in whitelistOptions"
+                        :key="item.value"
+                        :label="item.text"
+                        :value="item.value">
+                </el-option>
+            </el-select>
+        </el-form-item>
+
+        <div style="text-align: center">
+            <el-divider><i class="el-icon-info"></i></el-divider>
+            <span style="color:#ff465f">短信场景通道模板配置</span>
+        </div>
+        <el-table :data="triggers.templateList" show-header="false" style="width: 100%" max-height="300"
+                  :row-class-name="tableRowClassName">
+            <el-table-column label="渠道">
+                <template slot-scope="scope">
+                    <el-form-item
+                        label=""
+                        :prop="'templateList.' + scope.$index + '.channel'"
+                        :rules="rules.channel"
+                    >
+                        <el-select v-model="scope.row.channel" @change="channelChange(scope.row)">
+                            <el-option
+                                v-for="item in marketChannelOptions"
+                                :key="item.value"
+                                :label="item.text"
+                                :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                </template>
+            </el-table-column>
+            <el-table-column label="AccessKey">
+                <template slot-scope="scope">
+                    <el-form-item
+                        label=""
+                        :rules="rules.accessKeyIds"
+                        :prop="'templateList.' + scope.$index + '.accessKeyIds'"
+                    >
+                        <el-select v-model="scope.row.accessKeyIds" multiple collapse-tags >
+                            <el-option
+                                    v-for="item in accessKeyOptions[scope.$index]"
+                                    :key="item.value"
+                                    :label="item.accessKey"
+                                    :value="item.id">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                </template>
+            </el-table-column>
+            <el-table-column label="模板名称">
+                <template slot-scope="scope">
+                    <el-form-item
+                        label=""
+                        :rules="rules.templateName"
+                        :prop="'templateList.' + scope.$index + '.templateName'"
+                    >
+                        <el-input v-model="scope.row.templateName" maxlength="50"
+                                  show-word-limit style="padding: 0 48px 0 0"
+                              placeholder="请输入模板名称"
+                        >
+                        </el-input>
+                    </el-form-item>
+                </template>
+            </el-table-column>
+            <el-table-column label="模板编码">
+                <template slot-scope="scope">
+                    <el-form-item
+                            label=""
+                            :rules="rules.templateCode"
+                            :prop="'templateList.' + scope.$index + '.templateCode'"
+                    >
+                        <el-input v-model="scope.row.templateCode" maxlength="20"
+                                  show-word-limit style="padding: 0 48px 0 0"
+                                  placeholder="若通道为阿里云，请输入在阿里云申请的模板编码"
+                        >
+                        </el-input>
+                    </el-form-item>
+                </template>
+            </el-table-column>
+            <el-table-column label="模板内容">
+                <template slot-scope="scope">
+                    <el-form-item
+                            label=""
+                            :rules="rules.templateContent"
+                            :prop="'templateList.' + scope.$index + '.templateContent'"
+                    >
+                        <el-input v-model="scope.row.templateContent" maxlength="255"
+                                  show-word-limit style="padding: 0 50px 0 0"
+                                  placeholder="请输入模板内容" type="textarea"
+                                  :autosize="{ minRows: 2, maxRows: 4}"
+                        >
+                        </el-input>
+                    </el-form-item>
+                </template>
+            </el-table-column>
+            <el-table-column label="" width="80">
+                <template slot-scope="scope">
+                    <el-form-item>
+                        <el-button
+                                type="danger"
+                                icon="el-icon-delete"
+                                circle
+                                size="small"
+                                @click="deleteRow(scope.row,scope.$index)"/>
+                    </el-form-item>
+                </template>
+            </el-table-column>
+        </el-table>
+        <el-row>
+            <el-col :span="24" align="left" style="padding:10px">
+                <div class="el-table-add-row">
+                    <el-tooltip content="添加" placement="top">
+                        <el-button type="success" icon="el-icon-plus" circle size="small" @click="addRow()"/>
+                    </el-tooltip>
+
+                </div>
+            </el-col>
+        </el-row>
+    </el-form>
+    <el-row style="margin-top: 20px;">
+        <el-button size="medium" @click="submit" type="primary">提交</el-button>
+        <el-button size="medium" @click="cancel">关闭</el-button>
+    </el-row>
+</div>
+
+</#bs4Body>
+
+<script type="text/javascript">
+    window.rootPath = '${contextPath}';
+</script>
+
+<script>
+    var app = new Vue({
+        el: '#app',
+        data() {
+            return {
+                index: 0,
+                triggers: {
+                    templateList: [],
+                },
+                rules: {
+                    marketCode: [{required: true, message: '请选择市场', trigger: 'change'}],
+                    systemCode: [{required: true, message: '请选择系统', trigger: 'change'}],
+                    sceneCode: [{required: true, message: '请选择场景', trigger: 'change'}],
+                    whitelist: [{required: true, message: '请选择是否应用白名单', trigger: 'change'}],
+                    channel: [{required: true, message: '请选择渠道', trigger: 'change'}],
+                    accessKeyIds: [{required: true, message: '请选择市场通道key', trigger: 'change'}],
+                    templateName: [{maxlength: 50, message: '模板名称不能超过50个字符', trigger: 'blur'}],
+                    templateCode: [{maxlength: 20, message: '模板编码不能超过20个字符', trigger: 'blur'}],
+                    templateContent: [{required: true, message: '请输入模板内容', trigger: 'blur'},{maxlength: 255, message: '模板内容不能超过255个字符', trigger: 'blur'}],
+                },
+                marketChannelOptions: [],
+                marketOptions:[],
+                accessKeyOptions:[],
+                whitelistOptions:[],
+                systemCodeOptions:[],
+                sceneCodeOptions:[],
+            };
+        },
+        mounted: function () {
+            //加载市场通道数据
+            this.marketChannelOptions = loadByProvider({
+                provider: 'marketChannelProvider',
+                queryParams: {required: true}
+            });
+            //加载市场数据
+            this.marketOptions = loadByProvider({
+                provider: 'marketProvider',
+                queryParams: {required: true}
+            });
+            //加载消息系统数据
+            this.systemCodeOptions = loadByProvider({
+                provider: 'dataDictionaryValueProvider', stringValue: true,
+                queryParams: {dd_code: "system_code", dd_with_market: false, required: true}
+            });
+            //加载是否应用白名单数据
+            this.whitelistOptions = loadByProvider({
+                provider: 'booleanProvider',
+                queryParams: {required: true}
+            });
+            //加载场景数据
+            this.sceneCodeOptions = loadByProvider({
+                provider: 'dataDictionaryValueProvider', stringValue: true,
+                queryParams: {dd_code: "message_scene", dd_with_market: false, required: true}
+            });
+
+        },
+        methods: {
+            //表格添加行
+            addRow() {
+                app.triggers.templateList.push({popover: true})
+            },
+            //表格删除行
+            deleteRow(row, index) {
+                app.triggers.templateList.splice(index, 1)
+            },
+            tableRowClassName({row, rowIndex}){
+                row.index = rowIndex;
+            },
+            //市场信息变更时的事件，动态重新加载市场对应的通道key
+            marketChange(value){
+                if (app.triggers.templateList.length != 0) {
+                    for (let i = 0; i < app.triggers.templateList.length; i++) {
+                        app.triggers.templateList[i].accessKeyIds = [];
+                        axios.get('/triggers/getChannelKey.action', {params:{marketCode:value,channel:app.triggers.templateList[i].channel}})
+                            .then((res) => {
+                                Vue.set(app.accessKeyOptions,i,res.data.data);
+                            })
+                            .catch(function (error) {
+                            });
+                    }
+                }
+            },
+            submit() {
+                if (app.triggers.templateList.length === 0) {
+                    this.$message({
+                        message: '请配置模板信息',
+                        type: 'warning'
+                    });
+                    return
+                }
+                app.$refs['dataFormLXR'].validate(valid => {
+                    if (valid) {
+                        axios.post(rootPath + "/triggers/save.action", app.triggers)
+                            .then(function (response) {
+                                $.operate.saveSuccess(response.data);
+                            })
+                            .catch(function (error) {
+                                $.modal.alertError("系统错误");
+                            });
+                    }
+                })
+            },
+            //通道信息发生变更时，重新加载通道key
+            channelChange(row) {
+                app.triggers.templateList[row.index].accessKeyIds = [];
+                let marketCode = app.triggers.marketCode;
+                if (marketCode) {
+                    axios.get('/triggers/getChannelKey.action', {
+                        params: {
+                            marketCode: marketCode,
+                            channel: row.channel
+                        }
+                    }).then((res) => {
+                        Vue.set(app.accessKeyOptions, row.index, res.data.data);
+                    }).catch(function (error) {
+                    });
+                } else {
+                    this.$message({
+                        message: '请先选择市场信息',
+                        type: 'warning',
+                        center: true
+                    });
+                }
+
+            },
+            cancel() {
+                $.modal.close();
+            }
+        }
+    })
+
+
+    function loadByProvider(data) {
+        let resultData =[];
+        $.ajax({
+            type: "POST",
+            url: "/convert/list.action",
+            data: JSON.stringify(data),
+            contentType: 'application/json',
+            dataType: "json",
+            async : false,
+            success : function(ret) {
+                resultData =  ret;
+            },
+            error : function() {
+            }
+        });
+        return resultData;
+    }
+</script>

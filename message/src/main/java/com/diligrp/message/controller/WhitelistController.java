@@ -1,12 +1,19 @@
 package com.diligrp.message.controller;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.util.PhoneUtil;
+import com.dili.logger.sdk.annotation.BusinessLogger;
+import com.dili.logger.sdk.util.LoggerUtil;
 import com.dili.ss.domain.BaseOutput;
+import com.dili.uap.sdk.domain.UserTicket;
+import com.dili.uap.sdk.session.SessionContext;
 import com.diligrp.message.common.enums.MessageEnum;
+import com.diligrp.message.constants.MessageConstant;
 import com.diligrp.message.domain.Whitelist;
 import com.diligrp.message.domain.input.WhitelistSaveInfo;
 import com.diligrp.message.domain.vo.WhitelistVo;
 import com.diligrp.message.service.WhitelistService;
+import com.diligrp.message.service.remote.MarketRpcService;
 import com.diligrp.message.utils.MessageUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -15,6 +22,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.Objects;
 
 /**
  * 由MyBatis Generator工具自动生成
@@ -26,6 +35,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class WhitelistController {
 
     private final WhitelistService whitelistService;
+    private final MarketRpcService marketRpcService;
 
     /**
      * 白名单首页
@@ -89,11 +99,20 @@ public class WhitelistController {
      */
     @RequestMapping(value="/delete.action", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
-    public  BaseOutput delete(Long id) {
+    @BusinessLogger(systemCode = MessageConstant.SYSTEM_CODE, businessType = "message_whitelist", notes = "删除白名单数据", operationType = "del")
+    public BaseOutput delete(Long id) {
         Whitelist whitelist = whitelistService.get(id);
-        whitelist.setDeleted(MessageEnum.DeletedEnum.YES.getCode());
-        whitelist.setModified(MessageUtil.now());
-        whitelistService.updateSelective(whitelist);
+        if (Objects.nonNull(whitelist)) {
+            whitelist.setDeleted(MessageEnum.DeletedEnum.YES.getCode());
+            whitelist.setModified(MessageUtil.now());
+            whitelistService.updateSelective(whitelist);
+            StringBuffer stringBuffer = new StringBuffer();
+            stringBuffer.append(" 市场: ").append(marketRpcService.getByCode(whitelist.getMarketCode()).get().getName());
+            stringBuffer.append(" 客户姓名: ").append(whitelist.getCustomerName());
+            stringBuffer.append(" 客户电话: ").append(PhoneUtil.hideBetween(whitelist.getCellphone()));
+            UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
+            LoggerUtil.buildBusinessLoggerContext(whitelist.getId(), String.valueOf(whitelist.getId()), userTicket.getId(), userTicket.getRealName(), userTicket.getFirmId(), stringBuffer.toString());
+        }
         return BaseOutput.success("删除成功");
     }
 }

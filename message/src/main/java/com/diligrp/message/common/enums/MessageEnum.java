@@ -1,6 +1,9 @@
 package com.diligrp.message.common.enums;
 
+import com.google.common.collect.Maps;
 import lombok.Getter;
+
+import java.util.Map;
 
 public class MessageEnum {
 
@@ -11,7 +14,9 @@ public class MessageEnum {
         WEBCHINESE_SMS("webchinese_sms", "网建短信通"),
         ;
 
+        @Getter
         private String name;
+        @Getter
         private String code;
 
         ChannelEnum(String code, String name){
@@ -19,21 +24,21 @@ public class MessageEnum {
             this.name = name;
         }
 
-        public static ChannelEnum getChannelEnum(String code) {
-            for (MessageEnum.ChannelEnum mc : MessageEnum.ChannelEnum.values()) {
-                if (mc.getCode().equals(code)) {
-                    return mc;
-                }
+        private static Map<String, ChannelEnum> initMaps = Maps.newHashMap();
+
+        static {
+            for (ChannelEnum anEnum : ChannelEnum.values()) {
+                initMaps.put(anEnum.code, anEnum);
             }
-            return null;
         }
 
-        public String getCode() {
-            return code;
-        }
-
-        public String getName() {
-            return name;
+        /**
+         * 获取一个枚举实例
+         * @param code
+         * @return
+         */
+        public static ChannelEnum getInstance(String code) {
+            return initMaps.getOrDefault(code,null);
         }
     }
 
@@ -165,7 +170,9 @@ public class MessageEnum {
         TRUE(true, "是"),
         ;
 
+        @Getter
         private String name;
+        @Getter
         private Boolean code;
 
         BooleanEnum(Boolean code, String name){
@@ -173,21 +180,13 @@ public class MessageEnum {
             this.name = name;
         }
 
-        public static BooleanEnum getBoolean(Boolean code) {
+        public static BooleanEnum getInstance(Boolean code) {
             for (BooleanEnum be : BooleanEnum.values()) {
                 if (be.getCode().equals(code)) {
                     return be;
                 }
             }
             return null;
-        }
-
-        public Boolean getCode() {
-            return code;
-        }
-
-        public String getName() {
-            return name;
         }
     }
 
@@ -211,7 +210,7 @@ public class MessageEnum {
             this.name = name;
         }
 
-        public static WhitelistStatus getWhitelistStatus(Integer code) {
+        public static WhitelistStatus getInstance(Integer code) {
             for (WhitelistStatus ws : WhitelistStatus.values()) {
                 if (ws.getCode().equals(code)) {
                     return ws;

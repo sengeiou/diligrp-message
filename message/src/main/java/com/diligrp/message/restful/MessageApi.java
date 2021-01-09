@@ -45,11 +45,7 @@ public class MessageApi {
      * @return
      */
     @RequestMapping(value = "/receiveMessage.api", method = {RequestMethod.GET, RequestMethod.POST})
-    public BaseOutput receiveMessage(@RequestBody @Validated MessageInfoInput messageInfoInput, HttpServletRequest request, BindingResult br) {
-        if (br.hasErrors()) {
-            log.warn(String.format("短信发送数据[%s]验证失败[%s]", JSONUtil.toJsonStr(messageInfoInput), br.getFieldError().getDefaultMessage()));
-            return BaseOutput.failure().setMessage(br.getFieldError().getDefaultMessage());
-        }
+    public BaseOutput receiveMessage(@RequestBody MessageInfoInput messageInfoInput, HttpServletRequest request) {
         try {
             if (Objects.isNull(messageInfoInput.getIp()) && Objects.nonNull(request)) {
                 messageInfoInput.setIp(NetUtil.getIpAddress(request));

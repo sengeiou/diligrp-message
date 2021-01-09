@@ -94,20 +94,11 @@
                         templateCode: {
                             layout: 12,
                             type: "text",
-                            label: "模板编码:",
+                            label: "指定模板码:",
                         },
-                        // parameters: {
-                        //     type: "text",
-                        //     label: "短信参数:",
-                        // },
-                        sendTime: {
+                        sendChannel:{
                             layout: 12,
-                            type: "text",
-                            label: "发送时间:",
-                        },
-                        sendState: {
-                            layout: 12,
-                            label: "推送状态:",
+                            label: "发送渠道:",
                             type: "text",
                             displayFormatter(labels) {
                                 return loadProviderDisplayText({
@@ -116,13 +107,18 @@
                                 });
                             }
                         },
-                        content: {
+                        parameters: {
                             type: "text",
-                            label: "消息内容:",
+                            label: "短信参数:",
                         },
-                        sendChannel:{
+                        sendTime: {
                             layout: 12,
-                            label: "发送渠道:",
+                            type: "text",
+                            label: "发送时间:",
+                        },
+                        sendState: {
+                            layout: 12,
+                            label: "发送状态:",
                             type: "text",
                             displayFormatter(labels) {
                                 return loadProviderDisplayText({
@@ -130,6 +126,10 @@
                                     value: labels
                                 });
                             }
+                        },
+                        content: {
+                            type: "text",
+                            label: "消息内容:",
                         },
                         requestId: {
                             layout: 12,

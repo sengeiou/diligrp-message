@@ -1,5 +1,10 @@
 package com.diligrp.message.common.enums;
 
+import com.google.common.collect.Maps;
+import lombok.Getter;
+
+import java.util.Map;
+
 /**
  * <B>Description</B>
  * <B>Copyright:本软件源代码版权归农丰时代所有,未经许可不得任意复制与传播.</B>
@@ -16,7 +21,9 @@ public class TriggersEnum {
         DISABLED(0, "已禁用"),
         ;
 
+        @Getter
         private String name;
+        @Getter
         private Integer code;
 
         EnabledStateEnum(Integer code, String name){
@@ -24,21 +31,31 @@ public class TriggersEnum {
             this.name = name;
         }
 
-        public static EnabledStateEnum getEnabledState(Integer code) {
+        private static Map<Integer, EnabledStateEnum> initMaps = Maps.newHashMap();
+
+        static {
             for (EnabledStateEnum anEnum : EnabledStateEnum.values()) {
-                if (anEnum.getCode().equals(code)) {
-                    return anEnum;
-                }
+                initMaps.put(anEnum.code, anEnum);
             }
-            return null;
         }
 
-        public Integer getCode() {
-            return code;
+        /**
+         * 获取某个枚举值实例信息
+         *
+         * @param code
+         * @return
+         */
+        public static EnabledStateEnum getInstance(Integer code) {
+            return initMaps.getOrDefault(code, null);
         }
 
-        public String getName() {
-            return name;
+        /**
+         * 对比枚举值是否相等
+         * @param code
+         * @return
+         */
+        public Boolean equalsToCode(Integer code) {
+            return this.getCode().equals(code);
         }
     }
 }

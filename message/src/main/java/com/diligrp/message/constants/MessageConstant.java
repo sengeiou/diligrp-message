@@ -9,7 +9,17 @@ package com.diligrp.message.constants;
 public interface MessageConstant {
 
     /**
+     * 本系统编码
+     */
+    String SYSTEM_CODE = "MESSAGE_CENTER";
+
+    /**
      * 本地缓存前缀
      */
     String CACHE_KEY = "message_cache";
+
+    /**
+     * 系统url
+     */
+    String SYSTEM_BASE_URL = "https://message.diligrp.com";
 }

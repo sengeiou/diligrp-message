@@ -1,5 +1,6 @@
 package com.diligrp.message.service.impl;
 
+import cn.hutool.core.util.IdUtil;
 import com.dili.ss.base.BaseServiceImpl;
 import com.dili.ss.domain.EasyuiPageOutput;
 import com.diligrp.message.common.enums.BizNumberTypeEnum;
@@ -38,7 +39,7 @@ public class SendLogServiceImpl extends BaseServiceImpl<SendLog, Long> implement
     @Override
     public void save(SendLog sendLog) {
         Optional<String> bizNumber = uidRpcService.getBizNumber(BizNumberTypeEnum.SEND_REQUEST);
-        sendLog.setRequestCode(bizNumber.orElse(""));
+        sendLog.setRequestCode(bizNumber.orElse(IdUtil.getSnowflake(1,1).nextIdStr()));
         this.insertSelective(sendLog);
     }
 

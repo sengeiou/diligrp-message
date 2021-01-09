@@ -7,9 +7,9 @@ import com.dili.ss.metadata.ValueProvider;
 import com.diligrp.message.common.enums.TriggersEnum;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -24,14 +24,6 @@ import java.util.stream.Stream;
 @Component
 public class TriggersStateProvider implements ValueProvider {
 
-    private static final List<ValuePair<?>> BUFFER = new ArrayList<>();
-
-    static {
-        BUFFER.addAll(Stream.of(TriggersEnum.EnabledStateEnum.values())
-                .map(e -> new ValuePairImpl<>(e.getName(), String.valueOf(e.getCode())))
-                .collect(Collectors.toList()));
-    }
-
     /**
      * 取下拉列表的选项
      *
@@ -42,7 +34,9 @@ public class TriggersStateProvider implements ValueProvider {
      */
     @Override
     public List<ValuePair<?>> getLookupList(Object val, Map metaMap, FieldMeta fieldMeta) {
-        return BUFFER;
+        return Stream.of(TriggersEnum.EnabledStateEnum.values())
+                .map(e -> new ValuePairImpl<>(e.getName(), String.valueOf(e.getCode())))
+                .collect(Collectors.toList());
     }
 
     /**
@@ -55,12 +49,12 @@ public class TriggersStateProvider implements ValueProvider {
      */
     @Override
     public String getDisplayText(Object object, Map metaMap, FieldMeta fieldMeta) {
-        if (null == object) {
+        if (Objects.isNull(object)) {
             return null;
         }
-        ValuePair<?> valuePair = BUFFER.stream().filter(val -> object.toString().equals(val.getValue().toString())).findFirst().orElseGet(null);
-        if (null != valuePair) {
-            return valuePair.getText();
+        TriggersEnum.EnabledStateEnum instance = TriggersEnum.EnabledStateEnum.getInstance(Integer.valueOf(object.toString()));
+        if (Objects.nonNull(instance)) {
+            return instance.getName();
         }
         return null;
     }

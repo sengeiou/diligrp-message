@@ -7,9 +7,9 @@ import com.dili.ss.metadata.ValueProvider;
 import com.diligrp.message.common.enums.MessageEnum;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -18,13 +18,6 @@ import java.util.stream.Stream;
  */
 @Component
 public class BooleanProvider implements ValueProvider {
-    private static final List<ValuePair<?>> BUFFER = new ArrayList<>();
-
-    static {
-        BUFFER.addAll(Stream.of(MessageEnum.BooleanEnum.values())
-                .map(e -> new ValuePairImpl<>(e.getName(), e.getCode().toString()))
-                .collect(Collectors.toList()));
-    }
 
     /**
      * 取下拉列表的选项
@@ -36,7 +29,9 @@ public class BooleanProvider implements ValueProvider {
      */
     @Override
     public List<ValuePair<?>> getLookupList(Object val, Map metaMap, FieldMeta fieldMeta) {
-        return BUFFER;
+        return Stream.of(MessageEnum.BooleanEnum.values())
+                .map(e -> new ValuePairImpl<>(e.getName(), e.getCode().toString()))
+                .collect(Collectors.toList());
     }
 
     /**
@@ -49,12 +44,12 @@ public class BooleanProvider implements ValueProvider {
      */
     @Override
     public String getDisplayText(Object object, Map metaMap, FieldMeta fieldMeta) {
-        if (null == object) {
+        if (Objects.isNull(object)) {
             return null;
         }
-        ValuePair<?> valuePair = BUFFER.stream().filter(val -> object.toString().equals(val.getValue().toString())).findFirst().orElseGet(null);
-        if (null != valuePair) {
-            return valuePair.getText();
+        MessageEnum.BooleanEnum instance = MessageEnum.BooleanEnum.getInstance(Boolean.valueOf(object.toString()));
+        if (Objects.nonNull(instance)) {
+            return instance.getName();
         }
         return null;
     }

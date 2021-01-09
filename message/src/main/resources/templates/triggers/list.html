@@ -1,0 +1,307 @@
+<#bs4Body>
+<div class="container-fluid">
+    <form id="triggersQueryForm" role="form">
+        <input type="hidden" name="isDelete" value="0">
+        <div class="row  row-cols-6">
+            <div class="form-group col">
+                <label for="">所属市场</label>
+                <select class="form-control" id="marketCode" name="marketCode"></select>
+                <#bcomboProvider _id="marketCode" _provider="marketProvider"  _valueField="value" _textField="text" _value="" _queryParams='{emptyText:"-- 全部 --"}' />
+            </div>
+            <div class="form-group col">
+                <label for="">所属系统</label>
+                <select class="form-control" id="systemCode" name="systemCode"></select>
+                <#bcomboProvider _id="systemCode" _provider='dataDictionaryValueProvider' _queryParams='{dd_code:"system_code",emptyText:"-- 全部 --",dd_with_market:"false"}'/>
+            </div>
+            <div class="form-group col">
+                <label for="">业务场景</label>
+                <select class="form-control" id="sceneCode" name="sceneCode"></select>
+                <#bcomboProvider _id="sceneCode" _provider='dataDictionaryValueProvider' _queryParams='{dd_code:"message_scene",emptyText:"-- 全部 --",dd_with_market:"false"}'/>
+            </div>
+            <div class="form-group col">
+                <label for="whitelist">应用白名单</label>
+                <select class="form-control" id="whitelist" name="whitelist"></select>
+                <#bcomboProvider  _id="whitelist" _provider="booleanProvider"  _queryParams='{emptyText:"-- 全部 --"}'  _valueField="value" _textField="text" />
+            </div>
+            <div class="form-group col">
+                <label for="enabled">状态</label>
+                <select class="form-control" id="enabled" name="enabled"></select>
+                <#bcomboProvider  _id="enabled" _provider="triggersStateProvider"  _queryParams='{emptyText:"-- 全部 --"}'  _valueField="value" _textField="text" />
+            </div>
+            <div class="col align-self-center mt-3">
+                <button type="button" class="btn btn-outline-primary mr-2" onclick="clearForm()"><i class="fa fa-refresh"></i> 清空
+                </button>
+                <button type="button" class="btn btn-outline-primary" onclick="queryDataHandler()"><i class="fa fa-search"></i> 查询
+                </button>
+            </div>
+        </div>
+    </form>
+    <hr>
+    <div class="">
+        <div class="row">
+            <div class="col-12">
+                <div id="toolbar" class="btn-group" role="group" aria-label="Toolbar with button groups">
+                    <button type="button" class="btn btn-primary" onclick="openViewHandler()">
+                        <i class="fa fa-eye"></i>详情
+                    </button>
+                    <#resource code="addMarketChannel">
+                        <button id="btn_add" type="button" class="btn btn-primary" onclick="openInsertHandler()">
+                            <i class="fa fa-plus"></i> 新增
+                        </button>
+                    </#resource>
+                    <#resource code="editMarketChannel">
+                        <button id="btn_edit" type="button" class="btn btn-primary" onclick="openUpdateHandler()">
+                            <i class="fa fa-pencil-square-o"></i> 修改
+                        </button>
+                    </#resource>
+                    <#resource code="deleteMarketChannel">
+                        <button id="btn_del" type="button" class="btn btn-primary" onclick="doDeleteHandler()">
+                            <i class="fa fa-trash-o"></i> 删除
+                        </button>
+                    </#resource>
+                    <#resource code="enabledTrigger">
+                        <button id="btn_enabled" type="button" class="btn btn-primary"
+                                onclick="doEnableHandler(true)"><i class="fa fa-play"></i> 启用
+                        </button>
+                    </#resource>
+                    <#resource code="disabledTrigger">
+                        <button id="btn_disabled" type="button" class="btn btn-primary"
+                                onclick="doEnableHandler(false)"><i class="fa fa-stop"></i> 禁用
+                        </button>
+                    </#resource>
+                </div>
+                <table id="triggersGrid" data-toggle="table" data-title="场景/模板列表" class="table" data-toolbar="#toolbar"
+                       data-pagination="true" data-page-number="1" data-page-size="10" data-query-params="queryParams"
+                       data-side-pagination="server" data-method="POST"
+                       data-content-type="application/json; charset=utf-8" data-single-select="true"
+                       data-click-to-select="true" data-checkbox-header="true" data-unique-id="id" data-sort-name="id"
+                       data-sort-order="desc" data-icons="bui.variable.icons" data-buttons-class="primary"
+                       data-show-refresh="true" data-show-fullscreen="true" data-show-columns="true">
+                    <thead>
+                    <tr>
+                        <th data-width-unit="%" data-width="2" data-radio="true"></th>
+                        <th data-width-unit="%" data-width="15" data-field="marketCode" data-sortable="true" data-sort-name="market_code" data-align="center" data-provider="marketProvider">
+                            所属市场
+                        </th>
+                        <th data-width-unit="%" data-width="10" data-field="systemCode" data-sortable="true" data-sort-name="system_code" data-align="center" data-provider="dataDictionaryValueProvider" data-query-params='{dd_code:"system_code",dd_with_market:"false"}'>
+                            所属系统
+                        </th>
+                        <th data-width-unit="%" data-width="10" data-field="sceneCode" data-sortable="true" data-sort-name="scene_code" data-align="center" data-provider="dataDictionaryValueProvider" data-query-params='{dd_code:"message_scene",dd_with_market:"false"}'>
+                            业务场景
+                        </th>
+                        <th data-width-unit="%" data-width="10" data-field="enabled" data-sortable="true" data-sort-name=" enabled "  data-align="center" data-provider="triggersStateProvider">
+                            状态
+                        </th>
+                        <th data-width-unit="%" data-width="10" data-field="whitelist" data-sortable="true" data-sort-name=" whitelist " data-align="center" data-provider="booleanProvider">
+                            应用白名单
+                        </th>
+                        <th data-width-unit="%" data-width="15" data-field="groupChannel" data-sortable="false" data-align="center" data-provider="groupChannelProvider" data-formatter="formatForTip">
+                            模板来源
+                        </th>
+                        <th data-width-unit="%" data-width="15" data-field="groupTemplateCode" data-sortable="false"  data-align="center" data-formatter="formatForTip" >
+                            模板编码
+                        </th>
+                        <th data-width-unit="%" data-width="20" data-field="created" data-align="center" data-sortable="true" data-sort-name=" created " data-provider="datetimeProvider">
+                            创建时间
+                        </th>
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</#bs4Body>
+<!-- 通用js -->
+<script src="${contextPath}/resources/bui/js/base_list.js" type="text/javascript"></script>
+<script>
+
+    let _dataGrid = $('#triggersGrid');
+    let currentSelectRowIndex;
+    var dia;
+
+
+    $(function () {
+        $(window).resize(function () {
+            _dataGrid.bootstrapTable('resetView')
+        });
+        let size = ($(window).height() - $('#triggersQueryForm').height() - 210) / 40;
+        size = size > 10 ? size : 10;
+        _dataGrid.bootstrapTable('refreshOptions', {url: '/triggers/listPage.action', pageSize: parseInt(size)});
+
+        _dataGrid.on('load-success.bs.table', function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+    });
+
+    /**
+     * 打开新增窗口
+     */
+    function openInsertHandler() {
+        let url = "${contextPath}/triggers/preSave.action";
+        // $.modal.open("新增场景/模板", url);
+        dia = bs4pop.dialog({
+            title: '新增场景/模板',
+            content: url,
+            isIframe: true,
+            closeBtn: true,
+            backdrop: 'static',
+            width: '95%',
+            height: '95%',
+            btns: []
+        });
+    }
+
+    /**
+     * 打开修改页面
+     */
+    function openUpdateHandler(){
+        //获取选中行的数据
+        let rows = _dataGrid.bootstrapTable('getSelections');
+        if (null == rows || rows.length == 0) {
+            bs4pop.alert('请选中一条数据');
+            return;
+        }
+        //table选择模式是单选时可用
+        let selectedRow = rows[0];
+        $.modal.open("修改市场通道", "/triggers/preSave.action?id=" + selectedRow.id,700,600);
+    }
+
+    /**
+     * 查看详情
+     */
+    function openViewHandler() {
+        //获取选中行的数据
+        let rows = _dataGrid.bootstrapTable('getSelections');
+        if (null == rows || rows.length == 0) {
+            bs4pop.alert('请选中一条数据');
+            return;
+        }
+        //table选择模式是单选时可用
+        let selectedRow = rows[0];
+        $.modal.open("查看市场通道详情", "/triggers/view.action?id=" + selectedRow.id,900,);
+    }
+
+    /**
+     * 删除场景
+     */
+    function doDeleteHandler() {
+        //获取选中行的数据
+        let rows = _dataGrid.bootstrapTable('getSelections');
+        if (null == rows || rows.length == 0) {
+            bs4pop.alert('请选中一条数据');
+            return;
+        }
+        let selectedRow = rows[0];
+        bs4pop.confirm("您确认想要删除记录吗？", undefined, function (sure) {
+            if(sure){
+                bui.loading.show('努力提交中，请稍候。。。');
+                $.ajax({
+                    type: "POST",
+                    url: "${contextPath}/triggers/delete.action",
+                    data: {id: selectedRow.id},
+                    processData:true,
+                    dataType: "json",
+                    async : true,
+                    success : function(ret) {
+                        bui.loading.hide();
+                        if(ret.success){
+                            queryDataHandler();
+                        }else{
+                            bs4pop.alert(ret.result, {type: 'error'});
+                        }
+                    },
+                    error : function() {
+                        bui.loading.hide();
+                        bs4pop.alert('远程访问失败', {type: 'error'});
+                    }
+                });
+            }
+        });
+    }
+
+    /**
+     * 禁启用操作
+     * @param enable 是否启用:true-启用
+     */
+    function doEnableHandler(enable) {
+        //获取选中行的数据
+        let rows = _dataGrid.bootstrapTable('getSelections');
+        if (null == rows || rows.length == 0) {
+            bs4pop.alert('请选中一条数据');
+            return;
+        }
+        let selectedRow = rows[0];
+        let msg = (enable || 'true' == enable) ? '确定要启用该场景吗？' : '确定要禁用该场景吗？';
+        bs4pop.confirm(msg, undefined, function (sure) {
+            if(sure){
+                bui.loading.show('努力提交中，请稍候。。。');
+                $.ajax({
+                    type: "POST",
+                    url: "${contextPath}/triggers/doEnable.action",
+                    data: {id: selectedRow.id, enable: enable},
+                    processData:true,
+                    dataType: "json",
+                    async : true,
+                    success : function(ret) {
+                        bui.loading.hide();
+                        if(ret.success){
+                            queryDataHandler();
+                        }else{
+                            bs4pop.alert("操作失败:" + ret.result, {type: 'error'});
+                        }
+                    },
+                    error : function() {
+                        bui.loading.hide();
+                        bs4pop.alert('远程访问失败', {type: 'error'});
+                    }
+                });
+            }
+        });
+    }
+
+    /**
+     * table参数组装
+     * 可修改queryParams向服务器发送其余的参数
+     * @param params
+     */
+    function queryParams(params) {
+        let temp = {
+            rows: params.limit,   //页面大小
+            page: ((params.offset / params.limit) + 1) || 1, //页码
+            sort: params.sort,
+            order: params.order
+        };
+        return JSON.stringify($.extend(temp, bui.util.bindGridMeta2Form('triggersGrid', 'triggersQueryForm')));
+    }
+
+    /**
+     * 查询处理
+     */
+    function queryDataHandler() {
+        currentSelectRowIndex = undefined;
+        $('#toolbar button').attr('disabled', false);
+        _dataGrid.bootstrapTable('refresh');
+    }
+
+    //选中行事件
+    _dataGrid.on('uncheck.bs.table', function (e, row, $element) {
+        currentSelectRowIndex = undefined;
+    });
+
+
+    //选中行事件 -- 可操作按钮控制
+    _dataGrid.on('check.bs.table', function (e, row, $element) {
+        let enabled = row.$_enabled;
+        if (enabled === 0) {
+            //当用户状态为 禁用，则禁用不可操作
+            $('#toolbar button').attr('disabled', false);
+            $('#btn_disabled').attr('disabled', true);
+
+        } else if (enabled === 1) {
+            $('#toolbar button').attr('disabled', false);
+            $('#btn_enabled').attr('disabled', true);
+        }
+    });
+
+</script>

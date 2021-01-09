@@ -32,7 +32,7 @@ public class MarketChannelProvider implements ValueProvider {
         if (Objects.isNull(o)) {
             return null;
         }
-        MessageEnum.ChannelEnum channelEnum = MessageEnum.ChannelEnum.getChannelEnum(o.toString());
+        MessageEnum.ChannelEnum channelEnum = MessageEnum.ChannelEnum.getInstance(o.toString());
         if (Objects.nonNull(channelEnum)) {
             return channelEnum.getName();
         }

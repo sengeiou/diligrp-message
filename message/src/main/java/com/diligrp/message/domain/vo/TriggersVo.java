@@ -3,6 +3,8 @@ package com.diligrp.message.domain.vo;
 import com.dili.ss.domain.annotation.Operator;
 import com.diligrp.message.domain.Triggers;
 import com.diligrp.message.domain.TriggersTemplate;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.Column;
 import java.util.List;
@@ -15,6 +17,8 @@ import java.util.List;
  * @author yuehongbo
  * @date 2019/3/31 18:09
  */
+@Getter
+@Setter
 public class TriggersVo extends Triggers {
 
     /**
@@ -33,6 +37,7 @@ public class TriggersVo extends Triggers {
      * 市场编码
      */
     @Column(name = "`market_code`")
+    @Operator(Operator.IN)
     private List<String> marketCodeList;
 
     /**
@@ -40,30 +45,5 @@ public class TriggersVo extends Triggers {
      */
     private List<TriggersTemplate> templateList;
 
-    public String getGroupChannel() {
-        return groupChannel;
-    }
-    public void setGroupChannel(String groupChannel) {
-        this.groupChannel = groupChannel;
-    }
-    public String getGroupTemplateCode() {
-        return groupTemplateCode;
-    }
-    public void setGroupTemplateCode(String groupTemplateCode) {
-        this.groupTemplateCode = groupTemplateCode;
-    }
-    @Operator(Operator.IN)
-    public List<String> getMarketCodeList() {
-        return marketCodeList;
-    }
-    public void setMarketCodeList(List<String> marketCodeList) {
-        this.marketCodeList = marketCodeList;
-    }
-    public List<TriggersTemplate> getTemplateList() {
-        return templateList;
-    }
-    public void setTemplateList(List<TriggersTemplate> templateList) {
-        this.templateList = templateList;
-    }
 
 }

@@ -1,6 +1,5 @@
 package com.diligrp.message.provider;
 
-import cn.hutool.core.util.StrUtil;
 import com.dili.ss.metadata.FieldMeta;
 import com.dili.ss.metadata.ValuePair;
 import com.dili.ss.metadata.ValueProvider;
@@ -41,7 +40,7 @@ public class GroupChannelProvider implements ValueProvider {
         Set<String> sets = Sets.newHashSet(split);
         StringBuffer strb = new StringBuffer();
         for (String s : sets) {
-            strb.append(MessageEnum.ChannelEnum.getChannelEnum(s).getName()).append(" ");
+            strb.append(MessageEnum.ChannelEnum.getInstance(s).getName()).append(" ");
         }
         return strb.toString();
     }
