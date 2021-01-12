@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import com.dili.ss.base.BaseServiceImpl;
 import com.diligrp.message.domain.MarketChannel;
+import com.diligrp.message.domain.query.MarketChannelQuery;
 import com.diligrp.message.mapper.MarketChannelMapper;
 import com.diligrp.message.service.MarketChannelService;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -42,6 +44,16 @@ public class MarketChannelServiceImpl extends BaseServiceImpl<MarketChannel, Lon
             }
         }
         return Collections.EMPTY_MAP;
+    }
+
+    @Override
+    public List<MarketChannel> queryByIds(Set<Long> ids) {
+        if (CollectionUtil.isNotEmpty(ids)) {
+            MarketChannelQuery query = new MarketChannelQuery();
+            query.setIdSet(ids);
+            return this.listByExample(query);
+        }
+        return Collections.emptyList();
     }
 
 }

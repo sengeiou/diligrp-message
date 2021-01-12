@@ -144,43 +144,4 @@
         }
     })
 
-    function loadProvider(data) {
-        return new Promise((resolve, reject) => {
-            axios.post('/convert/list.action', data)
-                .then((res) => {
-                    resolve(res.data);
-                    // console.log(res);
-                })
-                .catch(function (error) {
-                    reject(error);
-                    // console.log(error);
-                });
-        });
-    }
-
-    /**
-     * 根据Provider 获取回显值
-     * @param data Provider 查询条件
-     * @returns {*}
-     */
-    function loadProviderDisplayText(data) {
-        let result = "";
-        $.ajax({
-            type: "POST",
-            url: '/valueProvider/getDisplayText.action',
-            data: JSON.stringify(data),
-            processData:true,
-            contentType: 'application/json',
-            dataType: "json",
-            async : false,
-            success: function (ret) {
-                result = ret.data;
-            },
-            error: function(a,status,e){
-                console.error("出错了");
-            }
-        });
-        return result;
-    }
-
 </script>

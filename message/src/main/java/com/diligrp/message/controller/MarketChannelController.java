@@ -12,7 +12,7 @@ import com.diligrp.message.common.enums.MessageEnum;
 import com.diligrp.message.constants.MessageConstant;
 import com.diligrp.message.domain.MarketChannel;
 import com.diligrp.message.domain.TriggersTemplate;
-import com.diligrp.message.domain.vo.MarketChannelVo;
+import com.diligrp.message.domain.query.MarketChannelQuery;
 import com.diligrp.message.service.MarketChannelService;
 import com.diligrp.message.service.TriggersTemplateService;
 import com.diligrp.message.service.remote.MarketRpcService;
@@ -49,15 +49,15 @@ public class MarketChannelController {
 
     /**
      * 查询市场通道列表信息
-     * @param marketChannelVo
+     * @param marketChannelQuery
      * @return
      * @throws Exception
      */
     @RequestMapping(value="/listPage.action", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
-    public String listPage(@RequestBody MarketChannelVo marketChannelVo) throws Exception {
-        marketChannelVo.setAuthMarkets(marketRpcService.getCurrentUserFirmCodes());
-        return marketChannelService.listEasyuiPageByExample(marketChannelVo, true).toString();
+    public String listPage(@RequestBody MarketChannelQuery marketChannelQuery) throws Exception {
+        marketChannelQuery.setAuthMarkets(marketRpcService.getCurrentUserFirmCodes());
+        return marketChannelService.listEasyuiPageByExample(marketChannelQuery, true).toString();
     }
 
     /**

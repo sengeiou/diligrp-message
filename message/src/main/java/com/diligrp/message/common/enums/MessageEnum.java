@@ -162,35 +162,6 @@ public class MessageEnum {
     }
 
     /**
-     * boolean类型的枚举定义
-     */
-    public enum BooleanEnum {
-
-        FALSE(false, "否"),
-        TRUE(true, "是"),
-        ;
-
-        @Getter
-        private String name;
-        @Getter
-        private Boolean code;
-
-        BooleanEnum(Boolean code, String name){
-            this.code = code;
-            this.name = name;
-        }
-
-        public static BooleanEnum getInstance(Boolean code) {
-            for (BooleanEnum be : BooleanEnum.values()) {
-                if (be.getCode().equals(code)) {
-                    return be;
-                }
-            }
-            return null;
-        }
-    }
-
-    /**
      * 白名单状态类型的枚举定义
      */
     public enum WhitelistStatus {

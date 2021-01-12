@@ -48,7 +48,7 @@
                 formConfig: {
                     formDesc: {
                         marketCode: {
-                            options: loadProvider({
+                            options: loadDataByProviderAsync({
                                 provider: 'marketProvider',
                                 queryParams: {required: true}
                             }, true, "marketCode"),
@@ -124,20 +124,4 @@
         }
     })
 
-    function loadProvider(data, first, name) {
-        return new Promise((resolve, reject) => {
-            axios.post('/convert/list.action', data)
-                .then((res) => {
-                    if (first) {
-                        if (!app.formData[name]){
-                            app.formData[name] = res.data[0].value;
-                        }
-                    }
-                    resolve(res.data);
-                })
-                .catch(function (error) {
-                    reject(error);
-                });
-        });
-    }
 </script>

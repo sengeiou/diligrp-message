@@ -120,12 +120,12 @@
                     platform: {
                         type: 'select',
                         label: '推送平台',
-                        options: loadProvider({
+                        options: loadDataByProviderAsync({
                             provider: 'platformProvider'
                         }),
                     },
                     pushState: {
-                        options: loadProvider({
+                        options: loadDataByProviderAsync({
                             provider: 'sendStateProvider'
                         }),
                         label: "推送状态",
@@ -153,18 +153,4 @@
             }
         }
     })
-
-    function loadProvider(data) {
-        return new Promise((resolve, reject) => {
-            axios.post('/convert/list.action', data)
-                .then((res) => {
-                    resolve(res.data);
-                    // console.log(res);
-                })
-                .catch(function (error) {
-                    reject(error);
-                    // console.log(error);
-                });
-        });
-    }
 </script>

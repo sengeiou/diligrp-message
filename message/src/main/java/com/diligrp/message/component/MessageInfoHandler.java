@@ -6,6 +6,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.validation.BeanValidationResult;
 import cn.hutool.extra.validation.ValidationUtil;
 import com.alibaba.fastjson.JSONObject;
+import com.dili.commons.glossary.YesOrNoEnum;
 import com.dili.ss.domain.BaseOutput;
 import com.diligrp.message.common.enums.MessageEnum;
 import com.diligrp.message.common.enums.TriggersEnum;
@@ -87,7 +88,7 @@ public class MessageInfoHandler {
                     msg.append("应用场景已禁用 ");
                 } else if (CollectionUtil.isEmpty(triggersVo.getTemplateList())) {
                     msg.append("模板未配置 ");
-                } else if (triggersVo.getWhitelist()) {
+                } else if (YesOrNoEnum.YES.getCode().equals(triggersVo.getWhitelist())) {
                     String[] phones = info.getCellphone().split(",");
                     //如果需要验证白名单，检查用户是否存在白名单中
                     Whitelist whitelist = new Whitelist();

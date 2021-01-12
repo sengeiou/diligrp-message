@@ -21,7 +21,7 @@
             <div class="form-group col">
                 <label for="whitelist">应用白名单</label>
                 <select class="form-control" id="whitelist" name="whitelist"></select>
-                <#bcomboProvider  _id="whitelist" _provider="booleanProvider"  _queryParams='{emptyText:"-- 全部 --"}'  _valueField="value" _textField="text" />
+                <#bcomboProvider  _id="whitelist" _provider="yesOrNoProvider"  _queryParams='{emptyText:"-- 全部 --"}'  _valueField="value" _textField="text" />
             </div>
             <div class="form-group col">
                 <label for="enabled">状态</label>
@@ -92,7 +92,7 @@
                         <th data-width-unit="%" data-width="10" data-field="enabled" data-sortable="true" data-sort-name=" enabled "  data-align="center" data-provider="triggersStateProvider">
                             状态
                         </th>
-                        <th data-width-unit="%" data-width="10" data-field="whitelist" data-sortable="true" data-sort-name=" whitelist " data-align="center" data-provider="booleanProvider">
+                        <th data-width-unit="%" data-width="10" data-field="whitelist" data-sortable="true" data-sort-name=" whitelist " data-align="center" data-provider="yesOrNoProvider">
                             应用白名单
                         </th>
                         <th data-width-unit="%" data-width="15" data-field="groupChannel" data-sortable="false" data-align="center" data-provider="groupChannelProvider" data-formatter="formatForTip">
@@ -164,7 +164,17 @@
         }
         //table选择模式是单选时可用
         let selectedRow = rows[0];
-        $.modal.open("修改市场通道", "/triggers/preSave.action?id=" + selectedRow.id,700,600);
+        let url = "${contextPath}/triggers/preSave.action?id=" + selectedRow.id;
+        dia = bs4pop.dialog({
+            title: '修改场景/模板',
+            content: url,
+            isIframe: true,
+            closeBtn: true,
+            backdrop: 'static',
+            width: '95%',
+            height: '95%',
+            btns: []
+        });
     }
 
     /**
@@ -179,7 +189,17 @@
         }
         //table选择模式是单选时可用
         let selectedRow = rows[0];
-        $.modal.open("查看市场通道详情", "/triggers/view.action?id=" + selectedRow.id,900,);
+        let url = "${contextPath}/triggers/view.action?id=" + selectedRow.id;
+        dia = bs4pop.dialog({
+            title: '查看模板详情',
+            content: url,
+            isIframe: true,
+            closeBtn: true,
+            backdrop: 'static',
+            width: '95%',
+            height: '95%',
+            btns: []
+        });
     }
 
     /**

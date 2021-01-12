@@ -1,279 +1,331 @@
-<#body>
-<style>
-    .template-item {
-        padding: 5px 0;
-    }
-    .template-group {
-        padding-bottom: 30px;
-        border-bottom: 1px solid #ddd;
-    }
-</style>
-<script type="text/javascript">
-    /**
-     * 检查市场-系统-场景对应的关系是否不存在
-     */
-    function checkNotExist() {
-        var id = $('#modifyId').val();
-        if (null != id){
-            var marketCode = $('#marketCode').combobox("getValue");
-            var systemCode = $('#systemCode').combobox("getValue");
-            var sceneCode = $('#sceneCode').combobox("getValue");
-            if (null != marketCode && null != systemCode && null != sceneCode){
-                $.ajax({
-                    type: "POST",
-                    url: "${contextPath}/triggers/checkNotExist.action",
-                    data: {marketCode:marketCode,systemCode:systemCode,sceneCode:sceneCode,selfId:id},
-                    processData:true,
-                    dataType: "json",
-                    async : true,
-                    success: function (ret) {
-                        if(!ret.success){
-                            swal('错误',"市场-系统-场景对应关系已存在，不能重复添加", 'error');
-                            return;
-                        }
-                    },
-                    error: function(){
-                        swal('错误', '远程访问失败', 'error');
-                    }
-                });
-            }
-        }
-    }
+<#bs4Body>
+<#vueElm />
+<div id=app>
+    <el-form
+            ref="dataFormLXR"
+            size="medium"
+            :model="triggers"
+            :inline="true"
+    >
+        <el-form-item
+                label="所属市场"
+                prop="marketCode"
+                :rules="rules.marketCode">
+            <el-select v-model="triggers.marketCode" @change="marketChange">
+                <el-option
+                        v-for="item in marketOptions"
+                        :key="item.value"
+                        :label="item.text"
+                        :value="item.value">
+                </el-option>
+            </el-select>
+        </el-form-item>
+        <el-form-item
+                label="所属系统"
+                prop="systemCode"
+                :rules="rules.systemCode">
+            <el-select v-model="triggers.systemCode">
+                <el-option
+                        v-for="item in systemCodeOptions"
+                        :key="item.value"
+                        :label="item.text"
+                        :value="item.value">
+                </el-option>
+            </el-select>
+        </el-form-item>
+        <el-form-item
+                label="应用场景"
+                prop="sceneCode"
+                :rules="rules.sceneCode">
+            <el-select v-model="triggers.sceneCode">
+                <el-option
+                        v-for="item in sceneCodeOptions"
+                        :key="item.value"
+                        :label="item.text"
+                        :value="item.value">
+                </el-option>
+            </el-select>
+        </el-form-item>
+        <el-form-item
+                label="应用白名单"
+                prop="whitelist"
+                :rules="rules.whitelist">
+            <el-select v-model="triggers.whitelist">
+                <el-option
+                        v-for="item in whitelistOptions"
+                        :key="item.value"
+                        :label="item.text"
+                        :value="item.value">
+                </el-option>
+            </el-select>
+        </el-form-item>
 
-    // 市场改变
-    function marketOriginChange(){
-        // 检查市场-系统-场景对应的关系是否不存在
-        checkNotExist();
-        originChange();
-    }
-
-    // 纯整数值类型数组是否包含另一个数组
-    function arrIncludes(arr1, arr2) {
-        return arr2.every(val => arr1.includes(parseInt(val)));
-    }
-
-    // 来源改变
-    function originChange() {
-        var marketCode = $('#marketCode').combobox("getValue");
-        if (null == marketCode || ''==marketCode){
-            return;
-        }
-        let element;
-        if ($(this).attr('id') === 'channel') {
-            element = $(this);
-        } else {
-            element = $('#marketCode');
-        }
-        // easyui事件直接在页面元素内联上调用，拿到$(this)
-        if($(this).attr('id') === 'channel') {
-            console.info("------ channel");
-            var channel = $(this).combobox('getValue');
-            $.ajax({
-                type: "POST",
-                url: "${contextPath}/triggers/getChannelKey.action",
-                data: {marketCode:marketCode,channel:channel},
-                processData:true,
-                dataType: "json",
-                async : false,
-                success: function (ret) {
-                    if(ret.success){
-                        //获取 ret.data
-                        let data = [];
-                        ret.data.forEach(function(el, index){
-                            data.push({text: el.accessKey, value: el.id});
-                        });
-                        var t_id = $(element).parents('.template-group').find('#templateId').val();
-                        if ($('#modifyId').val() === '' || typeof(t_id) == "undefined" ||  t_id === '') {
-                            console.info("------channel clear");
-                            $(element).parents('.template-group').find('#marketChannelIds').combobox('clear');
-                        }
-                        $(element).parents('.template-group').find('#marketChannelIds').combobox('loadData', data);
-                        // var isFirst = $(element).parents('.template-group').find('#isFirst');
-                        // if (!isFirst.val() || isFirst.val() == 'false'){
-                        //     var options = $(element).parents('.template-group').find('#marketChannelIds').combobox("options");
-                        //     var bindData = options.attributes.binddata;
-                        //     $(element).parents('.template-group').find('#marketChannelIds').combobox("setValues", bindData.split(","));
-                        //     isFirst.val('false');
-                        // } else {
-                        //     $(element).parents('.template-group').find('#marketChannelIds').combobox('clear');
-                        // }
-                    }else{
-                        swal('错误',ret.result, 'error');
-                    }
-                },
-                error: function(){
-                    swal('错误', '远程访问失败', 'error');
-                }
-            });
-        } else {
-            console.info("------ not channel");
-            $.each($('.channel'), function(index,el){
-                var channel = $(el).parents('.template-group').find('#channel').combobox('getValue');
-                $.ajax({
-                    type: "POST",
-                    url: "${contextPath}/triggers/getChannelKey.action",
-                    data: {marketCode:marketCode,channel:channel},
-                    processData:true,
-                    dataType: "json",
-                    async : false,
-                    success: function (ret) {
-                        if(ret.success){
-                            //获取 ret.data
-                            let data = [];
-                            ret.data.forEach(function(el, index){
-                                data.push({text: el.accessKey, value: el.id});
-                            });
-                            var t_id = $(el).parents('.template-group').find('#templateId').val();
-                            if ($('#modifyId').val() === '' || typeof(t_id) == "undefined" ||  t_id === '') {
-                                console.info("------ not channel clear");
-                                $(el).parents('.template-group').find('#marketChannelIds').combobox('clear');
-                            }
-                            $(el).parents('.template-group').find('#marketChannelIds').combobox('loadData', data );
-                        }else{
-                            swal('错误',ret.result, 'error');
-                        }
-                    },
-                    error: function(){
-                        swal('错误', '远程访问失败', 'error');
-                    }
-                });
-            })
-        }
-    }
-
-</script>
-
-
-<div class="easyui-layout" >
-    <div id="nav" style="padding-left:15px;padding-top:10px;" align="left">
-        <#nav/>
-    </div>
-    <!-- 基本信息表单 -->
-    <div align="center">
-
-        <div class="">
-            <a href="#" class="easyui-linkbutton" iconCls="icon-save" id="record-save-btn" >保存</a>&nbsp;&nbsp;
-            <a href="${contextPath}/triggers/index.html" class="easyui-linkbutton" iconCls="icon-back" id="record-back-btn" >返回</a>
+        <div style="text-align: center">
+            <el-divider><i class="el-icon-info"></i></el-divider>
+            <span style="color:#ff465f">短信场景通道模板配置</span>
         </div>
-        <div  class="easyui-panel" style="width: 96%;" title="基本信息" border="false" >
-            <!--<form action=""></form>-->
-            <form id="_form" class="easyui-form" method="post" fit="true">
-                <div class="templatewrap" id="templatewrap" style="width: 360px;">
-                    <div class="template-base">
-                        <input name="id" id="modifyId" value="${triggers.id!}" type="hidden">
-                        <div class="template-item">
-                            <input class="easyui-combobox" name="marketCode" id="marketCode" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false" required="true" data-options="label:'&lowast;市场:',onLoadSuccess:onComboLoadSuccessSelectOne,onChange:marketOriginChange" />
-                            <#comboProvider _id="marketCode" _provider='marketProvider' _queryParams='{required:true}' _value="${triggers.marketCode!}" />
-                        </div>
-                        <div class="template-item">
-                            <input class="easyui-combobox" name="systemCode" id="systemCode" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false" required="true" data-options="label:'&lowast;所属系统:',onLoadSuccess:onComboLoadSuccessSelectOne,onChange:checkNotExist" />
-                            <#comboProvider _id="systemCode" _provider='dataDictionaryValueProvider' _queryParams='{dd_code:"system_code",required:true,dd_with_market:"false"}' _value="${triggers.systemCode!}"/>
-                        </div>
-                        <div class="template-item">
-                            <input class="easyui-combobox" name="sceneCode" id="sceneCode" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false" required="true" data-options="label:'&lowast;应用场景:',onLoadSuccess:onComboLoadSuccessSelectOne,onChange:checkNotExist" />
-                            <#comboProvider _id="sceneCode" _provider='dataDictionaryValueProvider' _queryParams='{dd_code:"message_scene",required:true,dd_with_market:"false"}' _value="${triggers.sceneCode!}"/>
-                        </div>
-                        <div class="template-item">
-                            <input class="easyui-combobox" name="whitelist" id="whitelist" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false" required="true" data-options="label:'&lowast;应用白名单:',onLoadSuccess:onComboLoadSuccessSelectOne" />
-                            <#comboProvider _id="whitelist" _provider='booleanProvider' _queryParams='{required:true}' _value="${triggers.whitelist!}"/>
-                        </div>
-                    </div>
-                    <div style="padding-top: 50px"></div>
-                    <%if (has(triggersTemplateList)){ for(triggersTemplate in triggersTemplateList){%>
-                        <div class="template-group">
-                            <h4 class="template-group-title">模板</h4>
-                            <input type="hidden" name="templateId" id="templateId" value="${triggersTemplate.id}" >
-                            <div class="template-item">
-                                <input class="easyui-combobox" id="channel" name="channel" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false" required="true" data-options="cls: 'channel',label:'&lowast;模板来源:',onLoadSuccess:onComboLoadSuccessSelectOne,onChange:originChange,
-                                        url:'${contextPath}/provider/getLookupList.action',
-                                        method:'POST',
-                                        onLoadSuccess:function(){ $(this).combobox('select', '${triggersTemplate.channel}');},
-                                        queryParams: {provider: 'marketChannelProvider',queryParams:'{required:true}'}" />
-                            </div>
-                            <div class="template-item">
-                                <!-- 是否首次进入页面 -->
-                                <input type="hidden" id="isFirst" value="${isFirst!}">
-                                <input class="easyui-combobox" id="marketChannelIds" name="marketChannelIds" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false" required="true" data-options="cls: 'marketChannelIds',label:'&lowast;AccessKey:',multiple:true,attributes:{'binddata':'${triggersTemplate.marketChannelIds}'},
-                                 onLoadSuccess:function(){
-                                    var isFirst = $(this).parents('.template-group').find('#isFirst').val();
-                                    var datas = $(this).combobox('getData');
-                                    if(null == datas || datas.length < 1){
-                                        $(this).combobox('clear');
-                                        return;
-                                    }
-                                    console.info('------datas---- ' + datas);
-                                    if (isFirst && isFirst === 'true'){
-                                        $(this).combobox('setValues', [${triggersTemplate.marketChannelIds}]);
-                                        $(this).parents('.template-group').find('#isFirst').val('false');
-                                        console.info('------isFirst true');
-                                    }else{
-                                        console.info('------isFirst---'+ isFirst);
-                                        console.info('------marketChannelIds---'+ ${triggersTemplate.marketChannelIds});
-                                        $(this).combobox('clear');
-                                    }
-                                  }
-                                " />
-                            </div>
-                            <div class="template-item">
-                                <input class="easyui-textbox" name="templateName" value="${triggersTemplate.templateName!}" style="width:100%" labelAlign="right" data-options="label:'模板名称:',validType:'length[0,50]'" />
-                            </div>
-                            <div class="template-item">
-                                <input class="easyui-textbox" name="templateCode" value="${triggersTemplate.templateCode!}" style="width:100%" labelAlign="right" data-options="label:'模板CODE:',validType:'length[0,20]'" />
-                            </div>
-                            <div class="template-item">
-                                <input class="easyui-textbox" name="templateContent" value="${triggersTemplate.templateContent!}" style="width:100%" labelAlign="right" required="true" data-options="label:'&lowast;模板内容:', height: '80px', multiline: true,validType:'length[1,255]'" />
-                            </div>
-                            <div class="edit-limit">
-                                <a href="#" class="easyui-linkbutton template-plus-btn" data-options="iconCls:'icon-add'">增加</a>
-                                <a href="#" class="easyui-linkbutton template-minus-btn" data-options="iconCls:'icon-remove'">删除</a>
-                            </div>
-                        </div>
-                    <%}}else{%>
-                        <div class="template-group">
-                            <h4 class="template-group-title">模板</h4>
-                            <input type="hidden" name="templateId" id="templateId">
-                            <div class="template-item">
-                                <input class="easyui-combobox" id="channel" name="channel" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false" required="true" data-options="cls:'channel', label:'&lowast;模板来源:',onLoadSuccess:onComboLoadSuccessSelectOne,onChange:originChange,
-                                    url:'${contextPath}/provider/getLookupList.action',
-                                    method:'POST',
-                                    queryParams: {provider: 'marketChannelProvider',queryParams:'{required:true}'}" />
-                            </div>
-                            <div class="template-item">
-                                <input class="easyui-combobox" id="marketChannelIds" name="marketChannelIds" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false" required="true" data-options="textField:'text',valueField:'value', label:'&lowast;AccessKey:',multiple:true" />
-                            </div>
-                            <div class="template-item">
-                                <input class="easyui-textbox" name="templateName" style="width:100%" labelAlign="right" data-options="label:'模板名称:',validType:'length[0,50]'" />
-                            </div>
-                            <div class="template-item">
-                                <input class="easyui-textbox" name="templateCode" style="width:100%" labelAlign="right" data-options="label:'模板CODE:',validType:'length[0,20]'" />
-                            </div>
-                            <div class="template-item">
-                                <input class="easyui-textbox" name="templateContent" style="width:100%" labelAlign="right" required="true" data-options="label:'&lowast;模板内容:', height: '80px', multiline: true,validType:'length[1,255]'" />
-                            </div>
-                            <div class="edit-limit">
-                                <a href="#" class="easyui-linkbutton template-plus-btn" data-options="iconCls:'icon-add'">增加</a>
-                                <a href="#" class="easyui-linkbutton template-minus-btn" data-options="iconCls:'icon-remove'">删除</a>
-                            </div>
-                        </div>
-                    <%}%>
-
+        <el-table :data="triggers.templateList" show-header="false" style="width: 100%" max-height="300"
+                  :row-class-name="tableRowClassName">
+            <el-table-column label="渠道">
+                <template slot-scope="scope">
+                    <el-form-item
+                            label=""
+                            :prop="'templateList.' + scope.$index + '.channel'"
+                            :rules="rules.channel"
+                    >
+                        <el-select v-model="scope.row.channel" @change="channelChange(scope.row)">
+                            <el-option
+                                    v-for="item in marketChannelOptions"
+                                    :key="item.value"
+                                    :label="item.text"
+                                    :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                </template>
+            </el-table-column>
+            <el-table-column label="AccessKey">
+                <template slot-scope="scope">
+                    <el-form-item
+                            label=""
+                            :rules="rules.accessKeyIds"
+                            :prop="'templateList.' + scope.$index + '.accessKeyIds'"
+                    >
+                        <el-select v-model="scope.row.accessKeyIds" multiple collapse-tags >
+                            <el-option
+                                    v-for="item in accessKeyOptions[scope.$index]"
+                                    :key="item.value"
+                                    :label="item.accessKey"
+                                    :value="item.id">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                </template>
+            </el-table-column>
+            <el-table-column label="模板名称">
+                <template slot-scope="scope">
+                    <el-form-item
+                            label=""
+                            :rules="rules.templateName"
+                            :prop="'templateList.' + scope.$index + '.templateName'"
+                    >
+                        <el-input v-model="scope.row.templateName" maxlength="50"
+                                  show-word-limit style="padding: 0 48px 0 0"
+                                  placeholder="请输入模板名称"
+                        >
+                        </el-input>
+                    </el-form-item>
+                </template>
+            </el-table-column>
+            <el-table-column label="模板编码">
+                <template slot-scope="scope">
+                    <el-form-item
+                            label=""
+                            :rules="rules.templateCode"
+                            :prop="'templateList.' + scope.$index + '.templateCode'"
+                    >
+                        <el-input v-model="scope.row.templateCode" maxlength="20"
+                                  show-word-limit style="padding: 0 48px 0 0"
+                                  placeholder="若通道为阿里云，请输入在阿里云申请的模板编码"
+                        >
+                        </el-input>
+                    </el-form-item>
+                </template>
+            </el-table-column>
+            <el-table-column label="模板内容">
+                <template slot-scope="scope">
+                    <el-form-item
+                            label=""
+                            :rules="rules.templateContent"
+                            :prop="'templateList.' + scope.$index + '.templateContent'"
+                    >
+                        <el-input v-model="scope.row.templateContent" maxlength="255"
+                                  show-word-limit style="padding: 0 50px 0 0"
+                                  placeholder="请输入模板内容" type="textarea"
+                                  :autosize="{ minRows: 2, maxRows: 4}"
+                        >
+                        </el-input>
+                    </el-form-item>
+                </template>
+            </el-table-column>
+            <el-table-column label="" width="80">
+                <template slot-scope="scope">
+                    <el-form-item>
+                        <el-button
+                                type="danger"
+                                icon="el-icon-delete"
+                                circle
+                                size="small"
+                                @click="deleteRow(scope.row,scope.$index)"/>
+                    </el-form-item>
+                </template>
+            </el-table-column>
+        </el-table>
+        <el-row>
+            <el-col :span="24" align="left" style="padding:10px">
+                <div class="el-table-add-row">
+                    <el-tooltip content="添加" placement="top">
+                        <el-button type="success" icon="el-icon-plus" circle size="small" @click="addRow()"/>
+                    </el-tooltip>
                 </div>
-            </form>
-        </div>
-    </div>
+            </el-col>
+        </el-row>
+    </el-form>
+    <el-row style="margin-top: 20px;">
+        <el-button size="medium" @click="submit" type="primary">提交</el-button>
+        <el-button size="medium" @click="cancel">关闭</el-button>
+    </el-row>
 </div>
 
-<#triggers_editJs />
+</#bs4Body>
+
 <script type="text/javascript">
-    $(function () {
-
-        $('input[class^=easyui-]').textbox({
-            labelWidth:110
-        });
-
-        $('input[class^=easyui-combobox]').combobox({
-            labelWidth:110
-        });
-    });
+    window.rootPath = '${contextPath}';
 </script>
-</#body>
+
+<script>
+    var app = new Vue({
+        el: '#app',
+        data() {
+            return {
+                index: 0,
+                triggers: {
+                    templateList: [],
+                },
+                rules: {
+                    marketCode: [{required: true, message: '请选择市场', trigger: 'change'}],
+                    systemCode: [{required: true, message: '请选择系统', trigger: 'change'}],
+                    sceneCode: [{required: true, message: '请选择场景', trigger: 'change'}],
+                    whitelist: [{required: true, message: '请选择是否应用白名单', trigger: 'change'}],
+                    channel: [{required: true, message: '请选择渠道', trigger: 'change'}],
+                    accessKeyIds: [{required: true, message: '请选择市场通道key', trigger: 'change'}],
+                    templateName: [{maxlength: 50, message: '模板名称不能超过50个字符', trigger: 'blur'}],
+                    templateCode: [{maxlength: 20, message: '模板编码不能超过20个字符', trigger: 'blur'}],
+                    templateContent: [{required: true, message: '请输入模板内容', trigger: 'blur'},{maxlength: 255, message: '模板内容不能超过255个字符', trigger: 'blur'}],
+                },
+                marketChannelOptions: [],
+                marketOptions:[],
+                accessKeyOptions:[],
+                whitelistOptions:[],
+                systemCodeOptions:[],
+                sceneCodeOptions:[],
+            };
+        },
+        mounted: function () {
+            //加载市场通道数据
+            this.marketChannelOptions = loadByProviderSync({
+                provider: 'marketChannelProvider',
+                queryParams: {required: true}
+            });
+            //加载市场数据
+            this.marketOptions = loadByProviderSync({
+                provider: 'marketProvider',
+                queryParams: {required: true}
+            });
+            //加载消息系统数据
+            this.systemCodeOptions = loadByProviderSync({
+                provider: 'dataDictionaryValueProvider', stringValue: true,
+                queryParams: {dd_code: "system_code", dd_with_market: false, required: true}
+            });
+            //加载是否应用白名单数据
+            this.whitelistOptions = loadByProviderSync({
+                provider: 'yesOrNoProvider',
+                queryParams: {required: true}
+            });
+            //加载场景数据
+            this.sceneCodeOptions = loadByProviderSync({
+                provider: 'dataDictionaryValueProvider', stringValue: true,
+                queryParams: {dd_code: "message_scene", dd_with_market: false, required: true}
+            });
+
+        },
+        methods: {
+            //表格添加行
+            addRow() {
+                app.triggers.templateList.push({popover: true})
+            },
+            //表格删除行
+            deleteRow(row, index) {
+                app.triggers.templateList.splice(index, 1)
+            },
+            tableRowClassName({row, rowIndex}){
+                row.index = rowIndex;
+            },
+            //市场信息变更时的事件，动态重新加载市场对应的通道key
+            marketChange(value){
+                if (app.triggers.templateList.length != 0) {
+                    for (let i = 0; i < app.triggers.templateList.length; i++) {
+                        app.triggers.templateList[i].accessKeyIds = [];
+                        axios.get('/triggers/getChannelKey.action', {params:{marketCode:value,channel:app.triggers.templateList[i].channel}})
+                            .then((res) => {
+                                Vue.set(app.accessKeyOptions,i,res.data.data);
+                            })
+                            .catch(function (error) {
+                            });
+                    }
+                }
+            },
+            submit() {
+                if (app.triggers.templateList.length === 0) {
+                    this.$message({
+                        message: '请配置模板信息',
+                        type: 'warning'
+                    });
+                    return
+                }
+                app.$refs['dataFormLXR'].validate(valid => {
+                    if (valid) {
+                        axios.post(rootPath + "/triggers/save.action", app.triggers)
+                            .then(function (response) {
+                                $.operate.saveSuccess(response.data);
+                            })
+                            .catch(function (error) {
+                                $.modal.alertError("系统错误");
+                            });
+                    }
+                })
+            },
+            //通道信息发生变更时，重新加载通道key
+            channelChange(row) {
+                app.triggers.templateList[row.index].accessKeyIds = [];
+                let marketCode = app.triggers.marketCode;
+                if (marketCode) {
+                    axios.get('/triggers/getChannelKey.action', {
+                        params: {
+                            marketCode: marketCode,
+                            channel: row.channel
+                        }
+                    }).then((res) => {
+                        Vue.set(app.accessKeyOptions, row.index, res.data.data);
+                    }).catch(function (error) {
+                    });
+                } else {
+                    this.$message({
+                        message: '请先选择市场信息',
+                        type: 'warning',
+                        center: true
+                    });
+                }
+
+            },
+            cancel() {
+                $.modal.close();
+            }
+        }
+    })
+    app.triggers = ${triggers!};
+
+    /**
+     * 加载线上通道key数据
+     */
+    if (app.triggers.templateList.length != 0) {
+        for (let i = 0; i < app.triggers.templateList.length; i++) {
+            axios.get('/triggers/getChannelKey.action', {params:{marketCode:app.triggers.marketCode,channel:app.triggers.templateList[i].channel}})
+                .then((res) => {
+                    Vue.set(app.accessKeyOptions,i,res.data.data);
+                })
+                .catch(function (error) {
+                });
+        }
+    }
+</script>

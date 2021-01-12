@@ -16,5 +16,5 @@ public class TriggersTemplateSaveInput extends TriggersTemplate {
     /**
      * 页面传入的通道key的id数组
      */
-    private Long[] accessKeyIds;
+    private long[] accessKeyIds;
 }

@@ -167,7 +167,6 @@
                     <el-tooltip content="添加" placement="top">
                         <el-button type="success" icon="el-icon-plus" circle size="small" @click="addRow()"/>
                     </el-tooltip>
-
                 </div>
             </el-col>
         </el-row>
@@ -214,27 +213,27 @@
         },
         mounted: function () {
             //加载市场通道数据
-            this.marketChannelOptions = loadByProvider({
+            this.marketChannelOptions = loadByProviderSync({
                 provider: 'marketChannelProvider',
                 queryParams: {required: true}
             });
             //加载市场数据
-            this.marketOptions = loadByProvider({
+            this.marketOptions = loadByProviderSync({
                 provider: 'marketProvider',
                 queryParams: {required: true}
             });
             //加载消息系统数据
-            this.systemCodeOptions = loadByProvider({
+            this.systemCodeOptions = loadByProviderSync({
                 provider: 'dataDictionaryValueProvider', stringValue: true,
                 queryParams: {dd_code: "system_code", dd_with_market: false, required: true}
             });
             //加载是否应用白名单数据
-            this.whitelistOptions = loadByProvider({
-                provider: 'booleanProvider',
+            this.whitelistOptions = loadByProviderSync({
+                provider: 'yesOrNoProvider',
                 queryParams: {required: true}
             });
             //加载场景数据
-            this.sceneCodeOptions = loadByProvider({
+            this.sceneCodeOptions = loadByProviderSync({
                 provider: 'dataDictionaryValueProvider', stringValue: true,
                 queryParams: {dd_code: "message_scene", dd_with_market: false, required: true}
             });
@@ -314,23 +313,4 @@
             }
         }
     })
-
-
-    function loadByProvider(data) {
-        let resultData =[];
-        $.ajax({
-            type: "POST",
-            url: "/convert/list.action",
-            data: JSON.stringify(data),
-            contentType: 'application/json',
-            dataType: "json",
-            async : false,
-            success : function(ret) {
-                resultData =  ret;
-            },
-            error : function() {
-            }
-        });
-        return resultData;
-    }
 </script>

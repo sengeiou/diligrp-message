@@ -55,7 +55,7 @@ public class Triggers extends BaseDomain {
      * 是否启用白名单
      */
     @Column(name = "`whitelist`")
-    private Boolean whitelist;
+    private Integer whitelist;
 
     /**
      * 是否启用

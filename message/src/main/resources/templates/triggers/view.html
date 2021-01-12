@@ -1,166 +1,135 @@
-<#body>
-<style>
-    .template-item {
-        padding: 5px 0;
-    }
-    .template-group {
-        padding-bottom: 30px;
-        border-bottom: 1px solid #ddd;
-    }
-</style>
+<#bs4Body>
+<#vueElm />
+<div id=app>
+    <el-form
+            ref="dataFormLXR"
+            size="medium"
+            :model="triggers"
+            :inline="true"
+    >
+        <el-row>
+            <el-col :span="6">
+                <el-form-item
+                        label="所属市场"
+                        prop="marketCode">
+                    {{ triggers.marketCode }}
+                </el-form-item>
+            </el-col>
+            <el-col :span="6">
+                <el-form-item
+                        label="所属系统"
+                        prop="systemCode">
+                    {{ triggers.systemCode }}
+                </el-form-item>
+            </el-col>
+            <el-col :span="6">
+                <el-form-item
+                        label="应用场景"
+                        prop="sceneCode">
+                    {{ triggers.sceneCode }}
+                </el-form-item>
+            </el-col>
+            <el-col :span="6">
+                <el-form-item
+                        label="应用白名单"
+                        prop="whitelist">
+                    {{ triggers.whitelist }}
+                </el-form-item>
+            </el-col>
+        </el-row>
+        <div style="text-align: center">
+            <el-divider><i class="el-icon-info"></i></el-divider>
+            <span style="color:#ff465f">短信场景通道模板</span>
+        </div>
+        <el-table :data="triggers.templateList" show-header="false" style="width: 100%" max-height="300">
+            <el-table-column label="渠道">
+                <template slot-scope="scope">
+                    <el-form-item label=""
+                            :prop="'templateList.' + scope.$index + '.channel'">
+                        {{ scope.row.channel }}
+                    </el-form-item>
+                </template>
+            </el-table-column>
+            <el-table-column label="AccessKey">
+                <template slot-scope="scope">
+                    <el-form-item label=""
+                            :prop="'templateList.' + scope.$index + '.accessKeyValue'">
+                        {{ scope.row.accessKeyValue }}
+                    </el-form-item>
+                </template>
+            </el-table-column>
+            <el-table-column label="模板名称">
+                <template slot-scope="scope">
+                    <el-form-item label=""
+                            :prop="'templateList.' + scope.$index + '.templateName'">
+                        {{ scope.row.templateName }}
+                    </el-form-item>
+                </template>
+            </el-table-column>
+            <el-table-column label="模板编码">
+                <template slot-scope="scope">
+                    <el-form-item label=""
+                            :prop="'templateList.' + scope.$index + '.templateCode'">
+                        {{ scope.row.templateCode }}
+                    </el-form-item>
+                </template>
+            </el-table-column>
+            <el-table-column label="模板内容">
+                <template slot-scope="scope">
+                    <el-form-item label=""
+                            :prop="'templateList.' + scope.$index + '.templateContent'">
+                        {{ scope.row.templateContent }}
+                    </el-form-item>
+                </template>
+            </el-table-column>
+        </el-table>
+    </el-form>
+    <el-row style="margin-top: 20px;">
+        <el-button size="medium" @click="cancel">关闭</el-button>
+    </el-row>
+</div>
+
+</#bs4Body>
+
 <script type="text/javascript">
-
-    // 市场改变
-    function marketOriginChange(){
-        if (!$('#modifyId').val()) {
-            var market = $(this);
-            originChange(market);
-        }
-    }
-
-    // 来源改变
-    function originChange(element) {
-        var marketCode = $('#marketCode').combobox("getValue");
-        if (null == marketCode || ''==marketCode){
-            return;
-        }
-        // easyui事件直接在页面元素内联上调用，拿到$(this)
-        if($(this).attr('id') === 'channel') {
-            var that = $(this);
-            var channel = $(this).combobox('getValue');
-            $.ajax({
-                type: "POST",
-                url: "${contextPath}/triggers/getChannelKey.action",
-                data: {marketCode:marketCode,channel:channel},
-                processData:true,
-                dataType: "json",
-                async : true,
-                success: function (ret) {
-                    if(ret.success){
-                        //获取 ret.data
-                        let data = [];
-                        ret.data.forEach(function(el, index){
-                            data.push({"text": el.accessKey, value: el.id})
-                        });
-                        that.parents('.template-group').find('#marketChannelIds').combobox('loadData', data );
-                        if (!$('#modifyId').val()) {
-                            that.parents('.template-group').find('#marketChannelIds').combobox('clear');
-                        }
-                        //渲染。。。。。。
-                    }else{
-
-                        swal('错误',ret.result, 'error');
-                    }
-                },
-                error: function(){
-                    swal('错误', '远程访问失败', 'error');
-                }
-            });
-        } else if (element.attr('id') === 'marketCode') {
-            $.each($('.channel'), function(index,el){
-                var channel = $(el).parents('.template-group').find('#channel').combobox('getValue');
-                $.ajax({
-                    type: "POST",
-                    url: "${contextPath}/triggers/getChannelKey.action",
-                    data: {marketCode:marketCode,channel:channel},
-                    processData:true,
-                    dataType: "json",
-                    async : true,
-                    success: function (ret) {
-                        if(ret.success){
-                            //获取 ret.data
-                            let data = [];
-                            ret.data.forEach(function(el, index){
-                                data.push({'text': el.accessKey, 'value': el.id})
-                            });
-                            $(el).parents('.template-group').find('#marketChannelIds').combobox('loadData', data );
-                            $(el).parents('.template-group').find('[name="marketChannelIds"]').val('' ).remove();
-
-                            if (!$('#modifyId').val()) {
-                                $(el).parents('.template-group').find('#marketChannelIds').combobox('clear');
-                            }
-
-                            //渲染。。。。。。
-                        }else{
-                            swal('错误',ret.result, 'error');
-                        }
-                    },
-                    error: function(){
-                        swal('错误', '远程访问失败', 'error');
-                    }
-                });
-
-            })
-        }
-    }
-
-
+    window.rootPath = '${contextPath}';
 </script>
 
-
-<div class="easyui-layout" >
-    <div id="nav" style="padding-left:15px;padding-top:10px;" align="left">
-        <#nav/>
-    </div>
-    <!-- 基本信息表单 -->
-    <div align="center">
-
-        <div class="">
-            <a href="${contextPath}/triggers/index.html" class="easyui-linkbutton" iconCls="icon-back" id="record-back-btn" >返回</a>
-        </div>
-        <div  class="easyui-panel" style="width: 96%;" title="基本信息" border="false" >
-            <!--<form action=""></form>-->
-            <form id="_form" class="easyui-form" method="post" fit="true">
-                <div class="templatewrap" id="templatewrap" style="width: 360px;">
-                    <div class="template-base">
-                        <input name="_id" id="modifyId" value="${triggers.id!}" type="hidden">
-                        <div class="template-item">
-                            <input  name="marketCode" id="marketCode" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false"  data-options="label:'市场:',onChange:marketOriginChange,cls:'noborder', readonly:true, hasDownArrow:false" />
-                            <#comboProvider _id="marketCode" _provider='marketProvider' _queryParams='{required:true}' _value="${triggers.marketCode!}" />
-                        </div>
-                        <div class="template-item">
-                            <input name="systemCode" id="systemCode" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false"  data-options="label:'所属系统:',cls:'noborder', readonly:true, hasDownArrow:false" />
-                            <#comboProvider _id="systemCode" _provider='dataDictionaryValueProvider' _queryParams='{dd_code:"system_code",required:true,dd_with_market:"false"}' _value="${triggers.systemCode!}"/>
-                        </div>
-                        <div class="template-item">
-                            <input name="sceneCode" id="sceneCode" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false"  data-options="label:'应用场景:',cls:'noborder', readonly:true, hasDownArrow:false" />
-                            <#comboProvider _id="sceneCode" _provider='dataDictionaryValueProvider' _queryParams='{dd_code:"message_scene",required:true,dd_with_market:"false"}' _value="${triggers.sceneCode!}"/>
-                        </div>
-                        <div class="template-item">
-                            <input name="whitelist" id="whitelist" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false"  data-options="label:'应用白名单:',cls:'noborder', readonly:true, hasDownArrow:false" />
-                            <#comboProvider _id="whitelist" _provider='booleanProvider' _queryParams='{required:true}' _value="${triggers.whitelist!}"/>
-                        </div>
-                    </div>
-                    <div style="padding-top: 50px"></div>
-                    <%if (has(triggersTemplateList)){ for(triggersTemplate in triggersTemplateList){%>
-                        <div class="template-group">
-                            <h4 class="template-group-title">模板</h4>
-                            <input type="hidden" name="templateId" value="${triggersTemplate.id}" >
-                            <div class="template-item">
-                                <input class="easyui-combobox" id="channel" name="channel" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false"  data-options="cls: 'channel',label:'模板来源:',onChange:originChange,cls:'noborder', readonly:true, hasDownArrow:false,
-                                        url:'${contextPath}/provider/getLookupList.action',
-                                        method:'POST',
-                                        onLoadSuccess:function(){ $(this).combobox('select', '${triggersTemplate.channel}');},
-                                        queryParams: {provider: 'marketChannelProvider',queryParams:'{required:true}'}" />
-                            </div>
-                            <div class="template-item">
-                                <input class="easyui-combobox" id="marketChannelIds" name="marketChannelIds" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" editable="false"  data-options="label:'AccessKey:',multiple:true,cls:'noborder', readonly:true, hasDownArrow:false,
-                                        onLoadSuccess:function(){ $(this).combobox('setValues', [${triggersTemplate.marketChannelIds}]);}" />
-                            </div>
-                            <div class="template-item">
-                                <input class="easyui-textbox" name="templateName" value="${triggersTemplate.templateName!}" style="width:100%" labelAlign="right" data-options="label:'模板名称:',cls:'noborder', editable:false, readonly:true" />
-                            </div>
-                            <div class="template-item">
-                                <input class="easyui-textbox" name="templateCode" value="${triggersTemplate.templateCode!}" style="width:100%" labelAlign="right" data-options="label:'模板CODE:',cls:'noborder', editable:false, readonly:true" />
-                            </div>
-                            <div class="template-item">
-                                <input class="easyui-textbox" name="templateContent" value="${triggersTemplate.templateContent!}" style="width:100%" labelAlign="right"  readonly="true" data-options="label:'模板内容:', height: '80px', multiline: true,cls:'noborder', editable:false, readonly:true" />
-                            </div>
-                        </div>
-                    <%}}%>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-</#body>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data() {
+            return {
+                index: 0,
+                triggers: {
+                    templateList: [],
+                },
+            };
+        },
+        methods: {
+            cancel() {
+                $.modal.close();
+            }
+        }
+    })
+    app.triggers = ${triggers!};
+    app.triggers.marketCode = loadProviderDisplayText({
+        provider: 'marketProvider',
+        value:app.triggers.marketCode,
+        by:"code"
+    });
+    app.triggers.systemCode = loadProviderDisplayText({
+        provider: 'dataDictionaryValueProvider',
+        value:app.triggers.systemCode,
+        queryParams: {dd_code:"system_code",dd_with_market:false}
+    });
+    app.triggers.sceneCode = loadProviderDisplayText({
+        provider: 'dataDictionaryValueProvider',
+        value:app.triggers.sceneCode,
+        queryParams: {dd_code: "message_scene", dd_with_market: false}
+    });
+    app.triggers.whitelist = loadProviderDisplayText({
+        provider: 'yesOrNoProvider',
+        value:app.triggers.whitelist,
+    });
+</script>

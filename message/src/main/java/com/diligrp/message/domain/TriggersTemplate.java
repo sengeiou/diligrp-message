@@ -81,5 +81,4 @@ public class TriggersTemplate extends BaseDomain {
     @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "`modified`")
     private LocalDateTime modified;
-
 }

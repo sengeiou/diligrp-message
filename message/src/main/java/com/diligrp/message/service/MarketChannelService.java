@@ -3,7 +3,9 @@ package com.diligrp.message.service;
 import com.dili.ss.base.BaseService;
 import com.diligrp.message.domain.MarketChannel;
 
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * 由MyBatis Generator工具自动生成
@@ -18,4 +20,11 @@ public interface MarketChannelService extends BaseService<MarketChannel, Long> {
      * @return 返回map结构数据，key 为数据ID，value 为通道数据本身
      */
     Map<Long,MarketChannel> queryByMarket(String market);
+
+    /**
+     * 根据id集合查询市场通道信息
+     * @param ids id集合
+     * @return
+     */
+    List<MarketChannel> queryByIds(Set<Long> ids);
 }

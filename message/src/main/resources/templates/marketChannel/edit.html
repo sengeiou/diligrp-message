@@ -19,7 +19,7 @@
             v-model="formData"
             :request-fn="handleRequest">
             <template v-slot:accesskey="{ desc, data, field, formData }">
-                <el-input v-model="formData.accessKey" class="aa" required>
+                <el-input v-model="formData.accesskey" class="aa">
                    <i slot="suffix" class="el-input__icon el-icon-info" style="font-size: large;" @click="accessKeyTips"></i>
                 </el-input>
             </template>
@@ -42,6 +42,8 @@
     window.rootPath = '${contextPath}';
     function init(vm){
         vm.formData = ${marketChannel!};
+        //由于驼峰命名关系，所以需要增加一个非驼峰的回显
+        vm.formData.accesskey = vm.formData.accessKey;
     }
 </script>
 <script>
@@ -60,7 +62,7 @@
                 formData: {},
                 formDesc: {
                     marketCode: {
-                        options: loadProvider({
+                        options: loadDataByProviderAsync({
                             provider: 'marketProvider',
                             queryParams: {required: true}
                         }, true, "marketCode"),
@@ -70,7 +72,7 @@
                     },
                     channel: {
                         options: function (data) {
-                            return loadProvider({
+                            return loadDataByProviderAsync({
                                 provider: 'marketChannelProvider',stringValue:true,
                                 queryParams: {required: true}
                             }, true, "channel")
@@ -109,7 +111,7 @@
                     accesskey: {
                         label: "账号",
                         type: "input",
-                        // required: true,
+                        required: true,
                         attrs: {
                             maxlength: 50,
                             showWordLimit: true,
@@ -179,20 +181,4 @@
         }
     })
 
-    function loadProvider(data, first, name) {
-        return new Promise((resolve, reject) => {
-            axios.post('/convert/list.action', data)
-                .then((res) => {
-                    if (first) {
-                        if (!app.formData[name]){
-                            app.formData[name] = res.data[0].value;
-                        }
-                    }
-                    resolve(res.data);
-                })
-                .catch(function (error) {
-                    reject(error);
-                });
-        });
-    }
 </script>

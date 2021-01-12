@@ -1,10 +1,10 @@
 package com.diligrp.message.provider;
 
+import com.dili.commons.glossary.YesOrNoEnum;
 import com.dili.ss.metadata.FieldMeta;
 import com.dili.ss.metadata.ValuePair;
 import com.dili.ss.metadata.ValuePairImpl;
 import com.dili.ss.metadata.ValueProvider;
-import com.diligrp.message.common.enums.MessageEnum;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -17,7 +17,7 @@ import java.util.stream.Stream;
  * @author yuehongbo
  */
 @Component
-public class BooleanProvider implements ValueProvider {
+public class YesOrNoProvider implements ValueProvider {
 
     /**
      * 取下拉列表的选项
@@ -29,8 +29,8 @@ public class BooleanProvider implements ValueProvider {
      */
     @Override
     public List<ValuePair<?>> getLookupList(Object val, Map metaMap, FieldMeta fieldMeta) {
-        return Stream.of(MessageEnum.BooleanEnum.values())
-                .map(e -> new ValuePairImpl<>(e.getName(), e.getCode().toString()))
+        return Stream.of(YesOrNoEnum.values())
+                .map(e -> new ValuePairImpl<>(e.getName(), String.valueOf(e.getCode())))
                 .collect(Collectors.toList());
     }
 
@@ -47,7 +47,7 @@ public class BooleanProvider implements ValueProvider {
         if (Objects.isNull(object)) {
             return null;
         }
-        MessageEnum.BooleanEnum instance = MessageEnum.BooleanEnum.getInstance(Boolean.valueOf(object.toString()));
+        YesOrNoEnum instance = YesOrNoEnum.getYesOrNoEnum(Integer.valueOf(object.toString()));
         if (Objects.nonNull(instance)) {
             return instance.getName();
         }
