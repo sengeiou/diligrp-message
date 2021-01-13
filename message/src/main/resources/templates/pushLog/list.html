@@ -1,21 +1,18 @@
 <#bs4Body>
 <#vueElm />
 <div class="container-fluid">
-    <#bs4nav>
     <div id="app">
         <ele-form
                 :form-attrs="{
                     size: 'medium'
                 }"
                 :inline="true"
-                :is-show-reset-btn="true"
                 form-btn-size="medium"
-                :form-desc="formDesc"
+                v-bind="formConfig"
                 v-model="formData"
                 :request-fn="handleRequest">
         </ele-form>
     </div>
-    </#bs4nav>
     <hr>
     <div class="row">
         <div class="col-12">
@@ -115,34 +112,43 @@
         el: '#app',
         data() {
             return {
-                formData: {},
-                formDesc: {
-                    platform: {
-                        type: 'select',
-                        label: '推送平台',
-                        options: loadDataByProviderAsync({
-                            provider: 'platformProvider'
-                        }),
-                    },
-                    pushState: {
-                        options: loadDataByProviderAsync({
-                            provider: 'sendStateProvider'
-                        }),
-                        label: "推送状态",
-                        type: "select",
-                    },
-                    pushTimeStart: {
-                        type: "datetime",
-                        label: "推送时间",
-                    },
-                    pushTimeEnd: {
-                        labelWidth: "20px",
-                        type: "datetime",
-                        label: "-",
-                    },
-                    alert: {
-                        type: "input",
-                        label: "通知内容",
+                formData: {platform: "", pushState: "", pushTimeStart: "", pushTimeEnd: "", alert: ""},
+                formConfig: {
+                    isShowResetBtn: true,
+                    formDesc: {
+                        platform: {
+                            type: 'select',
+                            label: '推送平台',
+                            options: loadDataByProviderAsync({
+                                provider: 'platformProvider'
+                            }),
+                        },
+                        pushState: {
+                            options: loadDataByProviderAsync({
+                                provider: 'sendStateProvider'
+                            }),
+                            label: "推送状态",
+                            type: "select",
+                        },
+                        pushTimeStart: {
+                            type: "datetime",
+                            label: "推送时间",
+                            attrs: {
+                                editable: false
+                            }
+                        },
+                        pushTimeEnd: {
+                            labelWidth: "20px",
+                            type: "datetime",
+                            label: "-",
+                            attrs: {
+                                editable: false
+                            }
+                        },
+                        alert: {
+                            type: "input",
+                            label: "通知内容",
+                        }
                     }
                 }
             };
