@@ -50,14 +50,12 @@ public class WhitelistCustomerInput {
     /**
      * 开始日期 -- 废弃，需要用 startDateTime
      */
-    @NotNull(message = "白名单开始时间不能为空")
     @Deprecated
     private LocalDate startDate;
 
     /**
      * 结束 时间 -- 字段废弃 需要用  endDateTime
      */
-    @NotNull(message = "白名单结束时间不能为空")
     @Deprecated
     private LocalDate endDate;
 
