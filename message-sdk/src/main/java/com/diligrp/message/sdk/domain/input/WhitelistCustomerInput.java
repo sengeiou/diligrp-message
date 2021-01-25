@@ -26,7 +26,6 @@ public class WhitelistCustomerInput {
     /**
      * 源系统ID
      */
-    @NotNull(message = "源ID不能为空")
     @Deprecated
     private Long id;
 
