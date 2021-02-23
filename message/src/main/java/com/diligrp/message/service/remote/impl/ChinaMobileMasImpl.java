@@ -9,8 +9,11 @@ import com.dili.ss.domain.BaseOutput;
 import com.diligrp.message.common.constant.MessagePushConstant;
 import com.diligrp.message.service.remote.IMessageService;
 import com.diligrp.message.utils.EncryptUtil;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
@@ -25,12 +28,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class ChinaMobileMasImpl implements IMessageService {
 
-    private String baseUrl = "http://112.35.1.155:1992/sms";
+    @Value("${dili.message.base-url.china-mobile-mas:http://112.35.1.155:1992}")
+    private String baseUrl;
 
     @Override
     public BaseOutput<String> sendSMS(JSONObject object) {
         try {
-            HttpResponse response = HttpUtil.createPost(baseUrl + "/norsubmit").body(getSmsParam(object)).execute();
+            HttpResponse response = HttpUtil.createPost(baseUrl + "/sms/norsubmit").body(getSmsParam(object)).execute();
             if (response.isOk()) {
                 String responseBody = response.body();
                 JSONObject jsonObject = JSONObject.parseObject(responseBody);
@@ -42,18 +46,24 @@ public class ChinaMobileMasImpl implements IMessageService {
                 } else {
                     output.setCode(jsonObject.getString("rspcod"));
                     output.setMessage(ResponseCode.getResponseCode(output.getCode()).getDesc());
+                    output.setMetadata("移动云MAS短信发送失败,返回 " + output.getMessage());
                 }
                 return output;
             } else {
                 response.close();
-                return BaseOutput.failure("调用移动云MAS返回错误").setCode(String.valueOf(response.getStatus()));
+                return BaseOutput.failure("调用移动云MAS返回错误").setCode(String.valueOf(response.getStatus())).setMetadata("移动云MAS调用失败,返回代码 " + response.getStatus());
             }
         } catch (Exception e) {
-            log.error("移动云MAS通道发送异常," + e.getMessage(), e);
+            log.error(String.format("移动云MAS通道发送异常 %s" + e.getMessage()), e);
             return BaseOutput.failure(e.getLocalizedMessage()).setMetadata("移动云MAS通道发送异常 >>>> " + e.toString());
         }
     }
 
+    /**
+     * 组装生成短信发送报文信息
+     * @param object
+     * @return
+     */
     private String getSmsParam(JSONObject object) {
         Submit submit = new Submit();
         submit.setEcName(object.getString(MessagePushConstant.COMPANY_NAME));
@@ -73,12 +83,16 @@ public class ChinaMobileMasImpl implements IMessageService {
         stringBuffer.append(submit.getAddSerial());
         String selfMac = EncryptUtil.MD5HexString(stringBuffer.toString());
         submit.setMac(selfMac);
-        return Base64.encodeBase64String(JSON.toJSONString(submit).getBytes());
+        String s = Base64.encodeBase64String(JSON.toJSONString(submit).getBytes());
+        log.info(String.format("移动云MAS短信报文加密数据:%s", s));
+        return s;
     }
 
     /**
      * 移动短信提交内容
      */
+    @Getter
+    @Setter
     class Submit{
         private String ecName;
         private String apId;
@@ -88,55 +102,6 @@ public class ChinaMobileMasImpl implements IMessageService {
         private String sign;
         private String addSerial;
         private String mac;
-
-        public String getEcName() {
-            return ecName;
-        }
-        public void setEcName(String ecName) {
-            this.ecName = ecName;
-        }
-        public String getApId() {
-            return apId;
-        }
-        public void setApId(String apId) {
-            this.apId = apId;
-        }
-        public String getSecretKey() {
-            return secretKey;
-        }
-        public void setSecretKey(String secretKey) {
-            this.secretKey = secretKey;
-        }
-        public String getMobiles() {
-            return mobiles;
-        }
-        public void setMobiles(String mobiles) {
-            this.mobiles = mobiles;
-        }
-        public String getContent() {
-            return content;
-        }
-        public void setContent(String content) {
-            this.content = content;
-        }
-        public String getSign() {
-            return sign;
-        }
-        public void setSign(String sign) {
-            this.sign = sign;
-        }
-        public String getAddSerial() {
-            return addSerial;
-        }
-        public void setAddSerial(String addSerial) {
-            this.addSerial = addSerial;
-        }
-        public String getMac() {
-            return mac;
-        }
-        public void setMac(String mac) {
-            this.mac = mac;
-        }
     }
 
     /**
@@ -151,7 +116,9 @@ public class ChinaMobileMasImpl implements IMessageService {
         SUCCESS("success", "数据验证通过。"),
         TOO_MANY_MOBILES("TooManyMobiles", "手机号数量超限（>5000），应≤5000。"),
         ;
+        @Getter
         private String code;
+        @Getter
         private String desc;
 
         ResponseCode(String code, String desc) {
@@ -168,11 +135,5 @@ public class ChinaMobileMasImpl implements IMessageService {
             return null;
         }
 
-        public String getCode() {
-            return code;
-        }
-        public String getDesc() {
-            return desc;
-        }
     }
 }

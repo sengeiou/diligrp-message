@@ -42,6 +42,11 @@ public class MarketChannelController {
     private final TriggersTemplateService triggersTemplateService;
     private final MarketRpcService marketRpcService;
 
+    /**
+     * 市场通道首页
+     * @param modelMap
+     * @return
+     */
     @RequestMapping(value="/index.html", method = RequestMethod.GET)
     public String index(ModelMap modelMap) {
         return "marketChannel/list";

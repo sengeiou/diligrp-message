@@ -22,6 +22,11 @@ public class ValueProviderController {
 
     private final ValueProviderUtils valueProviderUtils;
 
+    /**
+     * 获取值提供者的显示信息
+     * @param queryMap
+     * @return
+     */
     @PostMapping({"/getDisplayText.action"})
     public BaseOutput<String> getDisplayText(@RequestBody Map<String, Object> queryMap) {
         String provider = queryMap.get("provider").toString();

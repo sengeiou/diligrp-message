@@ -1,6 +1,7 @@
 package com.diligrp.message;
 
 import cn.hutool.extra.mail.MailUtil;
+import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.dili.ss.domain.BaseOutput;
 import com.diligrp.MessageApplication;
@@ -43,11 +44,11 @@ public class MessageApplicationTests {
         object.put(MessagePushConstant.ACCESS_KEY, "hebrh");
         object.put(MessagePushConstant.SECRET, Base64Util.getDecoderString("aGVicmgwMQ=="));
         object.put(MessagePushConstant.SIGN, "bttBGypys");
-        object.put(MessagePushConstant.COMPANY_NAME, "哈尔滨人和集团");
+        object.put(MessagePushConstant.COMPANY_NAME, "哈尔滨哈达农副产品股份有限公司");
         object.put(MessagePushConstant.PHONES, "17608176657");
         object.put(MessagePushConstant.CONTENT, "你好,验证码为123456");
         BaseOutput<String> output = chinaMobileMas.sendSMS(object);
-        System.out.println(output);
+        System.out.println(JSONUtil.toJsonStr(output));
     }
 
     @Test
@@ -59,7 +60,7 @@ public class MessageApplicationTests {
         object.put(MessagePushConstant.PHONES, "17608176657");
         object.put(MessagePushConstant.CONTENT, "你好,验证码为123456");
         BaseOutput<String> output = smsChinese.sendSMS(object);
-        System.out.println(output);
+        System.out.println(JSONUtil.toJsonStr(output));
     }
 
     @Test

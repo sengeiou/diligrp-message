@@ -16,7 +16,6 @@ import com.diligrp.message.service.MarketChannelService;
 import com.diligrp.message.service.TriggersService;
 import com.diligrp.message.service.TriggersTemplateService;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import lombok.RequiredArgsConstructor;
 import one.util.streamex.StreamEx;
 import org.springframework.stereotype.Controller;
@@ -27,7 +26,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * 由MyBatis Generator工具自动生成
@@ -97,7 +95,11 @@ public class TriggersController {
         return "triggers/add";
     }
 
-
+    /**
+     * 保存触发场景信息
+     * @param saveInput
+     * @return
+     */
     @PostMapping(value = "/save.action")
     @ResponseBody
     public BaseOutput save(@RequestBody TriggersSaveInput saveInput) {

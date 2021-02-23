@@ -7,7 +7,6 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.dto.DTOUtils;
-import com.dili.ss.redis.service.RedisUtil;
 import com.dili.uap.sdk.domain.DataDictionaryValue;
 import com.dili.uap.sdk.rpc.DataDictionaryRpc;
 import com.diligrp.message.constants.MessageConstant;
@@ -15,14 +14,12 @@ import com.github.benmanes.caffeine.cache.Cache;
 import com.google.common.collect.Lists;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -38,13 +35,13 @@ import java.util.stream.Collectors;
 @Slf4j
 public class DataDictionaryRpcService {
 
-    private static String redisKeyPrefix = "message:dictionary:";
-
     private final DataDictionaryRpc dataDictionaryRpc;
-    private final RedisUtil redisUtil;
 
     @Resource(name = "caffeineTimedCache")
     private Cache<String, String> caffeineTimedCache;
+
+    @Resource(name = "caffeineMaxSizeCache")
+    private Cache<String, String> caffeineMaxSizeCache;
 
     /**
      * 查询需要发送邮件的用户列表
@@ -52,24 +49,18 @@ public class DataDictionaryRpcService {
      */
     public List<String> listToMail() {
         String messageErrorEmail = "message_error_email";
-        String redisKey = redisKeyPrefix + messageErrorEmail;
-        Long redisSize = redisUtil.getRedisTemplate().opsForList().size(redisKey);
-        List<String> mails = Lists.newArrayList();
-        //检查当前key在redis中是否存在
-        if (null == redisSize || redisSize == 0) {
-            BaseOutput<List<DataDictionaryValue>> out = dataDictionaryRpc.listDataDictionaryValueByDdCode(messageErrorEmail);
-            if (out == null || !out.isSuccess()) {
-                return Collections.emptyList();
+        StringBuilder keyBuilder = new StringBuilder(MessageConstant.CACHE_KEY).append("_").append(messageErrorEmail);
+        String str = caffeineMaxSizeCache.get(keyBuilder.toString(), t -> {
+            BaseOutput<List<DataDictionaryValue>> listBaseOutput = dataDictionaryRpc.listDataDictionaryValueByDdCode(messageErrorEmail);
+            if (listBaseOutput.isSuccess() && CollectionUtil.isNotEmpty(listBaseOutput.getData())) {
+                return listBaseOutput.getData().stream().filter(Objects::nonNull).map(DataDictionaryValue::getCode).filter(Objects::nonNull).collect(Collectors.joining(","));
             }
-            mails = out.getData().stream().filter(Objects::nonNull).map(DataDictionaryValue::getCode).filter(Objects::nonNull).collect(Collectors.toList());
-            if (CollectionUtil.isNotEmpty(mails)) {
-                redisUtil.getRedisTemplate().opsForList().leftPushAll(redisKey, mails);
-                redisUtil.expire(redisKey, 7, TimeUnit.DAYS);
-            }
-        } else {
-            mails = redisUtil.getRedisTemplate().opsForList().range(redisKey, 0, redisSize);
+            return null;
+        });
+        if (StrUtil.isNotBlank(str)) {
+            return Lists.newArrayList(str.split(","));
         }
-        return mails;
+        return Collections.emptyList();
     }
 
     /**

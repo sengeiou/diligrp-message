@@ -1,6 +1,7 @@
 package com.diligrp.message.service.remote.impl;
 
 import cn.hutool.http.Header;
+import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson.JSONObject;
@@ -9,6 +10,7 @@ import com.dili.ss.domain.BaseOutput;
 import com.diligrp.message.common.constant.MessagePushConstant;
 import com.diligrp.message.service.remote.IMessageService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
@@ -23,7 +25,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class SmsChineseImpl implements IMessageService {
 
-    private String baseUrl= "http://utf8.api.smschinese.cn";
+    @Value("${dili.message.base-url.sms-chinese:http://utf8.api.smschinese.cn}")
+    private String baseUrl;
 
     @Override
     public BaseOutput<String> sendSMS(JSONObject object) {
@@ -32,8 +35,8 @@ public class SmsChineseImpl implements IMessageService {
         params.put("Key", object.getString(MessagePushConstant.SECRET));
         params.put("smsMob", object.getString(MessagePushConstant.PHONES));
         params.put("smsText", object.getString(MessagePushConstant.CONTENT));
-        try {
-            HttpResponse response = HttpUtil.createPost(baseUrl).header(Header.CONTENT_TYPE, "application/x-www-form-urlencoded").header("charset", "utf8").form(params).execute();
+        HttpRequest httpRequest = HttpUtil.createPost(baseUrl).header(Header.CONTENT_TYPE, "application/x-www-form-urlencoded").header("charset", "utf8").form(params);
+        try (HttpResponse response = httpRequest.execute()) {
             if (response.isOk()) {
                 Integer responseCode = Integer.valueOf(response.body());
                 BaseOutput output = new BaseOutput();
@@ -42,11 +45,11 @@ public class SmsChineseImpl implements IMessageService {
                 } else {
                     output.setCode(String.valueOf(responseCode));
                     output.setMessage(ResponseCode.getResponseCode(responseCode).getDesc());
+                    output.setMetadata(output.getMessage());
                 }
                 return output;
             } else {
-                response.close();
-                return BaseOutput.failure("调用网建返回错误").setCode(String.valueOf(response.getStatus()));
+                return BaseOutput.failure("调用网建返回错误").setCode(String.valueOf(response.getStatus())).setMetadata("网建接口返回错误代码 " + response.getStatus());
             }
         } catch (Exception e) {
             log.error("网建通道发送异常," + e.getMessage(), e);

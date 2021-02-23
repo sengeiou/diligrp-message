@@ -68,7 +68,7 @@
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
-            <version>5.5.7</version>
+            <version>5.5.8</version>
         </dependency>
         <dependency>
             <groupId>com.aliyun</groupId>
@@ -88,11 +88,6 @@
             <groupId>com.sun.mail</groupId>
             <artifactId>javax.mail</artifactId>
             <version>1.6.2</version>
-        </dependency>
-        <dependency>
-            <artifactId>fastjson</artifactId>
-            <groupId>com.alibaba</groupId>
-            <version>1.2.60</version>
         </dependency>
         <!-- 极光推送 -->
         <dependency>
@@ -195,6 +190,12 @@
             <artifactId>ss-redis</artifactId>
             <groupId>com.dili</groupId>
             <version>${sharp-sword.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>ss-processor</artifactId>
+                    <groupId>com.dili</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.dili</groupId>

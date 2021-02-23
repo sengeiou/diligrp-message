@@ -132,10 +132,10 @@ public class SmsServiceImpl implements SmsService {
                             tempLog.setId(null);
                             tempLog.setSendChannel(t.getChannel());
                             sendLogs.add(tempLog);
-                            if (null != output.getMetadata() && StrUtil.isNotBlank(String.valueOf(output.getMetadata()))) {
+                            if (Objects.nonNull(output.getMetadata()) && StrUtil.isNotBlank(String.valueOf(output.getMetadata()))) {
                                 //邮件可能发送失败，但是不影响主业务，此处忽略邮件是否发送成功
                                 try {
-                                    MailUtil.send(dataDictionaryRpcService.listToMail(), "消息发送异常", output.getMetadata().toString(), false);
+                                    MailUtil.send(dataDictionaryRpcService.listToMail(), "短信发送异常", output.getMetadata().toString(), false);
                                 } catch (Throwable throwable) {
                                     log.error("邮件通知异常 " + throwable.getMessage(), throwable);
                                 }

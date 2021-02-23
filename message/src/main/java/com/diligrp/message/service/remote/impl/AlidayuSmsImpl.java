@@ -6,7 +6,6 @@ import com.aliyuncs.CommonResponse;
 import com.aliyuncs.DefaultAcsClient;
 import com.aliyuncs.IAcsClient;
 import com.aliyuncs.exceptions.ClientException;
-import com.aliyuncs.exceptions.ServerException;
 import com.aliyuncs.http.MethodType;
 import com.aliyuncs.profile.DefaultProfile;
 import com.dili.ss.constant.ResultCode;
@@ -14,11 +13,7 @@ import com.dili.ss.domain.BaseOutput;
 import com.diligrp.message.common.constant.MessagePushConstant;
 import com.diligrp.message.service.remote.IMessageService;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-
-import java.sql.SQLException;
 
 /**
  * <B>阿里大于通道实现</B>
@@ -54,13 +49,15 @@ public class AlidayuSmsImpl implements IMessageService {
                 } else {
                     output.setCode(code);
                     result = data.getString("Message");
+                    metadata = result;
                 }
-                output.setMessage(result);
+                output.setMessage(result).setMetadata(metadata);
                 return output;
             }
         } catch (ClientException e) {
             log.error("阿里大于通道发送异常,requestId:" + e.getMessage(), e);
-            result = "错误类型:[" + e.getErrorType().name() + "],错误code:[" + e.getErrCode() + "],错误信息:[" + e.getErrMsg() + "]";
+            result = String.format("错误类型:[%s],错误code:[%s],错误信息:[%s]", e.getErrorType().name(), e.getErrCode(), e.getErrMsg());
+            metadata = result;
         } catch (Exception e) {
             log.error("阿里大于通道发送异常," + e.getMessage(), e);
             result = "系统异常";
