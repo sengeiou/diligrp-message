@@ -36,10 +36,16 @@ public class SendLog extends BaseDomain {
     private String requestCode;
 
     /**
-     * 来源市场
+     * 短信通道市场
      */
     @Column(name = "`market_code`")
     private String marketCode;
+
+    /**
+     * 业务产生市场
+     */
+    @Column(name = "`business_market_code`")
+    private String businessMarketCode;
 
     /**
      * 来源系统

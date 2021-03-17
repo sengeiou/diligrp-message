@@ -48,7 +48,19 @@
                         marketCode: {
                             layout: 12,
                             type: 'text',
-                            label: '所属市场:',
+                            label: '通道市场:',
+                            displayFormatter (labels) {
+                                return loadProviderDisplayText({
+                                    provider: 'marketProvider',
+                                    value:labels,
+                                    by:"code"
+                                });
+                            }
+                        },
+                        businessMarketCode: {
+                            layout: 12,
+                            type: 'text',
+                            label: '业务市场:',
                             displayFormatter (labels) {
                                 return loadProviderDisplayText({
                                     provider: 'marketProvider',

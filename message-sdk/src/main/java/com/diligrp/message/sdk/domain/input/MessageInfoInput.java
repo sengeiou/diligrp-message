@@ -2,6 +2,7 @@ package com.diligrp.message.sdk.domain.input;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.util.StringUtils;
 
 import javax.validation.constraints.NotBlank;
 
@@ -15,10 +16,16 @@ import javax.validation.constraints.NotBlank;
 public class MessageInfoInput {
 
     /**
-     * 所属市场
+     * 短信通道市场
      */
-    @NotBlank(message = "所属市场不能为空")
+    @NotBlank(message = "短信通道市场不能为空")
     private String marketCode;
+
+    /**
+     * 业务产生市场
+     */
+    @NotBlank(message = "业务产生市场不能为空")
+    private String businessMarketCode;
 
     /**
      * 系统编码
@@ -52,4 +59,11 @@ public class MessageInfoInput {
      * 请求IP地址
      */
     private String ip;
+
+    public void setMarketCode(String marketCode) {
+        this.marketCode = marketCode;
+        if (StringUtils.hasText(businessMarketCode)) {
+            this.setBusinessMarketCode(marketCode);
+        }
+    }
 }

@@ -8,6 +8,7 @@
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="request_code" jdbcType="VARCHAR" property="requestCode" />
     <result column="market_code" jdbcType="VARCHAR" property="marketCode" />
+    <result column="business_market_code" jdbcType="VARCHAR" property="businessMarketCode" />
     <result column="system_code" jdbcType="VARCHAR" property="systemCode" />
     <result column="scene_code" jdbcType="VARCHAR" property="sceneCode" />
     <result column="cellphone" jdbcType="VARCHAR" property="cellphone" />
@@ -20,69 +21,5 @@
     <result column="request_id" jdbcType="VARCHAR" property="requestId" />
     <result column="biz_id" jdbcType="VARCHAR" property="bizId" />
   </resultMap>
-  <sql id="Base_Column_List">
-    <!--
-      WARNING - @mbg.generated
-    -->
-    id, request_code, market_code, system_code, scene_code, cellphone, receipt_time, 
-    content, send_state, send_time, send_channel, remarks, request_id, biz_id
-  </sql>
-  <select id="selectBy" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    <!--
-      WARNING - @mbg.generated
-    -->
-    select 
-    <include refid="Base_Column_List" />
-    from message_send_log
-    where id = #{id,jdbcType=BIGINT}
-  </select>
-  <update id="updateBy" parameterType="com.diligrp.message.domain.SendLog">
-    <!--
-      WARNING - @mbg.generated
-    -->
-    update message_send_log
-    <set>
-      <if test="requestCode != null">
-        request_code = #{requestCode,jdbcType=VARCHAR},
-      </if>
-      <if test="marketCode != null">
-        market_code = #{marketCode,jdbcType=VARCHAR},
-      </if>
-      <if test="systemCode != null">
-        system_code = #{systemCode,jdbcType=VARCHAR},
-      </if>
-      <if test="sceneCode != null">
-        scene_code = #{sceneCode,jdbcType=VARCHAR},
-      </if>
-      <if test="cellphone != null">
-        cellphone = #{cellphone,jdbcType=VARCHAR},
-      </if>
-      <if test="receiptTime != null">
-        receipt_time = #{receiptTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="content != null">
-        content = #{content,jdbcType=VARCHAR},
-      </if>
-      <if test="sendState != null">
-        send_state = #{sendState,jdbcType=TINYINT},
-      </if>
-      <if test="sendTime != null">
-        send_time = #{sendTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="sendChannel != null">
-        send_channel = #{sendChannel,jdbcType=VARCHAR},
-      </if>
-      <if test="remarks != null">
-        remarks = #{remarks,jdbcType=VARCHAR},
-      </if>
-      <if test="requestId != null">
-        request_id = #{requestId,jdbcType=VARCHAR},
-      </if>
-      <if test="bizId != null">
-        biz_id = #{bizId,jdbcType=VARCHAR}
-      </if>
-    </set>
-    where id = #{id,jdbcType=BIGINT}
-  </update>
 
 </mapper>

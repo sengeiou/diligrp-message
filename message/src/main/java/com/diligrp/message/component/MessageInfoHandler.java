@@ -58,6 +58,7 @@ public class MessageInfoHandler {
         BeanValidationResult beanValidationResult = ValidationUtil.warpValidate(info);
         SendLog sendLog = new SendLog();
         sendLog.setMarketCode(info.getMarketCode());
+        sendLog.setBusinessMarketCode(info.getBusinessMarketCode());
         sendLog.setSystemCode(info.getSystemCode());
         sendLog.setSceneCode(info.getSceneCode());
         sendLog.setCellphone(info.getCellphone());

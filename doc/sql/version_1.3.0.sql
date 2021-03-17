@@ -1,0 +1,2 @@
+ALTER TABLE `message_center`.`message_send_log` ADD COLUMN `business_market_code` VARCHAR(20) DEFAULT NULL COMMENT '产生业务短信的市场' AFTER market_code;
+update `message_center`.`message_send_log` set business_market_code = market_code;
