@@ -4,7 +4,7 @@
         <input type="hidden" name="isDelete" value="0">
         <div class="row  row-cols-6">
             <div class="form-group col">
-                <label for="">所属市场</label>
+                <label for="">通道市场</label>
                 <select class="form-control" id="marketCode" name="marketCode"></select>
                 <#bcomboProvider _id="marketCode" _provider="marketProvider"  _valueField="value" _textField="text" _value="" _queryParams='{emptyText:"-- 全部 --"}' />
             </div>
@@ -81,7 +81,7 @@
                     <tr>
                         <th data-width-unit="%" data-width="2" data-radio="true"></th>
                         <th data-width-unit="%" data-width="15" data-field="marketCode" data-sortable="true" data-sort-name="market_code" data-align="center" data-provider="marketProvider">
-                            所属市场
+                            通道市场
                         </th>
                         <th data-width-unit="%" data-width="10" data-field="systemCode" data-sortable="true" data-sort-name="system_code" data-align="center" data-provider="dataDictionaryValueProvider" data-query-params='{dd_code:"system_code",dd_with_market:"false"}'>
                             所属系统
