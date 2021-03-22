@@ -2,7 +2,7 @@ package com.diligrp.message.sdk.domain.input;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.util.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.validation.constraints.NotBlank;
 
@@ -62,7 +62,7 @@ public class MessageInfoInput {
 
     public void setMarketCode(String marketCode) {
         this.marketCode = marketCode;
-        if (!StringUtils.hasText(businessMarketCode)) {
+        if (StringUtils.isBlank(businessMarketCode)) {
             this.setBusinessMarketCode(marketCode);
         }
     }
