@@ -62,7 +62,7 @@ public class MessageInfoInput {
 
     public void setMarketCode(String marketCode) {
         this.marketCode = marketCode;
-        if (StringUtils.hasText(businessMarketCode)) {
+        if (!StringUtils.hasText(businessMarketCode)) {
             this.setBusinessMarketCode(marketCode);
         }
     }
