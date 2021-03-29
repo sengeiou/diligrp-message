@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.diligrp.message.mapper.BlacklistMapper">
+  <resultMap id="BaseResultMap" type="com.diligrp.message.domain.Blacklist">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="market_code"  property="marketCode" />
+    <result column="customer_name"  property="customerName" />
+    <result column="cellphone"  property="cellphone" />
+    <result column="start_time"  property="startTime" />
+    <result column="end_time"  property="endTime" />
+    <result column="status"  property="status" />
+    <result column="creator_id" property="creatorId" />
+    <result column="created" property="created" />
+    <result column="modified"  property="modified" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    id, market_code, customer_name, cellphone, start_time, end_time, status, creator_id, created, modified
+  </sql>
+
+  <!-- 查询某个手机号，在某市场的此时此刻，是否在白名单中 -->
+  <select id="queryValidByMarketCode" resultType="string" parameterType="string">
+    <![CDATA[
+        select mw.cellphone from message_blacklist mw where mw.start_time  <= NOW() and end_time >= NOW() and mw.market_code=#{marketCode}
+    ]]>
+  </select>
+
+</mapper>

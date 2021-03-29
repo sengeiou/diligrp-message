@@ -31,6 +31,13 @@
             </el-col>
             <el-col :span="6">
                 <el-form-item
+                        label="应用黑名单"
+                        prop="blacklist">
+                    {{ triggers.blacklist }}
+                </el-form-item>
+            </el-col>
+            <el-col :span="6">
+                <el-form-item
                         label="应用白名单"
                         prop="whitelist">
                     {{ triggers.whitelist }}
@@ -131,5 +138,9 @@
     app.triggers.whitelist = loadProviderDisplayText({
         provider: 'yesOrNoProvider',
         value:app.triggers.whitelist,
+    });
+    app.triggers.blacklist = loadProviderDisplayText({
+        provider: 'yesOrNoProvider',
+        value:app.triggers.blacklist,
     });
 </script>

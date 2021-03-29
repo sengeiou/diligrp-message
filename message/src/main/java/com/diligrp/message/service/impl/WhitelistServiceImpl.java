@@ -72,8 +72,8 @@ public class WhitelistServiceImpl extends BaseServiceImpl<Whitelist, Long> imple
     }
 
     @Override
-    public Set<String> queryValidByMarketCode(Whitelist whitelist) {
-        return getActualMapper().queryValidByMarketCode(whitelist);
+    public Set<String> queryValidByMarketCode(String marketCode) {
+        return getActualMapper().queryValidByMarketCode(marketCode);
     }
 
     @Override
@@ -105,11 +105,11 @@ public class WhitelistServiceImpl extends BaseServiceImpl<Whitelist, Long> imple
     private void produceStatus(Whitelist whitelist) {
         LocalDateTime now = LocalDateTime.now();
         if (whitelist.getStartDateTime().isAfter(now)) {
-            whitelist.setStatus(MessageEnum.WhitelistStatus.USELESS.getCode());
+            whitelist.setStatus(MessageEnum.BlackWhitelistStatus.USELESS.getCode());
         } else if (whitelist.getEndDateTime().isBefore(now)) {
-            whitelist.setStatus(MessageEnum.WhitelistStatus.EXPIRED.getCode());
+            whitelist.setStatus(MessageEnum.BlackWhitelistStatus.EXPIRED.getCode());
         } else {
-            whitelist.setStatus(MessageEnum.WhitelistStatus.ACTIVE.getCode());
+            whitelist.setStatus(MessageEnum.BlackWhitelistStatus.ACTIVE.getCode());
         }
     }
 

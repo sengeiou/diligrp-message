@@ -3,20 +3,20 @@
 <div id=app>
     <div class="container-fluid pb-5">
         <ele-form
-            :form-attrs="{
+                :form-attrs="{
                 size: 'medium'
-            }"
-            ref="myForm"
-            label-position="left"
-            :is-show-cancel-btn="false"
-            submit-btn-text="提交"
-            :is-show-error-notify="false"
-            form-btn-size="medium"
-            :form-btns="formBtns"
-            :is-dialog="true"
-            v-bind="formConfig"
-            v-model="formData"
-            :request-fn="handleRequest">
+                }"
+                ref="myForm"
+                label-position="left"
+                :is-show-cancel-btn="false"
+                submit-btn-text="提交"
+                :is-show-error-notify="false"
+                form-btn-size="medium"
+                :form-btns="formBtns"
+                :is-dialog="true"
+                v-bind="formConfig"
+                v-model="formData"
+                :request-fn="handleRequest">
         </ele-form>
     </div>
 </div>
@@ -46,15 +46,6 @@
                 formData: {},
                 formConfig: {
                     formDesc: {
-                        marketCode: {
-                            options: loadDataByProviderAsync({
-                                provider: 'marketProvider',
-                                queryParams: {required: true}
-                            }, true, "marketCode"),
-                            label: "所属市场",
-                            type: "select",
-                            required: true
-                        },
                         customerName: {
                             label: "客户姓名",
                             type: "input",
@@ -104,7 +95,7 @@
         },
         methods: {
             handleRequest(data) {
-                axios.post(rootPath + "/whitelist/insert.action", data)
+                axios.post(rootPath + "/blacklist/insert.action", data)
                     .then(function (response) {
                         if (response.data.success){
                             $.modal.close();

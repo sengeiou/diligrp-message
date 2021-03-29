@@ -1,6 +1,7 @@
 package com.diligrp.message.service.remote;
 
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONUtil;
 import com.dili.ss.domain.BaseOutput;
 import com.diligrp.message.common.enums.BizNumberTypeEnum;
 import com.diligrp.message.rpc.UidRpc;
@@ -42,8 +43,9 @@ public class UidRpcService {
             BaseOutput<String> bizNumberOutput = uidRpc.bizNumber(bizNumberType.getType());
             if (StrUtil.isNotBlank(bizNumberOutput.getData())) {
                 return Optional.of(bizNumberOutput.getData());
+            } else {
+                log.warn(String.format("根据业务类型[%s]获取编号失败:%s", bizNumberType.getName(), JSONUtil.toJsonStr(bizNumberOutput)));
             }
-
         } catch (Exception e) {
             log.error(String.format("根据业务类型[%s]获取编号异常:%s", bizNumberType.getName(), e.getMessage()), e);
         }

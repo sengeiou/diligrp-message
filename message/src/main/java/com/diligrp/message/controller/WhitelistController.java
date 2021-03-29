@@ -1,7 +1,6 @@
 package com.diligrp.message.controller;
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.util.PhoneUtil;
 import com.dili.logger.sdk.annotation.BusinessLogger;
 import com.dili.logger.sdk.util.LoggerUtil;
 import com.dili.ss.domain.BaseOutput;
@@ -77,18 +76,25 @@ public class WhitelistController {
      */
     @RequestMapping(value="/insert.action", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
-    public  BaseOutput insert(@RequestBody WhitelistSaveInfo whitelistInfo) {
-        Whitelist whitelist = BeanUtil.copyProperties(whitelistInfo,Whitelist.class);
+    @BusinessLogger(systemCode = MessageConstant.SYSTEM_CODE, businessType = "message_whitelist", notes = "新增白名单数据", operationType = "add")
+    public BaseOutput insert(@RequestBody WhitelistSaveInfo whitelistInfo) {
+        Whitelist whitelist = BeanUtil.copyProperties(whitelistInfo, Whitelist.class);
         whitelist.setSource(String.valueOf(MessageEnum.WhitelistSourceEnum.MANUAL.getCode()));
         whitelist.setDeleted(MessageEnum.DeletedEnum.NO.getCode());
         //结束时间 设置为 23:59:59
         whitelist.setEndDateTime(whitelistInfo.getEndDate().atTime(23, 59, 59));
         //开始时间 设置为 00:00:00
-        whitelist.setStartDateTime(whitelistInfo.getStartDate().atTime(0,0,0));
+        whitelist.setStartDateTime(whitelistInfo.getStartDate().atTime(0, 0, 0));
         if (whitelistService.checkDate(whitelist)) {
             return BaseOutput.failure("新增失败！该时间段与已有时间段存在重复。");
         }
         whitelistService.saveWhitelist(whitelist);
+        UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
+        StringBuffer strb = new StringBuffer();
+        strb.append(" 客户姓名：").append(whitelist.getCustomerName());
+        strb.append(" 手机号：").append(whitelist.getCellphone());
+        strb.append(" 有效期：").append(whitelistInfo.getStartDate()).append(" - ").append(whitelistInfo.getEndDate());
+        LoggerUtil.buildBusinessLoggerContext(whitelist.getId(), String.valueOf(whitelist.getId()), userTicket.getId(), userTicket.getRealName(), userTicket.getFirmId(), strb.toString());
         return BaseOutput.success("新增成功");
     }
 
@@ -109,7 +115,7 @@ public class WhitelistController {
             StringBuffer stringBuffer = new StringBuffer();
             stringBuffer.append(" 市场: ").append(marketRpcService.getByCode(whitelist.getMarketCode()).get().getName());
             stringBuffer.append(" 客户姓名: ").append(whitelist.getCustomerName());
-            stringBuffer.append(" 客户电话: ").append(PhoneUtil.hideBetween(whitelist.getCellphone()));
+            stringBuffer.append(" 客户电话: ").append(whitelist.getCellphone());
             UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
             LoggerUtil.buildBusinessLoggerContext(whitelist.getId(), String.valueOf(whitelist.getId()), userTicket.getId(), userTicket.getRealName(), userTicket.getFirmId(), stringBuffer.toString());
         }

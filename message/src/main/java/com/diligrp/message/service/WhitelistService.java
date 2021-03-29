@@ -31,10 +31,10 @@ public interface WhitelistService extends BaseService<Whitelist, Long> {
 
     /**
      * 查询某个手机号，在某市场的此时此刻，是否在白名单中
-     * @param whitelist
+     * @param marketCode
      * @return
      */
-    Set<String> queryValidByMarketCode(Whitelist whitelist);
+    Set<String> queryValidByMarketCode(String marketCode);
 
     /**
      * 更改白名单的状态信息

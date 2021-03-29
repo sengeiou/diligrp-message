@@ -19,6 +19,11 @@
                 <#bcomboProvider _id="sceneCode" _provider='dataDictionaryValueProvider' _queryParams='{dd_code:"message_scene",emptyText:"-- 全部 --",dd_with_market:"false"}'/>
             </div>
             <div class="form-group col">
+                <label for="whitelist">应用黑名单</label>
+                <select class="form-control" id="blacklist" name="blacklist"></select>
+                <#bcomboProvider  _id="blacklist" _provider="yesOrNoProvider"  _queryParams='{emptyText:"-- 全部 --"}'  _valueField="value" _textField="text" />
+            </div>
+            <div class="form-group col">
                 <label for="whitelist">应用白名单</label>
                 <select class="form-control" id="whitelist" name="whitelist"></select>
                 <#bcomboProvider  _id="whitelist" _provider="yesOrNoProvider"  _queryParams='{emptyText:"-- 全部 --"}'  _valueField="value" _textField="text" />
@@ -91,6 +96,9 @@
                         </th>
                         <th data-width-unit="%" data-width="10" data-field="enabled" data-sortable="true" data-sort-name=" enabled "  data-align="center" data-provider="triggersStateProvider">
                             状态
+                        </th>
+                        <th data-width-unit="%" data-width="10" data-field="blacklist" data-sortable="true" data-sort-name=" blacklist " data-align="center" data-provider="yesOrNoProvider">
+                            应用黑名单
                         </th>
                         <th data-width-unit="%" data-width="10" data-field="whitelist" data-sortable="true" data-sort-name=" whitelist " data-align="center" data-provider="yesOrNoProvider">
                             应用白名单

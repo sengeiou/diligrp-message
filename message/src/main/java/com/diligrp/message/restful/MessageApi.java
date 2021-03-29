@@ -4,14 +4,20 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson.JSONObject;
+import com.dili.logger.sdk.annotation.BusinessLogger;
+import com.dili.logger.sdk.util.LoggerUtil;
 import com.dili.ss.constant.ResultCode;
 import com.dili.ss.domain.BaseOutput;
+import com.dili.ss.dto.DTOUtils;
+import com.dili.uap.sdk.domain.Firm;
 import com.diligrp.message.common.enums.MessageEnum;
 import com.diligrp.message.component.MessageInfoHandler;
+import com.diligrp.message.constants.MessageConstant;
 import com.diligrp.message.domain.Whitelist;
 import com.diligrp.message.sdk.domain.input.MessageInfoInput;
 import com.diligrp.message.sdk.domain.input.WhitelistCustomerInput;
 import com.diligrp.message.service.WhitelistService;
+import com.diligrp.message.service.remote.MarketRpcService;
 import com.diligrp.message.utils.NetUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * 短信发送
@@ -38,6 +45,7 @@ public class MessageApi {
 
     private final MessageInfoHandler messageInfoHandler;
     private final WhitelistService whitelistService;
+    private final MarketRpcService marketRpcService;
 
     /**
      * 接收业务系统的短信发送
@@ -63,19 +71,25 @@ public class MessageApi {
      * @return
      */
     @RequestMapping(value = "/whitelistCustomer.api", method = {RequestMethod.GET, RequestMethod.POST})
-    public BaseOutput whitelistCustomer(@RequestBody @Validated  WhitelistCustomerInput input,BindingResult br) {
+    @BusinessLogger(systemCode = MessageConstant.SYSTEM_CODE, businessType = "message_whitelist", notes = "白名单数据来源其他系统同步", operationType = "add")
+    public BaseOutput whitelistCustomer(@RequestBody @Validated WhitelistCustomerInput input, BindingResult br) {
         if (br.hasErrors()) {
             log.warn(String.format("白名单数据[%s]验证失败[%s]", JSONUtil.toJsonStr(input), br.getFieldError().getDefaultMessage()));
             return BaseOutput.failure().setMessage(br.getFieldError().getDefaultMessage());
         }
         try {
             Whitelist whitelist = new Whitelist();
-            BeanUtil.copyProperties(input, whitelist,"id");
+            BeanUtil.copyProperties(input, whitelist, "id");
             whitelist.setSourceId(input.getSourceId());
             whitelist.setSource(String.valueOf(MessageEnum.WhitelistSourceEnum.SYSTEM.getCode()));
             whitelist.setDeleted(MessageEnum.DeletedEnum.NO.getCode());
             whitelistService.saveWhitelist(whitelist);
-            log.info(String.format("白名单数据【%s】保存成功", JSONUtil.toJsonStr(input)));
+            StringBuffer strb = new StringBuffer();
+            strb.append(" 客户姓名：").append(whitelist.getCustomerName());
+            strb.append(" 手机号：").append(whitelist.getCellphone());
+            strb.append(" 有效期：").append(input.getStartDateTime().toLocalDate()).append(" - ").append(input.getEndDateTime().toLocalDate());
+            Optional<Firm> byCode = marketRpcService.getByCode(input.getMarketCode());
+            LoggerUtil.buildBusinessLoggerContext(whitelist.getId(), String.valueOf(whitelist.getId()), null, null, byCode.orElse(DTOUtils.newInstance(Firm.class)).getId(), strb.toString());
             return BaseOutput.success();
         } catch (Exception e) {
             log.error(String.format("白名单数据[%s]处理异常:%s", JSONUtil.toJsonStr(input), e.getMessage()), e);

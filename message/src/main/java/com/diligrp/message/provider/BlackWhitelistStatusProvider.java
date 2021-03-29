@@ -18,11 +18,11 @@ import java.util.stream.Stream;
  * @author yuehongbo
  */
 @Component
-public class WhitelistStatusProvider implements ValueProvider {
+public class BlackWhitelistStatusProvider implements ValueProvider {
 
     @Override
     public List<ValuePair<?>> getLookupList(Object o, Map map, FieldMeta fieldMeta) {
-        return Stream.of(MessageEnum.WhitelistStatus.values())
+        return Stream.of(MessageEnum.BlackWhitelistStatus.values())
                 .map(e -> new ValuePairImpl<>(e.getName(), e.getCode()))
                 .collect(Collectors.toList());
     }
@@ -32,7 +32,7 @@ public class WhitelistStatusProvider implements ValueProvider {
         if (Objects.isNull(o)) {
             return null;
         }
-        MessageEnum.WhitelistStatus instance = MessageEnum.WhitelistStatus.getInstance(Integer.valueOf(o.toString()));
+        MessageEnum.BlackWhitelistStatus instance = MessageEnum.BlackWhitelistStatus.getInstance(Integer.valueOf(o.toString()));
         if (Objects.nonNull(instance)) {
             return instance.getName();
         }

@@ -13,12 +13,12 @@ import java.time.LocalDateTime;
 /**
  * 由MyBatis Generator工具自动生成
  * 
- * This file was generated on 2019-04-02 10:16:25.
+ * This file was generated on 2019-04-02 10:14:09.
  */
+@Table(name = "`message_blacklist`")
 @Getter
 @Setter
-@Table(name = "`message_triggers`")
-public class Triggers extends BaseDomain {
+public class Blacklist extends BaseDomain {
     /**
      * ID
      */
@@ -28,46 +28,53 @@ public class Triggers extends BaseDomain {
     private Long id;
 
     /**
-     * 触发点编码
-     */
-    @Column(name = "`trigger_code`")
-    private String triggerCode;
-
-    /**
-     * 市场编码
+     * 所属市场
      */
     @Column(name = "`market_code`")
     private String marketCode;
 
     /**
-     * 所属系统
+     * 客户姓名
      */
-    @Column(name = "`system_code`")
-    private String systemCode;
+    @Column(name = "`customer_name`")
+    private String customerName;
 
     /**
-     * 应用场景
+     * 客户手机号
      */
-    @Column(name = "`scene_code`")
-    private String sceneCode;
+    @Column(name = "`cellphone`")
+    private String cellphone;
 
     /**
-     * 是否启用黑名单
+     * 开始时间
      */
-    @Column(name = "`blacklist`")
-    private Integer blacklist;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
+    @Column(name = "`start_time`")
+    private LocalDateTime startTime;
 
     /**
-     * 是否启用白名单
+     * 结束时间
      */
-    @Column(name = "`whitelist`")
-    private Integer whitelist;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
+    @Column(name = "`end_time`")
+    private LocalDateTime endTime;
 
     /**
-     * 是否启用
+     * 黑名单状态
+     * {@link com.diligrp.message.common.enums.MessageEnum.BlackWhitelistStatus}
      */
-    @Column(name = "`enabled`")
-    private Integer enabled;
+    @Column(name="`status`")
+    private Integer status;
+
+    /**
+     * 创建人ID
+     */
+    @Column(name = "`creator_id`")
+    private Long creatorId;
 
     /**
      * 创建时间
@@ -86,4 +93,5 @@ public class Triggers extends BaseDomain {
     @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "`modified`")
     private LocalDateTime modified;
+
 }

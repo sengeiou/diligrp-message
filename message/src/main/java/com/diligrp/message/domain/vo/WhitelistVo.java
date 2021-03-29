@@ -2,11 +2,15 @@ package com.diligrp.message.domain.vo;
 
 import com.dili.ss.domain.annotation.Operator;
 import com.diligrp.message.domain.Whitelist;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.Transient;
 import java.util.List;
 
+@Getter
+@Setter
 public class WhitelistVo extends Whitelist {
     /**
      *
@@ -22,20 +26,4 @@ public class WhitelistVo extends Whitelist {
      */
     @Transient
     private String keywords;
-
-    public String getKeywords() {
-        return keywords;
-    }
-
-    public void setKeywords(String keywords) {
-        this.keywords = keywords;
-    }
-
-    public List<String> getAuthMarkets() {
-        return authMarkets;
-    }
-
-    public void setAuthMarkets(List<String> authMarkets) {
-        this.authMarkets = authMarkets;
-    }
 }

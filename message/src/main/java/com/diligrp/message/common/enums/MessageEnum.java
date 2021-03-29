@@ -162,9 +162,9 @@ public class MessageEnum {
     }
 
     /**
-     * 白名单状态类型的枚举定义
+     * 黑/白名单状态类型的枚举定义
      */
-    public enum WhitelistStatus {
+    public enum BlackWhitelistStatus {
 
         USELESS(10, "待生效"),
         ACTIVE(20, "生效中"),
@@ -176,13 +176,13 @@ public class MessageEnum {
         @Getter
         private Integer code;
 
-        WhitelistStatus(Integer code, String name) {
+        BlackWhitelistStatus(Integer code, String name) {
             this.code = code;
             this.name = name;
         }
 
-        public static WhitelistStatus getInstance(Integer code) {
-            for (WhitelistStatus ws : WhitelistStatus.values()) {
+        public static BlackWhitelistStatus getInstance(Integer code) {
+            for (BlackWhitelistStatus ws : BlackWhitelistStatus.values()) {
                 if (ws.getCode().equals(code)) {
                     return ws;
                 }

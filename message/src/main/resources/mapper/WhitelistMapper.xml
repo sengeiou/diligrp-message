@@ -9,8 +9,8 @@
     <result column="market_code" jdbcType="VARCHAR" property="marketCode" />
     <result column="customer_name" jdbcType="VARCHAR" property="customerName" />
     <result column="cellphone" jdbcType="VARCHAR" property="cellphone" />
-    <result column="start_date" jdbcType="TIMESTAMP" property="startDate" />
-    <result column="end_date" jdbcType="TIMESTAMP" property="endDate" />
+    <result column="start_date" jdbcType="TIMESTAMP" property="startDateTime" />
+    <result column="end_date" jdbcType="TIMESTAMP" property="endDateTime" />
     <result column="source" jdbcType="VARCHAR" property="source" />
     <result column="source_id" property="sourceId" />
     <result column="deleted" jdbcType="TINYINT" property="deleted" />
@@ -26,7 +26,7 @@
   </sql>
 
   <!-- 查询某个手机号，在某市场的此时此刻，是否在白名单中 -->
-  <select id="queryValidByMarketCode" resultType="string" parameterType="com.diligrp.message.domain.Whitelist">
+  <select id="queryValidByMarketCode" resultType="string" parameterType="string">
     <![CDATA[
         select mw.cellphone from message_whitelist mw where mw.start_date  <= NOW() and end_date >= NOW() and deleted =0 and mw.market_code=#{marketCode}
     ]]>

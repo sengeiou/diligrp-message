@@ -38,7 +38,7 @@ public class WhitelistExpiresScheduler {
     public void queryToStarted() {
         Example example = new Example(Whitelist.class);
         Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("status", MessageEnum.WhitelistStatus.USELESS.getCode());
+        criteria.andEqualTo("status", MessageEnum.BlackWhitelistStatus.USELESS.getCode());
         criteria.andEqualTo("deleted", MessageEnum.DeletedEnum.NO.getCode());
         criteria.andLessThanOrEqualTo("startDate", LocalDateTime.now());
         List<Whitelist> whitelists = whitelistService.selectByExample(example);
@@ -53,7 +53,7 @@ public class WhitelistExpiresScheduler {
     public void queryToEnd() {
         Example example = new Example(Whitelist.class);
         Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("status", MessageEnum.WhitelistStatus.ACTIVE.getCode());
+        criteria.andEqualTo("status", MessageEnum.BlackWhitelistStatus.ACTIVE.getCode());
         criteria.andEqualTo("deleted", MessageEnum.DeletedEnum.NO.getCode());
         criteria.andLessThanOrEqualTo("endDate", LocalDateTime.now());
         List<Whitelist> whitelists = whitelistService.selectByExample(example);

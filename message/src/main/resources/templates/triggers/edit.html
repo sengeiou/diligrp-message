@@ -47,10 +47,23 @@
             </el-select>
         </el-form-item>
         <el-form-item
+                label="应用黑名单"
+                prop="blacklist"
+                :rules="rules.blacklist">
+            <el-select v-model="triggers.blacklist" placeholder="请选择是否应用黑名单">
+                <el-option
+                        v-for="item in blacklistOptions"
+                        :key="item.value"
+                        :label="item.text"
+                        :value="item.value">
+                </el-option>
+            </el-select>
+        </el-form-item>
+        <el-form-item
                 label="应用白名单"
                 prop="whitelist"
                 :rules="rules.whitelist">
-            <el-select v-model="triggers.whitelist">
+            <el-select v-model="triggers.whitelist" placeholder="请选择是否应用黑名单">
                 <el-option
                         v-for="item in whitelistOptions"
                         :key="item.value"
@@ -196,6 +209,7 @@
                     marketCode: [{required: true, message: '请选择市场', trigger: 'change'}],
                     systemCode: [{required: true, message: '请选择系统', trigger: 'change'}],
                     sceneCode: [{required: true, message: '请选择场景', trigger: 'change'}],
+                    blacklist: [{required: true, message: '请选择是否应用黑名单', trigger: 'change'}],
                     whitelist: [{required: true, message: '请选择是否应用白名单', trigger: 'change'}],
                     channel: [{required: true, message: '请选择渠道', trigger: 'change'}],
                     accessKeyIds: [{required: true, message: '请选择市场通道key', trigger: 'change'}],
@@ -206,6 +220,7 @@
                 marketChannelOptions: [],
                 marketOptions:[],
                 accessKeyOptions:[],
+                whitelistOptions:[],
                 whitelistOptions:[],
                 systemCodeOptions:[],
                 sceneCodeOptions:[],
@@ -226,6 +241,11 @@
             this.systemCodeOptions = loadByProviderSync({
                 provider: 'dataDictionaryValueProvider', stringValue: true,
                 queryParams: {dd_code: "system_code", dd_with_market: false, required: true}
+            });
+            //加载是否应用黑名单数据
+            this.blacklistOptions = loadByProviderSync({
+                provider: 'yesOrNoProvider',
+                queryParams: {required: true}
             });
             //加载是否应用白名单数据
             this.whitelistOptions = loadByProviderSync({

@@ -12,8 +12,8 @@ public interface WhitelistMapper extends MyMapper<Whitelist> {
 
     /**
      * 查询某个手机号，在某市场的此时此刻，是否在白名单中
-     * @param whitelist
+     * @param marketCode 市场编码
      * @return
      */
-    Set<String> queryValidByMarketCode(Whitelist whitelist);
+    Set<String> queryValidByMarketCode(String marketCode);
 }

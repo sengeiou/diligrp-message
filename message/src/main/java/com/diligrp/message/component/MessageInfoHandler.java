@@ -2,21 +2,24 @@ package com.diligrp.message.component;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.validation.BeanValidationResult;
 import cn.hutool.extra.validation.ValidationUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.dili.commons.glossary.YesOrNoEnum;
 import com.dili.ss.domain.BaseOutput;
+import com.diligrp.message.common.enums.BizNumberTypeEnum;
 import com.diligrp.message.common.enums.MessageEnum;
 import com.diligrp.message.common.enums.TriggersEnum;
 import com.diligrp.message.domain.SendLog;
-import com.diligrp.message.domain.Whitelist;
 import com.diligrp.message.domain.vo.TriggersVo;
 import com.diligrp.message.sdk.domain.input.MessageInfoInput;
+import com.diligrp.message.service.BlacklistService;
 import com.diligrp.message.service.SendLogService;
 import com.diligrp.message.service.TriggersService;
 import com.diligrp.message.service.WhitelistService;
+import com.diligrp.message.service.remote.UidRpcService;
 import com.diligrp.message.utils.MessageUtil;
 import com.google.common.collect.Sets;
 import lombok.RequiredArgsConstructor;
@@ -24,9 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -49,14 +50,18 @@ public class MessageInfoHandler {
     private final MessageSendTask messageSendTask;
     private final SendLogService sendLogService;
     private final WhitelistService whitelistService;
+    private final BlacklistService blacklistService;
+    private final UidRpcService uidRpcService;
 
     /**
      * 处理接收到的信息
      * @param info
      */
-    public BaseOutput handler(MessageInfoInput info){
+    public BaseOutput handler(MessageInfoInput info) {
         BeanValidationResult beanValidationResult = ValidationUtil.warpValidate(info);
         SendLog sendLog = new SendLog();
+        Optional<String> bizNumber = uidRpcService.getBizNumber(BizNumberTypeEnum.SEND_REQUEST);
+        sendLog.setRequestCode(bizNumber.orElse(IdUtil.getSnowflake(1, 1).nextIdStr()));
         sendLog.setMarketCode(info.getMarketCode());
         sendLog.setBusinessMarketCode(info.getBusinessMarketCode());
         sendLog.setSystemCode(info.getSystemCode());
@@ -66,7 +71,7 @@ public class MessageInfoHandler {
         sendLog.setTemplateCode(info.getTemplateCode());
         sendLog.setSendTime(MessageUtil.now());
         sendLog.setRemoteIp(info.getIp());
-        if (StrUtil.isNotBlank(info.getParameters())){
+        if (StrUtil.isNotBlank(info.getParameters())) {
             sendLog.setParameters(info.getParameters());
         }
         if (beanValidationResult.isSuccess()) {
@@ -75,68 +80,78 @@ public class MessageInfoHandler {
             triggers.setSystemCode(info.getSystemCode());
             triggers.setSceneCode(info.getSceneCode());
             List<TriggersVo> templateList = triggersService.selectForUnionTemplate(triggers);
-            //存储存在于白名单中的手机号
-            Set<String> whiteSet = Sets.newHashSet();
-            //存在未在白名单中的手机号
-            Set<String> notWhiteSet = Sets.newHashSet();
+            //存储最终需要发送短信的手机号
+            Set<String> finalPhoneSet = Sets.newHashSet();
             StringBuffer msg = new StringBuffer();
             TriggersVo triggersVo = new TriggersVo();
             if (CollectionUtil.isEmpty(templateList)) {
-                msg.append("应用未配置 ");
+                msg.append(" 应用未配置 ");
             } else {
                 triggersVo = templateList.get(0);
                 if (TriggersEnum.EnabledStateEnum.DISABLED.getCode().equals(triggersVo.getEnabled())) {
-                    msg.append("应用场景已禁用 ");
+                    msg.append(" 应用场景已禁用 ");
                 } else if (CollectionUtil.isEmpty(triggersVo.getTemplateList())) {
-                    msg.append("模板未配置 ");
-                } else if (YesOrNoEnum.YES.getCode().equals(triggersVo.getWhitelist())) {
-                    String[] phones = info.getCellphone().split(",");
-                    //如果需要验证白名单，检查用户是否存在白名单中
-                    Whitelist whitelist = new Whitelist();
-                    whitelist.setMarketCode(info.getMarketCode());
-                    Set<String> dbData = whitelistService.queryValidByMarketCode(whitelist);
-                    if (CollectionUtil.isNotEmpty(dbData)) {
-                        for (String phone : phones) {
-                            if (dbData.contains(phone)) {
-                                whiteSet.add(phone);
-                            } else {
-                                notWhiteSet.add(phone);
+                    msg.append(" 模板未配置 ");
+                } else {
+                    /**
+                     * 以下逻辑为判断传入的手机号，是否在黑白名单中
+                     * 如果场景启用了黑名单并且手机号在黑名单中，则该手机号不会发送短信
+                     * 如果场景启用了白名单并且手机号不在白名单中，则该手机号不会发送短信
+                     */
+                    StringBuffer resultMsg = new StringBuffer();
+                    Collections.addAll(finalPhoneSet, info.getCellphone().split(","));
+                    if (YesOrNoEnum.YES.getCode().equals(triggersVo.getBlacklist())) {
+                        Set<String> blacklistSet = blacklistService.queryValidByMarketCode(info.getBusinessMarketCode());
+                        //取出两个集合的交集
+                        blacklistSet.retainAll(finalPhoneSet);
+                        //从原始数据中移除存在于黑名单中的数据
+                        finalPhoneSet.removeAll(blacklistSet);
+                        if (CollectionUtil.isEmpty(finalPhoneSet)) {
+                            resultMsg.append(" 手机号:").append(info.getCellphone()).append("全部存在于黑名单中");
+                        } else {
+                            resultMsg.append(" 手机号:").append(StrUtil.join(",", blacklistSet)).append("存在于黑名单中");
+                        }
+                    }
+                    if (YesOrNoEnum.YES.getCode().equals(triggersVo.getWhitelist())) {
+                        if (CollectionUtil.isNotEmpty(finalPhoneSet)) {
+                            //如果需要验证白名单，检查用户是否存在白名单中
+                            Set<String> dbData = whitelistService.queryValidByMarketCode(info.getBusinessMarketCode());
+                            //取白名单数据与传入数据的交集
+                            Set<String> tempSet = Sets.newHashSet(finalPhoneSet);
+                            finalPhoneSet.retainAll(dbData);
+                            //从传入数据中移除交集(白名单)数据，剩下的数据即未在白名单中的数据
+                            tempSet.removeAll(finalPhoneSet);
+                            if (CollectionUtil.isNotEmpty(tempSet)) {
+                                resultMsg.append(" 手机号:").append(StrUtil.join(",", tempSet)).append("在白名单中不存在");
                             }
                         }
-                        if (CollectionUtil.isEmpty(whiteSet)) {
-                            msg.append("所属手机未在白名单内");
-                        } else {
-                            info.setCellphone(StrUtil.join(",", whiteSet));
-                        }
-                    } else {
-                        msg.append("所属手机都未在白名单内");
                     }
+                    msg.append(resultMsg);
                 }
                 if (StrUtil.isNotBlank(info.getTemplateCode()) && CollectionUtil.isNotEmpty(triggersVo.getTemplateList())) {
                     Boolean matched = triggersVo.getTemplateList().stream().anyMatch(t -> StrUtil.isNotBlank(t.getTemplateCode()) && info.getTemplateCode().trim().equalsIgnoreCase(t.getTemplateCode().trim()));
                     if (!matched) {
-                        msg.append("指定的模板未在该场景中配置 ");
+                        finalPhoneSet = null;
+                        msg.delete(0, msg.length());
+                        msg.append(" 指定的模板未在该场景中配置 ");
                     }
                 }
             }
             if (StrUtil.isNotBlank(msg)) {
-                sendLog.setRemarks(msg.toString());
-                sendLog.setSendState(MessageEnum.SendStateEnum.FAILURE.getCode());
-                sendLogService.save(sendLog);
-                log.warn(String.format("信息[%s]-->发送失败[%s]", JSONObject.toJSONString(sendLog), msg));
-                return BaseOutput.failure().setMessage(msg.toString()).setMetadata(sendLog.getRequestCode());
-            } else {
+                SendLog saveData = new SendLog();
+                BeanUtil.copyProperties(sendLog, saveData);
+                saveData.setRemarks(msg.toString());
+                saveData.setSendState(MessageEnum.SendStateEnum.FAILURE.getCode());
+                sendLogService.save(saveData);
+                log.warn(String.format("信息[%s]-->发送失败[%s]", JSONObject.toJSONString(sendLog), saveData.getRemarks()));
+                if (CollectionUtil.isEmpty(finalPhoneSet)) {
+                    return BaseOutput.failure(sendLog.getRemarks()).setMetadata(sendLog.getRequestCode());
+                }
+            }
+            if (CollectionUtil.isNotEmpty(finalPhoneSet)) {
+                sendLog.setCellphone(StrUtil.join(",", finalPhoneSet));
                 if (messageSend) {
-                    if (CollectionUtil.isNotEmpty(notWhiteSet)) {
-                        SendLog log = new SendLog();
-                        BeanUtil.copyProperties(sendLog, log);
-                        log.setSendState(MessageEnum.SendStateEnum.FAILURE.getCode());
-                        log.setCellphone(StrUtil.join(",", notWhiteSet));
-                        log.setRemarks("此部分手机不在白名单中");
-                        sendLogService.save(log);
-                    }
                     sendLog.setSendState(MessageEnum.SendStateEnum.WAITING.getCode());
-                    sendLogService.save(sendLog);
                     //目前只有短信，则直接注册到短信任务中
                     messageSendTask.registerSMS(sendLog.getId(), new Date(), triggersVo.getTemplateList());
                 } else {
@@ -145,14 +160,14 @@ public class MessageInfoHandler {
                     sendLog.setContent(content);
                     sendLog.setRemarks("该环境已配置禁用短信发送");
                     sendLog.setSendState(MessageEnum.SendStateEnum.FAILURE.getCode());
-                    sendLogService.save(sendLog);
                     log.warn(String.format("信息[%s]-->发送失败[%s]", JSONObject.toJSONString(sendLog), sendLog.getRemarks()));
                 }
-                return BaseOutput.success();
+                sendLogService.save(sendLog);
             }
+            return BaseOutput.success(sendLog.getRemarks()).setMetadata(sendLog.getRequestCode());
         } else {
             List<BeanValidationResult.ErrorMessage> errorMessages = beanValidationResult.getErrorMessages();
-            String collect = errorMessages.stream().map(t -> t.getMessage()).collect(Collectors.joining());
+            String collect = errorMessages.stream().map(t -> t.getMessage()).collect(Collectors.joining(","));
             sendLog.setRemarks(collect);
             sendLog.setSendState(MessageEnum.SendStateEnum.FAILURE.getCode());
             sendLogService.save(sendLog);
