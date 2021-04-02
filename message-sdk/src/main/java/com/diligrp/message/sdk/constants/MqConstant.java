@@ -13,7 +13,7 @@ public interface MqConstant {
      */
     String MQ_MESSAGE_TOPIC_EXCHANGE = "dili.message.topicExchange";
     /**
-     * MQ 短信发送日志Queue
+     * MQ 短信发送Queue
      */
     String MQ_MESSAGE_SMS_QUEUE = "dili.message.smsQueue";
     /**
