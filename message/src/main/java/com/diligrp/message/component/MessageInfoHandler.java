@@ -152,6 +152,7 @@ public class MessageInfoHandler {
                 sendLog.setCellphone(StrUtil.join(",", finalPhoneSet));
                 if (messageSend) {
                     sendLog.setSendState(MessageEnum.SendStateEnum.WAITING.getCode());
+                    sendLogService.save(sendLog);
                     //目前只有短信，则直接注册到短信任务中
                     messageSendTask.registerSMS(sendLog.getId(), new Date(), triggersVo.getTemplateList());
                 } else {
@@ -160,9 +161,9 @@ public class MessageInfoHandler {
                     sendLog.setContent(content);
                     sendLog.setRemarks("该环境已配置禁用短信发送");
                     sendLog.setSendState(MessageEnum.SendStateEnum.FAILURE.getCode());
+                    sendLogService.save(sendLog);
                     log.warn(String.format("信息[%s]-->发送失败[%s]", JSONObject.toJSONString(sendLog), sendLog.getRemarks()));
                 }
-                sendLogService.save(sendLog);
             }
             return BaseOutput.success(sendLog.getRemarks()).setMetadata(sendLog.getRequestCode());
         } else {
