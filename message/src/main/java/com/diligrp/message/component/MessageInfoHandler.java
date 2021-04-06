@@ -102,14 +102,16 @@ public class MessageInfoHandler {
                     Collections.addAll(finalPhoneSet, info.getCellphone().split(","));
                     if (YesOrNoEnum.YES.getCode().equals(triggersVo.getBlacklist())) {
                         Set<String> blacklistSet = blacklistService.queryValidByMarketCode(info.getBusinessMarketCode());
-                        //取出两个集合的交集
-                        blacklistSet.retainAll(finalPhoneSet);
-                        //从原始数据中移除存在于黑名单中的数据
-                        finalPhoneSet.removeAll(blacklistSet);
-                        if (CollectionUtil.isEmpty(finalPhoneSet)) {
-                            resultMsg.append(" 手机号:").append(info.getCellphone()).append("全部存在于黑名单中");
-                        } else {
-                            resultMsg.append(" 手机号:").append(StrUtil.join(",", blacklistSet)).append("存在于黑名单中");
+                        if(CollectionUtil.isNotEmpty(blacklistSet)){
+                            //取出两个集合的交集
+                            blacklistSet.retainAll(finalPhoneSet);
+                            //从原始数据中移除存在于黑名单中的数据
+                            finalPhoneSet.removeAll(blacklistSet);
+                            if (CollectionUtil.isEmpty(finalPhoneSet)) {
+                                resultMsg.append(" 手机号:").append(info.getCellphone()).append(" 全部存在于黑名单中");
+                            } else {
+                                resultMsg.append(" 手机号:").append(StrUtil.join(",", blacklistSet)).append(" 存在于黑名单中");
+                            }
                         }
                     }
                     if (YesOrNoEnum.YES.getCode().equals(triggersVo.getWhitelist())) {
@@ -122,7 +124,7 @@ public class MessageInfoHandler {
                             //从传入数据中移除交集(白名单)数据，剩下的数据即未在白名单中的数据
                             tempSet.removeAll(finalPhoneSet);
                             if (CollectionUtil.isNotEmpty(tempSet)) {
-                                resultMsg.append(" 手机号:").append(StrUtil.join(",", tempSet)).append("在白名单中不存在");
+                                resultMsg.append(" 手机号:").append(StrUtil.join(",", tempSet)).append(" 在白名单中不存在");
                             }
                         }
                     }
