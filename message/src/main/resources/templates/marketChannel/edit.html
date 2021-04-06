@@ -41,8 +41,6 @@
     window.rootPath = '${contextPath}';
     function init(vm){
         vm.formData = ${marketChannel!};
-        //由于驼峰命名关系，所以需要增加一个非驼峰的回显
-        vm.formData.accesskey = vm.formData.accessKey;
     }
 </script>
 <script>

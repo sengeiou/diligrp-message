@@ -77,6 +77,9 @@ public class MarketChannelController {
             MarketChannel marketChannel = marketChannelService.get(id);
             marketChannel.setSecret(Base64.decodeStr(marketChannel.getSecret()));
             JSONObject jsonObject = JSONUtil.parseObj(marketChannel);
+            //由于驼峰命名在前端插槽的方式不支持的原因，所以需要增加一个非驼峰的回显
+            jsonObject.remove("accessKey");
+            jsonObject.set("accesskey",marketChannel.getAccessKey());
             modelMap.put("marketChannel", jsonObject);
         } else {
             modelMap.put("marketChannel", "{}");
