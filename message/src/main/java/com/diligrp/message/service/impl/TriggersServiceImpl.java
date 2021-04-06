@@ -169,6 +169,7 @@ public class TriggersServiceImpl extends BaseServiceImpl<Triggers, Long> impleme
             old.setMarketCode(triggersSaveInput.getMarketCode());
             old.setSceneCode(triggersSaveInput.getSceneCode());
             old.setWhitelist(triggersSaveInput.getWhitelist());
+            old.setBlacklist(triggersSaveInput.getBlacklist());
             this.updateSelective(old);
             triggersTemplateService.deleteByTriggerCode(triggerCode);
         }
