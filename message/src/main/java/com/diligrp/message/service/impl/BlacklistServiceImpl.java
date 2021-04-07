@@ -1,5 +1,6 @@
 package com.diligrp.message.service.impl;
 
+import cn.hutool.core.util.StrUtil;
 import com.dili.ss.base.BaseServiceImpl;
 import com.dili.ss.domain.EasyuiPageOutput;
 import com.dili.ss.dto.IDTO;
@@ -33,7 +34,7 @@ public class BlacklistServiceImpl extends BaseServiceImpl<Blacklist, Long> imple
 
     @Override
     public EasyuiPageOutput listPageForEasyui(BlacklistQuery blacklistQuery, boolean useProvider) throws Exception{
-        if (blacklistQuery.getKeywords() != null) {
+        if (StrUtil.isNotBlank(blacklistQuery.getKeywords())) {
             blacklistQuery.setMetadata(IDTO.AND_CONDITION_EXPR, "(customer_name='" + blacklistQuery.getKeywords() + "' or cellphone ='" + blacklistQuery.getKeywords() + "')");
         }
         return listEasyuiPageByExample(blacklistQuery, useProvider);
