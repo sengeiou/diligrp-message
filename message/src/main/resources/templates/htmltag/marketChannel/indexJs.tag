@@ -74,12 +74,6 @@
         $("#marketChannelGrid").datagrid("load", bindGridMeta2Form("marketChannelGrid", "form"));
     }
 
-
-    //清空表单
-    function clearForm() {
-        $('#form').form('clear');
-    }
-
     //表格表头右键菜单
     function headerContextMenu(e, field){
         e.preventDefault();
